@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>
+Привет
+</title>
+<meta http-equiv="content-type" content="text/html;charset=utf-8" />
+<style>
+  body *{
+    box-sizing:border-box;
+  }
+</style>
+</head>
+<body>
+
+<script id='compo' type="text/compo">
+/*
+  Defines one row of table, - TR and TD tags cant be parsed
+  by browser - you can use "tagName" attribute in this case.
+  Attribute "as" - defines Compo.component identifier
+  Compo.component - is some one like class, 
+  "constructor" or "script" tag - defines constructor of
+  its class.
+  "ref" attribute creates hook to element for constructor
+*/
+  <div as="list-item" tagName="tr">
+    <div tagName="td" style="padding:20px;">
+      Number of elements in the array:
+      <h1 ref="id"></h1>
+    </div>
+    <div tagName="td" style="padding:20px;">
+      Updating time:
+      <h1 ref="content"></h1>
+    </div>
+    <constructor>
+      this.controlSum=function(data){
+        return data.id+data.content;
+      }
+      this.onsetdata=function(data){
+        this.ref.id.innerText=data.id;
+        this.ref.content.innerText=data.content;
+      };
+    </constructor>
+  </div>
+/*
+  root container
+  "useTag" - you can override tagName for the instance of 
+  Compo.component by setting the "useTag" attribute.
+  "array-iterator" is builtin component -
+  can render array of data, uses children
+  as set of templates in fast manner.
+*/
+  <div as="app">   
+    <h1>Hallo</h1>
+    <div ref="content"></div>
+    <array-iterator ref="list" useTag="table">
+      <list-item 
+        style="font-weight:bold;background-color:#FFFFFF;color:#000000;border: 1px solid #000000;">
+          1st template
+      </list-item>
+      <list-item 
+        style="font-weight:bold;color:#FFFFFF;background-color:#000000;">
+          2nd template
+      </list-item>
+      <list-item 
+        style="font-weight:bold;color:white;background-color:green;">
+          3rd template
+      </list-item>
+    </array-iterator>
+    <constructor>
+      this.onsetdata=function(data){
+        this.ref.list.setData(data);
+      };
+    </constructor>
+  </div>
+</script>
+
+<div id="appb"></div>
+
+<script type="text/javascript" src="compo.js"></script>
+<script type="text/javascript">
+
+  var Compo = newCompo();
+  Compo.parse(document.getElementById('compo').textContent);
+  //console.dir(Compo);
+  var b=Compo.create('app');
+
+  b.mount(document.getElementById('appb'));
+
+  console.log(Compo.registry);
+  var list = [];
+
+  b.setData(list);
+  var time=new Date().getTime();
+  var st=time, ct=0;
+
+  var interval=setInterval(function(){
+    ct=new Date().getTime();
+    
+    list.unshift({id:list.length+1, content:(ct-time)});
+    time=ct;
+    b.setData(list);
+
+    var size=500;
+
+    if(list.length >= size){
+      console.log('adding',list.length,'by one',ct-st);
+
+      var nst = new Date().getTime();
+      clearInterval(interval);
+      
+      //return;
+      interval=setInterval(function(){
+          ct=new Date().getTime();
+          list.shift();
+          time=ct;
+          b.setData(list);
+          if (list.length===size-50) {
+            clearInterval(interval);
+            console.log('removing', 50, 'by one',ct-nst);
+            console.log('total',ct-st);
+            b.setData([]);
+            setTimeout(function(){
+              createAll(list);
+              setTimeout(
+                function(){
+var st=new Date().getTime();
+                  b.innerHTML=(b.innerHTML+'');
+console.log('set as innerHTML all', list.length, 'rows in', new Date().getTime()-st);
+
+                },0
+              );
+            }, 0);
+            //console.log(b.ref);
+          }
+        },0
+      );
+    }
+
+  },0);
+
+  function createAll(list){
+    var st=new Date().getTime();
+    b.setData(list);
+    console.log('rebuld all', list.length, 'rows in', new Date().getTime()-st);
+  }
+  
+</script>
+</body>
+</html>
