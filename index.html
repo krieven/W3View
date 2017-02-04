@@ -2,7 +2,7 @@
 <html>
 <head>
 <title>
-Привет
+Hallo
 </title>
 <meta http-equiv="content-type" content="text/html;charset=utf-8" />
 <style>
@@ -36,7 +36,7 @@
       this.controlSum=function(data){
         return data.id+data.content;
       }
-      this.onsetdata=function(data){
+      this.onSetData=function(data){
         this.ref.id.innerText=data.id;
         this.ref.content.innerText=data.content;
       };
@@ -68,7 +68,7 @@
       </list-item>
     </array-iterator>
     <constructor>
-      this.onsetdata=function(data){
+      this.onSetData=function(data){
         this.ref.list.setData(data);
       };
     </constructor>
@@ -101,7 +101,7 @@
     time=ct;
     b.setData(list);
 
-    var size=500;
+    var size=100;
 
     if(list.length >= size){
       console.log('adding',list.length,'by one',ct-st);
@@ -126,7 +126,7 @@
                 function(){
 var st=new Date().getTime();
                   b.innerHTML=(b.innerHTML+'');
-console.log('set as innerHTML all', list.length, 'rows in', new Date().getTime()-st);
+console.log('set innerHTML=innerHTML ', list.length, 'rows in', new Date().getTime()-st);
 
                 },0
               );

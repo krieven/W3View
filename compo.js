@@ -1,49 +1,77 @@
 'use strict';
 /**
  * Using:
- * 		Compo.parse(string);//parse definitions of components from string
- * 		var 
+ * 
+ * var Compo = newCompo(options); //optionally some kind of options 
+ * 		//can be injected options can be accessed from components 
+ * 		//as global var options
+ * 		
+ * Compo.parse(string DefinitionOfComponents); //parse definition of components from string
+ * 		
+ * var instance = Compo.create(name); //create DOMNode from Compo.registry
+ * 		// by name
+ * 		
+ * instance.mount(document....); // append instance into current DOM tree
+ * 		// optionally you can specify index in target.children, where
+ * 		// instance will be placed
+ * 		
+ * //set data and repaint
+ * 		instance.setData({some:data, that: instance, can: recive});
+ * 		//or
+ * 		instance.mergeData(data); //it is your opinion
+ * 		//or
+ * 		instance.update(); // if data can be changed by external routine
+ * 		
+ * //when you need remove the instance from DOM tree
+ * 		instance.unmount(); //you can mount it later
+ * 		
+ * //when you will remove the element permanently
+ * 		instance.destroy(); // and forget it
  * 
  * Lifecicle:
- *      user -> Compo.parse(string); -- parses 
- *      
- *      user -> instance = Compo.create(componentName) -- returns instance of Compo, defined by componentName
- *      auto -> instance.oncreate(); -- called once , time to make some with attributes
- *      user -> instance.mount(target) -- append instance to the end of target.children
- *      auto -> instance.onmount(); -- called each time instance is mounted
- *      user -> instance.mergeData({k:v}) -- you can set data partially
- *      auto -> instance.onsetdata(data); -- called each time mergeData is called , 
- *              time to make some with data, do not modify this.data object here (as react - props)
- *              here you can pass data forvard to this.ref 
+ *    
  */
-function newCompo(){
-	var Compo={mixin:{},registry:{}};
+function newCompo(options){
+	var Compo={registry:{}};
+	
+	var mixin = {};
 	/**
-	 * Монтирует компонент куда надо, когда Монтирует, демотирует из старого места
-	 * @param {DomNode} trg место, куда вмонтировать 
+	 * Mount element into target content
+	 * at index position
+	 * 
+	 * @param {DOMNode} target - destination target
+	 * @param {number} index - index in destination
 	 */
-	Compo.mixin.mount=function(trg, index){
-		trg = trg.ref && trg.ref.content ? trg.ref.content : trg;
-		if(typeof index === 'undefined') trg.appendChild(this);
-		else trg.insertBefore(this,trg.children[index]);
-		this.onmount();
+	mixin.mount=function(target, index){
+		target = target.ref && target.ref.content ? target.ref.content : target;
+		this.unmount();
+		if(index === undefined || target.childrem.length <= index ) 
+			target.appendChild(this);
+		else target.insertBefore(this,target.children[index < 0 ? 0 : index]);
+		this.onMount();
 	};
-	Compo.mixin.unmount=function(){
+	/**
+	 * Unmount element from DOM tree
+	 */
+	mixin.unmount=function(){
+		this.onUnmount();
 		if(this.parentNode) this.parentNode.removeChild(this);
-		this.onunmount();
 	}
 	/**
-	 * 
+	 * mergeData and setData - public API methods for
+	 * setting data into element, user defined onSetData callback will
+	 * be called immediately
+	 * mergeData - create or partially update this.data by recursive merging
+	 * setData - set this.data as link to its argument
 	 * 
 	 * @param {any} data
 	 */
-	Compo.mixin.mergeData=function(data){
+	mixin.mergeData=function(data){
 		this.data=this.data || {};
 		Compo.copyProps(data,this.data);
 		this.setData(this.data);
 	};
-	
-	Compo.mixin.setData=function(data){
+	mixin.setData=function(data){
 		this.data=data;
 		if(typeof this.controlSum === 'function'){
 			var newSum = this.controlSum(data);
@@ -52,56 +80,86 @@ function newCompo(){
 			}
 			this.oldSum = newSum;
 		}
-		this.onsetdata(this.data);
+		this.onSetData(this.data);
+	};
+	/**
+	 * Update element properties from its data
+	 * 
+	 * @param {boolean} ignoreSum - if true,
+	 * then controlSum checking will be ignored
+	 */
+	mixin.update=function(ignoreSum){
+		if (!ignoreSum) {
+			this.setData(this.data);
+		} else {
+			if(typeof this.controlSum === 'function'){
+				this.oldSum = this.controlSum(this.data);
+			}
+			this.onSetData(this.data);
+		}
+	};
+	/**
+	 * recursively destroy self and subtree
+	 */
+	mixin.destroy=function(){
+		if(this.unmount){
+			this.unmount();
+		} else this.parentNode.removeChild(this);
+		if(this.onDestroy){
+			this.onDestroy();
+		}
+		while(this.children.length){
+			if(!this.children[0].destroy){
+				this.children[0].destroy = mixin.destroy;
+			} 
+			this.children[0].destroy();
+		}
 	};
 
 	///lifecycle callbacks
 	/**
-	 * Mock, callback on this.mergeData 
+	 * all of these callbacks already presented in each
+	 * instance of Compo components.
+	 * Author of component can override each of them.
 	 */
-	Compo.mixin.onsetdata=function(data){};
 	/**
+	 * Mock, callback on this.mergeData and this.setData
+	 */
+	mixin.onSetData=function(data){};
+	/**
+	 * controlSum
 	 * this method can be used for reduce
-	 * calculations during rerender of this component
+	 * calculations during rerender of this element
 	 * 
-	 * if the result of this function is same as 
-	 * previous, onsetdata will not be called
+	 * if the result of this method is not undefined and same as 
+	 * previous, onSetData will not be called
+	 * and rerender will not be performed
 	 */
-	Compo.mixin.controlSum=function(data){return undefined;};
+	mixin.controlSum=function(data){return undefined;};
 	/**
-	 * Mock, callbacks on this.mount and this.unmount
+	 * Mock, callbacks on element.mount and element.unmount
+	 * in this time you can touch parentElement if needed,
+	 * onMount will be called after inserting into DOM tree
+	 * onUnmount - before removing
 	 */
-	Compo.mixin.onmount=function(){};
-	Compo.mixin.onunmount=function(){};
+	mixin.onMount=function(){};
+	mixin.onUnmount=function(){};
 	/**
-	 * Mock, callback called immediately after Component created
+	 * Mock, callback called immediately after element created
 	 * before mount 
 	 */
-	Compo.mixin.oncreate=function(){};
+	mixin.onCreate=function(){};
 	/**
-	 * Mock callback called when destroy;
+	 * Mock, callback called when destroy
+	 * Please cleanup all references to this,
+	 * including callbacks, placed into any kind of dispatchers,
+	 * observables and event listeners
 	 */
-	Compo.mixin.ondestroy=function(){};
+	mixin.onDestroy=function(){};
 	/**
-	 * 
+	 * Make preparat from sample HTMLElement
 	 */
-	Compo.mixin.destroy=function(){
-		if(this.unmount){
-			this.unmount();
-		} else this.parentNode.removeChild(this);
-		if(this.ondestroy){
-			this.ondestroy();
-		}
-		while(this.children.length){
-			if(this.children[0].destroy){
-				this.children[0].destroy();
-			} else this.removeChild(this.children[0]);
-		}
-	};
-	/**
-	 * 
-	 */
-	Compo.prepare=function(root){
+	function prepare (root){
 		var res={};
 		res.tgn=root.getAttribute('tagName') || root.tagName;
 		res.as=root.getAttribute('as');
@@ -123,7 +181,7 @@ function newCompo(){
 					"\n//# sourceURL=compo/"+res.as+".constructor";
 				res.script = new Function(res.script);
 			} else {
-				var child = Compo.prepare(ch[i]);
+				var child = prepare(ch[i]);
 				delete child.script;
 				delete child.as;
 				res.ch.push(child);
@@ -133,7 +191,8 @@ function newCompo(){
 		return res;
 	}
 	/**
-	 * register classes, 
+	 * register Components, takes definitions from
+	 * string, append new definitions into registry
 	 * @param {string} str
 	 * @returns {void} 
 	 */
@@ -145,14 +204,18 @@ function newCompo(){
 			var asName=(ch[i].getAttribute('as') || '').toUpperCase();
 			if( asName && !Compo.registry[asName] ) {
 				Compo.registry[asName]={};
-				var prep = Compo.prepare(ch[i]);
+				var prep = prepare(ch[i]);
 				delete prep.ref;
 				Compo.registry[asName].prep=prep;
 			}
 		}
 	};
 
-
+	/**
+	 * Magic method, - factory of components - 
+	 * does all dirty work at DOM nodes creation,
+	 * attribute setting, adding children and references registration
+	 */
 	Compo.create=function(name, attr, ch, root){
 		name=name.toUpperCase();
 		var instance;
@@ -207,7 +270,7 @@ function newCompo(){
 				}
 				//добавить ноду в инстанс 
 				instance.appendChild(cch);
-				if (cch.onmount) cch.onmount();
+				if (cch.onMount) cch.onMount();
 			}
 		} 
 		//если нет зарегистрированного компонента с таким именем
@@ -256,21 +319,22 @@ function newCompo(){
 		if(Compo.registry[name]){
 			if(Compo.registry[name].prep && Compo.registry[name].prep.script){
 				instance.init=Compo.registry[name].prep.script;
-				Compo.copyProps(Compo.mixin, instance);
+				Compo.copyProps(mixin, instance);
 				instance.init();
-				instance.oncreate();
+				instance.onCreate();
 			}
 		}
 		//всем создаваемым нодам микшируем деструктор
 		//для каскадного разрушения
-		instance.destroy = Compo.mixin.destroy;
+		instance.destroy = mixin.destroy;
 		return instance;
 	};
 
 	/**
 	 * recursively merges two object's ownPropertys 
-	 * @param {any} from - sourсe object
-	 * @param {any} to - destination object
+	 * 
+	 * @param {Object} from - sourсe object
+	 * @param {Object} to - destination object
 	 * @returns void
 	 */
 	Compo.copyProps=function(from,to){
@@ -316,7 +380,7 @@ function newCompo(){
 		while(this.children.length > 0){
 			templates.push(this.removeChild(this.children[0]));
 		}
-		delete this.ref;
+		this.ref = {};
 		function byExample(tpl){
 			if(!tpl.as){
 				throw new Error('template must be registered \"Compo\" component');
@@ -324,7 +388,7 @@ function newCompo(){
 			var res=Compo.create(tpl.as, tpl.attributes)
 			return res;
 		}
-		this.onsetdata = function(data){
+		this.onSetData = function(data){
 			if(!data || !Array.isArray(data)){
 				data = [];
 			}
