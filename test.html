@@ -42,6 +42,19 @@ Hallo
       };
     </constructor>
   </div>
+
+  <div as="hallo-world">
+    <input ref="input" placeholder="type here your name">
+    <h1>Hallo <span ref="name">Anonimous</span>!</h1>
+    <constructor>
+      this.ref.input.onkeyup=function(e){
+        this.setData(this.ref.input.value);
+      }.bind(this);
+      this.onSetData = function(data){
+        this.ref.name.innerText = data || 'Anonimous';
+      };
+    </constructor>
+  </div>
 /*
   root container
   "useTag" - you can override tagName for the instance of 
@@ -52,24 +65,23 @@ Hallo
 */
   <div as="app">   
     <h1>Hallo</h1>
+    <hallo-world></hallo-world>
     <div ref="content"></div>
     <array-iterator ref="list" useTag="table">
       <list-item 
-        style="font-weight:bold;background-color:#FFFFFF;color:#000000;border: 1px solid #000000;">
-          1st template
+        style="font-weight:bold;background-color:#FFFFFF;color:#000000;border: 2px solid #000000;">
       </list-item>
       <list-item 
         style="font-weight:bold;color:#FFFFFF;background-color:#000000;">
-          2nd template
       </list-item>
       <list-item 
         style="font-weight:bold;color:white;background-color:green;">
-          3rd template
       </list-item>
     </array-iterator>
     <constructor>
       this.onSetData=function(data){
         this.ref.list.setData(data);
+        this.ref.content.innerText=data.date;
       };
     </constructor>
   </div>
@@ -99,6 +111,7 @@ Hallo
     
     list.unshift({id:list.length+1, content:(ct-time)});
     time=ct;
+    list.date = new Date();
     b.setData(list);
 
     var size=100;
@@ -125,8 +138,8 @@ Hallo
               setTimeout(
                 function(){
 var st=new Date().getTime();
-                  b.innerHTML=(b.innerHTML+'');
-console.log('set innerHTML=innerHTML ', list.length, 'rows in', new Date().getTime()-st);
+                  //b.innerHTML=(b.innerHTML+'');
+//console.log('set innerHTML=innerHTML ', list.length, 'rows in', new Date().getTime()-st);
 
                 },0
               );
