@@ -2,9 +2,7 @@
 /**
  * Using:
  * 
- * var compo = new Compo(options); //optionally some kind of options 
- * 		//can be injected, options can be accessed from components 
- * 		//as global var options
+ * var compo = new Compo();
  * 		
  * compo.parse(string DefinitionOfComponents); //parse definition of components from string
  * 		
@@ -31,10 +29,9 @@
  * Lifecicle:
  *    
  */
-function Compo(options){
+function Compo(){
 	this.registry = {};
 	var compo = this;
-	
 	var mixin = {};
 	/**
 	 * Mount element into target content
