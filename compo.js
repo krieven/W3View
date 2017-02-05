@@ -2,13 +2,13 @@
 /**
  * Using:
  * 
- * var Compo = newCompo(options); //optionally some kind of options 
- * 		//can be injected options can be accessed from components 
+ * var compo = new Compo(options); //optionally some kind of options 
+ * 		//can be injected, options can be accessed from components 
  * 		//as global var options
  * 		
- * Compo.parse(string DefinitionOfComponents); //parse definition of components from string
+ * compo.parse(string DefinitionOfComponents); //parse definition of components from string
  * 		
- * var instance = Compo.create(name); //create DOMNode from Compo.registry
+ * var instance = compo.create(name); //create DOMNode from Compo.registry
  * 		// by name
  * 		
  * instance.mount(document....); // append instance into current DOM tree
@@ -31,8 +31,9 @@
  * Lifecicle:
  *    
  */
-function newCompo(options){
-	var Compo={registry:{}};
+function Compo(options){
+	this.registry = {};
+	var compo = this;
 	
 	var mixin = {};
 	/**
@@ -68,7 +69,7 @@ function newCompo(options){
 	 */
 	mixin.mergeData=function(data){
 		this.data=this.data || {};
-		Compo.copyProps(data,this.data);
+		compo.copyProps(data,this.data);
 		this.setData(this.data);
 	};
 	mixin.setData=function(data){
@@ -196,17 +197,17 @@ function newCompo(options){
 	 * @param {string} str
 	 * @returns {void} 
 	 */
-	Compo.parse=function(str){
+	compo.parse=function(str){
 		var matrix=document.createElement('div');
 		matrix.innerHTML=str.trim();
 		var ch=matrix.children;
 		for(var i=0;i<ch.length;i++){
 			var asName=(ch[i].getAttribute('as') || '').toUpperCase();
-			if( asName && !Compo.registry[asName] ) {
-				Compo.registry[asName]={};
+			if( asName && !compo.registry[asName] ) {
+				compo.registry[asName]={};
 				var prep = prepare(ch[i]);
 				delete prep.ref;
-				Compo.registry[asName].prep=prep;
+				compo.registry[asName].prep=prep;
 			}
 		}
 	};
@@ -216,14 +217,14 @@ function newCompo(options){
 	 * does all dirty work at DOM nodes creation,
 	 * attribute setting, adding children and references registration
 	 */
-	Compo.create=function(name, attr, ch, root){
+	compo.create=function(name, attr, ch, root){
 		name=name.toUpperCase();
 		var instance;
 		//если есть зарегистрированный компонент с таким именем
 		//тогда создадим его инстанс из препарата
-		if(Compo.registry[name]){
+		if(compo.registry[name]){
 			//взять препарат
-			var prep=Compo.registry[name].prep;
+			var prep=compo.registry[name].prep;
 			//если в препарате есть функция для создания
 			//инстанса, возвратить результат её работы
 			if(prep.create) return prep.create('',attr,ch,root);
@@ -261,7 +262,7 @@ function newCompo(options){
 				//указывая в качестве корня себя и
 				//в качестве параметров ноды - атрибуты и 
 				//вложенные ноды из её описания в инстансе
-				var cch=Compo.create(prep.ch[i].tgn, prep.ch[i].attr, prep.ch[i].ch,instance);
+				var cch=compo.create(prep.ch[i].tgn, prep.ch[i].attr, prep.ch[i].ch,instance);
 				//если у созданной ноды есть атрибут ref
 				//добавить ссылку на ноду в ref инстанса
 				var ref=cch.getAttribute('ref');
@@ -299,7 +300,7 @@ function newCompo(options){
 			}
 			//иначе создаём этой фабрикой, указывая атрибуты и деток из 
 			//параметров
-			var cch=Compo.create(ch[i].tgn, ch[i].attr, ch[i].ch, root);
+			var cch=compo.create(ch[i].tgn, ch[i].attr, ch[i].ch, root);
 			//устанавливаем ref в корень, если он есть
 			var ref=cch.getAttribute('ref');
 			if(ref){
@@ -316,10 +317,10 @@ function newCompo(options){
 		//микшируем Compo API, если инстанс - экземпляр зарегистрированного
 		//компонента, вызываем конструктор и отрабатываем
 		//пользовательское событие на создание
-		if(Compo.registry[name]){
-			if(Compo.registry[name].prep && Compo.registry[name].prep.script){
-				instance.init=Compo.registry[name].prep.script;
-				Compo.copyProps(mixin, instance);
+		if(compo.registry[name]){
+			if(compo.registry[name].prep && compo.registry[name].prep.script){
+				instance.init=compo.registry[name].prep.script;
+				compo.copyProps(mixin, instance);
 				instance.init();
 				instance.onCreate();
 			}
@@ -337,14 +338,14 @@ function newCompo(options){
 	 * @param {Object} to - destination object
 	 * @returns void
 	 */
-	Compo.copyProps=function(from,to){
+	compo.copyProps=function(from,to){
 		if(typeof from !== 'object' || typeof to !== 'object'){ return; }
 			for(var k in from){
 				if(!from.hasOwnProperty(k)) continue;
 				if(typeof from[k] === 'object' && !(from[k] instanceof Array)){
 						if(from[k]===to[k]) continue;
 						to[k]=to[k] || {};
-						Compo.copyProps(from[k], to[k]);
+						compo.copyProps(from[k], to[k]);
 						continue;
 				}
 				to[k] = from[k];
@@ -352,7 +353,7 @@ function newCompo(options){
 	};
 	//TODO remove this helper, 
 	//replaced by "array-iterator" builtin component
-	Compo.setArray=function(target,array,tofill,fillers){
+	compo.setArray=function(target,array,tofill,fillers){
 		var ready=target.children;
 		for(var i=0;i<ready.length || i<array.length;i++){
 			if(ready[i] && i>=array.length){
@@ -374,8 +375,8 @@ function newCompo(options){
 		}	
 	};
 	///builtin components
-	Compo.parse('<div as="ARRAY-ITERATOR"></div>');
-	Compo.registry['ARRAY-ITERATOR'].prep.script = function(){
+	compo.parse('<div as="ARRAY-ITERATOR"></div>');
+	compo.registry['ARRAY-ITERATOR'].prep.script = function(){
 		var templates=[];
 		while(this.children.length > 0){
 			templates.push(this.removeChild(this.children[0]));
@@ -385,7 +386,7 @@ function newCompo(options){
 			if(!tpl.as){
 				throw new Error('template must be registered \"Compo\" component');
 			}
-			var res=Compo.create(tpl.as, tpl.attributes)
+			var res=compo.create(tpl.as, tpl.attributes)
 			return res;
 		}
 		this.onSetData = function(data){
@@ -408,5 +409,4 @@ function newCompo(options){
 			}
 		}
 	};
-	return Compo;
 }

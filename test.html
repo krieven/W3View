@@ -64,12 +64,12 @@ Hallo
   as set of templates in fast manner.
 */
   <div as="app">   
-    <h1>Hallo</h1>
+    <h1 ref="appName">Hallo</h1>
     <hallo-world></hallo-world>
     <div ref="content"></div>
-    <array-iterator ref="list" useTag="table">
+    <array-iterator ref="list" useTag="table" style="border: 1px solid black;">
       <list-item 
-        style="font-weight:bold;background-color:#FFFFFF;color:#000000;border: 2px solid #000000;">
+        style="font-weight:bold;background-color:#FFFFFF;color:#000000;">
       </list-item>
       <list-item 
         style="font-weight:bold;color:#FFFFFF;background-color:#000000;">
@@ -92,14 +92,14 @@ Hallo
 <script type="text/javascript" src="compo.js"></script>
 <script type="text/javascript">
 
-  var Compo = newCompo();
-  Compo.parse(document.getElementById('compo').textContent);
-  //console.dir(Compo);
-  var b=Compo.create('app');
+  var compo = new Compo({appName: 'The application'});
+  compo.parse(document.getElementById('compo').textContent);
+  //console.dir(compo);
+  var b=compo.create('app');
 
   b.mount(document.getElementById('appb'));
 
-  console.log(Compo.registry);
+  console.log(compo.registry);
   var list = [];
 
   b.setData(list);
@@ -117,7 +117,7 @@ Hallo
     var size=100;
 
     if(list.length >= size){
-      console.log('adding',list.length,'by one',ct-st);
+      console.log('adding',list.length,'by one',ct-st, 'average', (ct-st)/list.length);
 
       var nst = new Date().getTime();
       clearInterval(interval);
@@ -130,7 +130,7 @@ Hallo
           b.setData(list);
           if (list.length===size-50) {
             clearInterval(interval);
-            console.log('removing', 50, 'by one',ct-nst);
+            console.log('removing', 50, 'by one',ct-nst, 'average', (ct-nst)/50);
             console.log('total',ct-st);
             b.setData([]);
             setTimeout(function(){
