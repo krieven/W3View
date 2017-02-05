@@ -26,9 +26,10 @@ Component definition is markup for one HTML Element.
 Just write some HTML markup and embedded constructor script like this:
 
 		<div as="hallo-world">
-			<input ref="input" placeholder="type here your name">
+			<input ref="input" placeholder="type your name here">
 			<h1>Hallo <span ref="name">Anonimous</span>!</h1>
 			<script>
+			// also you can use <constructor> tag instead of script tag
 				this.ref.input.onkeyup = function(e){
 					this.setData(this.ref.input.value);
 				}.bind(this);
@@ -55,20 +56,24 @@ One component definition is markup for one HTML Element,
 and all what can be used in any HTML Element markup - can be used here, 
 with some exceptions.
 
-As you can see - examples uses small set of additional attributes 
-in the component definition, lets explain these:
+As you can see - example uses small set of additional attributes 
+in the component definition, lets explain that.
 
 #### In the root of component definition
-* **as** - name of component 
+* **as** - name of component, with this name prepared component is 
+stored in the Compo, by this name it can be found and created. Think about
+this name as about name of class.
 
 #### In the component definition subtree
-* **ref** - hook to subtree element, then element can be 
-accessed from constructor script via this.ref.name
+* **ref** - hook to subtree element will be created with 
+value of this attribute as name, then element can be 
+accessed from constructor script via this.ref['value of ref attribute']
 * **tagName** - Compo.JS utilizes power of browser parser during parse 
 definitions, so - tags such as <TR> and <TD> cannot be used as root of 
 components and anywhere outside of <TABLE>, but you can define any tag,
 anywhere by using tagName attribute.
-* **useTag** - you can define some universal purpose components
+* **useTag** - you can define some universal purpose components and 
+instantiate them with different tag names.
 
 ### Lifecicle and lifecicle callbacks
 
