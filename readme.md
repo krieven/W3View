@@ -65,17 +65,19 @@ stored in the Compo, by this name it can be found and created. Think about
 this name as about name of class.
 
 #### In the component definition subtree
-* **ref** - hook to subtree element will be created with 
+* **ref** - hook to element will be created with 
 value of this attribute as name, then element can be 
 accessed from constructor script via this.ref['value of ref attribute']
 * **tagName** - Compo.JS utilizes power of browser parser during parse 
-definitions, so - tags such as <TR> and <TD> cannot be used as root of 
-components and anywhere outside of <TABLE>, but you can define any tag,
+definitions, so - tags such as TR and TD cannot be used as root of 
+components and anywhere outside of TABLE, but you can define any tag,
 anywhere by using tagName attribute.
 * **useTag** - you can define some universal purpose components and 
 instantiate them with different tag names.
 
+
 ### Lifecicle and lifecicle callbacks
+
 
 ## How to use Compo.JS?
 Create instance of Compo
@@ -85,7 +87,7 @@ Create instance of Compo
 parse definitions of components from string,
 string can contain any amount of definitions
 
-	compo.parse('<div as ..........'); 
+	compo.parse('<div as..........'); 
 
 create DOMNode from Compo.registry  by name
 
@@ -95,20 +97,26 @@ append instance into current DOM tree
 optionally you can specify index in target.children, where
 instance will be placed
 
-	instance.mount(document.element); 
+	instance.mount(document.element, index); 
 		
 set data and repaint
 
 		instance.setData({some:data, that: instance, can: recive});
+
 or
+
 		instance.mergeData(data); //it is your opinion
+
 or
+
 		instance.update(); //if data already setted and can be changed by external routine
 
 when you need to remove the instance from DOM tree
+
 		instance.unmount(); //you can mount it later
 		
 when you will remove the element permanently
+
 		instance.destroy(); // and forget it
 
 
