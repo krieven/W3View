@@ -19,25 +19,30 @@ for web application programming by using composition of components.
 * **COFFEE MAKER**
 
 ## How to create UI component with Compo.JS ?
+Just write some HTML markup and embedded javascript like this:
 
 		<div as="hallo-world">
 			<input ref="input" placeholder="type here your name">
 			<h1>Hallo <span ref="name">Anonimous</span>!</h1>
 			<script>
-
 				this.ref.input.onkeyup = function(e){
 					this.setData(this.ref.input.value);
 				}.bind(this);
-
 				this.onSetData = function(data){
 					this.ref.name.innerText = data || 'Anonimous';
 				};
-
 			</script>
 		</div>
 
-Looks like web page, when i was young, is not it?
-Yes, but it is **reusable component**!
+Looks like web page, when i was young, is not it? 
+Yes, but it is **reusable component**! 
+It can be used inside your page as simple application,
+and it can be used as part of more complex app inside another component, 
+for examole:
+
+		<div as="greeting-box">
+			<hallo-world></hallo-world>
+		</div>
 
 
 ## How to use UI component?
