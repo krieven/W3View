@@ -1,34 +1,5 @@
 'use strict';
-/**
- * Using:
- * 
- * var compo = new Compo();
- * 		
- * compo.parse(string DefinitionOfComponents); //parse definition of components from string
- * 		
- * var instance = compo.create(name); //create DOMNode from Compo.registry
- * 		// by name
- * 		
- * instance.mount(document....); // append instance into current DOM tree
- * 		// optionally you can specify index in target.children, where
- * 		// instance will be placed
- * 		
- * //set data and repaint
- * 		instance.setData({some:data, that: instance, can: recive});
- * 		//or
- * 		instance.mergeData(data); //it is your opinion
- * 		//or
- * 		instance.update(); // if data can be changed by external routine
- * 		
- * //when you need remove the instance from DOM tree
- * 		instance.unmount(); //you can mount it later
- * 		
- * //when you will remove the element permanently
- * 		instance.destroy(); // and forget it
- * 
- * Lifecicle:
- *    
- */
+
 function Compo(){
 	this.registry = {};
 	var compo = this;
@@ -316,9 +287,9 @@ function Compo(){
 		//пользовательское событие на создание
 		if(compo.registry[name]){
 			if(compo.registry[name].prep && compo.registry[name].prep.script){
-				instance.init=compo.registry[name].prep.script;
+				instance.constructor=compo.registry[name].prep.script;
 				compo.copyProps(mixin, instance);
-				instance.init();
+				instance.constructor();
 				instance.onCreate();
 			}
 		}
@@ -372,6 +343,9 @@ function Compo(){
 		}	
 	};
 	///builtin components
+	//ANY-TAG
+	compo.parse('<div as="ANY-TAG"></div>');
+	//ARRAY-ITERATOR
 	compo.parse('<div as="ARRAY-ITERATOR"></div>');
 	compo.registry['ARRAY-ITERATOR'].prep.script = function(){
 		var templates=[];

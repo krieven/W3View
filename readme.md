@@ -1,9 +1,12 @@
 # Compo.JS
 Extremely light, fast and easy to understand **UI** library 
-for web application programming by using composition of components.
+for web application programming, provides Custom Elements technology.
+
+**Get power of Custom Elements right now** with 6 kB script.
 
 ## What Compo.JS is?
-* **Small (really small!) and well documented browser script contains one global function**
+* **Small (really small!) and well documented browser script 
+contains one global constructor**
 * **HTML based definition of components**
 * **Small set of additional attributes**
 * **Natural, manageble DOM Nodes as component instances**
@@ -19,7 +22,8 @@ for web application programming by using composition of components.
 * **COFFEE MAKER**
 
 ## How to create UI component with Compo.JS ?
-Just write some HTML markup and embedded javascript like this:
+Component definition is markup for one HTML Element.
+Just write some HTML markup and embedded constructor script like this:
 
 		<div as="hallo-world">
 			<input ref="input" placeholder="type here your name">
@@ -34,15 +38,73 @@ Just write some HTML markup and embedded javascript like this:
 			</script>
 		</div>
 
-Looks like web page, when i was young, is not it? 
-Yes, but it is **reusable component**! 
-It can be used inside your page as simple application,
+Looks like web page when i was young, is not it? 
+Yes, but it is **reusable component**!
+It can be used as simple application,
 and it can be used as part of more complex app inside another component, 
 for examole:
 
-		<div as="greeting-box">
+		<div as="hallo-app">
+			<hallo-world></hallo-world>
+			<hr>
 			<hallo-world></hallo-world>
 		</div>
 
+### Additional attributes
+One component definition is markup for one HTML Element, 
+and all what can be used in any HTML Element markup - can be used here, 
+with some exceptions.
 
-## How to use UI component?
+As you can see - examples uses small set of additional attributes 
+in the component definition, lets explain these:
+
+#### In the root of component definition
+* **as** - name of component 
+
+#### In the component definition subtree
+* **ref** - hook to subtree element, then element can be 
+accessed from constructor script via this.ref.name
+* **tagName** - Compo.JS utilizes power of browser parser during parse 
+definitions, so - tags such as <TR> and <TD> cannot be used as root of 
+components and anywhere outside of <TABLE>, but you can define any tag,
+anywhere by using tagName attribute.
+* **useTag** - you can define some universal purpose components
+
+### Lifecicle and lifecicle callbacks
+
+## How to use Compo.JS?
+Create instance of Compo
+
+	var compo = new Compo();
+
+parse definitions of components from string,
+string can contain any amount of definitions
+
+	compo.parse('<div as ..........'); 
+
+create DOMNode from Compo.registry  by name
+
+	var instance = compo.create('name-from-as-attribute'); 
+
+append instance into current DOM tree
+optionally you can specify index in target.children, where
+instance will be placed
+
+	instance.mount(document.element); 
+		
+set data and repaint
+
+		instance.setData({some:data, that: instance, can: recive});
+or
+		instance.mergeData(data); //it is your opinion
+or
+		instance.update(); //if data already setted and can be changed by external routine
+
+when you need to remove the instance from DOM tree
+		instance.unmount(); //you can mount it later
+		
+when you will remove the element permanently
+		instance.destroy(); // and forget it
+
+
+   

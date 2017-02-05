@@ -47,9 +47,17 @@ Hallo
   </div>
 
   <div as="app">   
-    <h1 ref="appName">Hallo</h1>
-    <hallo-world></hallo-world>
+    <h1>Hallo</h1>
+    <hallo-world>
+      <p>Welcome to Compo.JS sample app</p>
+    </hallo-world>
+
     <div ref="content"></div>
+    
+    <hallo-world>
+      <any-tag useTag="h2">Welcome to Compo.JS sample app again</any-tag>
+    </hallo-world>
+
     <array-iterator ref="list" useTag="table" style="border: 1px solid black;">
       <list-item 
         style="font-weight:bold;background-color:#FFFFFF;color:#000000;">
@@ -64,7 +72,6 @@ Hallo
     <constructor>
       this.onSetData=function(data){
         this.ref.list.setData(data);
-        this.ref.content.innerText=data.date;
       };
     </constructor>
   </div>
@@ -127,7 +134,7 @@ var st=new Date().getTime();
                 },0
               );
             }, 0);
-            //console.log(b.ref);
+            console.log(b);
           }
         },0
       );
