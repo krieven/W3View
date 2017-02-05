@@ -62,7 +62,7 @@ in the component definition, lets explain that.
 #### In the root of component definition
 * **as** - name of component, with this name prepared component is 
 stored in the Compo, by this name it can be found and created. Think about
-this name as about name of class.
+this attribute value as about name of class.
 
 #### In the component definition subtree
 * **ref** - hook to element will be created with 
@@ -75,9 +75,12 @@ anywhere by using tagName attribute.
 * **useTag** - you can define some universal purpose components and 
 instantiate them with different tag names.
 
+If  ref="content" is specified inside component, then Element with 
+this attribute will be used to mount children Elements in.
 
 ### Lifecicle and lifecicle callbacks
 
+ 
 
 ## How to use Compo.JS?
 Create instance of Compo
