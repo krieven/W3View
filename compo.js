@@ -3,7 +3,7 @@
 function Compo(){
 	this.registry = {};
 	var compo = this;
-	var mixin = {};
+	var mixin = {factory:this};
 	/**
 	 * Mount element into target content
 	 * at index position
@@ -353,11 +353,12 @@ function Compo(){
 			templates.push(this.removeChild(this.children[0]));
 		}
 		this.ref = {};
+		var factory =this.factory;
 		function byExample(tpl){
 			if(!tpl.as){
 				throw new Error('template must be registered \"Compo\" component');
 			}
-			var res=compo.create(tpl.as, tpl.attributes)
+			var res = factory.create(tpl.as, tpl.attributes)
 			return res;
 		}
 		this.onSetData = function(data){
