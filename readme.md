@@ -22,14 +22,15 @@ contains one global constructor**
 * **COFFEE MAKER**
 
 ## How to create UI component with Compo.JS ?
-Component definition is markup for one HTML Element.
-Just write some HTML markup and embedded constructor script like this:
+Component definition - is the markup of one sample HTMLElement.
+Just write some HTML markup and embedded constructor script,
+like this:
 
 		<div as="hallo-world">
 			<input ref="input" placeholder="type your name here">
 			<h1>Hallo <span ref="name">Anonimous</span>!</h1>
 			<script>
-			//constructor script, 
+			//constructor, 
 			//also you can use CONSTRUCTOR tag instead of SCRIPT tag
 				this.ref.input.onkeyup = function(e){
 					this.setData(this.ref.input.value);
@@ -40,21 +41,26 @@ Just write some HTML markup and embedded constructor script like this:
 			</script>
 		</div>
 
-Looks like web page when i was young, is not it? 
-Yes, but it is **reusable component**!
+The "constructor" is the body of function.
+This function will be binded to HTMLElement, that will be instantiated 
+by Compo.JS and executed with *this*, referenced to it HTMLElement.
+
+Looks like web page, when i was young, is not it? 
+Yes, but it is **reusable component**.
 It can be used as simple application,
 and it can be used as part of more complex app inside another component, 
 for example:
 
-		<div as="hallo-app">
+		<div as="double-hallo-world">
 			<hallo-world></hallo-world>
 			<hr>
 			<hallo-world></hallo-world>
 		</div>
 
+
 ### Attributes
-One component definition is markup for one HTML Element, 
-and all what can be used in any HTML Element markup - can be used here.
+One component definition - is the markup for one HTMLElement, 
+and all what can be used in any HTMLElement markup - can be used here.
 
 ### Additional attributes
 As you can see - example uses small set of additional attributes 
@@ -74,6 +80,10 @@ anywhere by using tagName attribute.
 * **useTag** - you can define some universal purpose components and 
 instantiate them with different tag names.
 
+The difference between **tagName** and **useTag** is - tagName attribute - 
+will change tagName during parsing of definition,  useTag - during 
+instance creation.
+
 If Element with ref="content" is specified inside component definition, 
 then this Element will be used to mount children Elements in.
 For example:
@@ -91,7 +101,7 @@ For example:
 		</sample-component>
 	</div>
 
-The resulted markup of container will be
+The resulted structure will be
 
 	<div as="container">
 		You are here
@@ -108,11 +118,11 @@ simple appended.
 
 ### Lifecicle and lifecicle handlers
 The lifecicle of component instance is very simple, instance can be:
-1. **created** by Compo.create method, 
-2. **mounted** by instance.mount method, 
-3. **updated** by instance.setData, instance.mergeData or instance.update methods, 
-4. **unmounted** by instance.unmount, 
-5. and finally, recursively **destroyed** by instance.destroy method. 
++ **created** by Compo.create method, 
++ **mounted** by instance.mount method, 
++ **updated** by instance.setData, instance.mergeData or instance.update methods, 
++ **unmounted** by instance.unmount, 
++ and finally, recursively **destroyed** by instance.destroy method. 
 
 Respectively Compo.JS produces five lifecicle events:
 * when instanse is created (by Compo.create method) and 
@@ -126,45 +136,70 @@ handler can catch it.
 * before instance is destroyed, it will be automatically unmounted, 
 then **this.onDestroy** method will be called.
 
-all of these handlers can be specifyed in the constructor script. 
+All of these handlers optionally can be defined in the constructor script. 
+
+### API of Compo
+* parse
+* create
+
 
 ### API of Compo.JS components
 Each Compo.JS component is instance of HTMLElement and extends it API by
 
 #### Properties:
-**ref** - table of hooks 
+*ref* - table of hooks - elements in the component tree, marked by **ref**
+attribute. Only ref's, defined in this component definition is accesible.
 
-**factory** - instance of Compo, that is created this component instance
+*factory* - instance of Compo, that is created this component instance.
 
 #### Lifecicle methods:
-**mount(target: HTMLElement, index?: number)**
+It is recomended to use lifecicle methods 
+for components instead of standard appendChild, insertBefore and removeChild 
+methods, for properly lifecicle executions.
 
-**unmount()**
+*mount(target: HTMLElement, index?: number)* - mounts instance into DOM subtree 
+of target (in the target.ref.content 
+or in the target itself, if ref.content is not specified), 
+at the position of index , if index parameter is defined, 
+otherwise appends it to the end. If instance currently mounted, then unmount 
+will be called automatically before mounting. 
+**mount** immediately calls onMount.
 
-**setData(data: any)**
+*unmount()* - removes this instance from DOM tree, then calls onUnmount handler.
 
-**mergeData(data: Object)**
+*setData(data: any)* - sets data and calls onSetData handler.
 
-**update()**
+*mergeData(data: Object)* - merges its argument into previously setted data 
+and calls setData with result of merging as argument.
 
-**destroy()**
+*update()* - just calls setData with previously setted data as argument.
+
+*destroy()* - calls unmount if mounted, then calls onDestroy event handler 
+and recursively destroys all DOM subtree of this instance 
+(executes destroy on all mounted children).
 
 #### Event handlers:
-**onCreate()**
+*onCreate()* - will be called when component instance created and 
+its constructor executed.
 
-**onMount()**
+*onMount()* - will be called when component is mounted into DOM tree.
 
-**onUnmount()**
+*onUnmount()* - will be called before unmounting of component from DOM tree.
+Its chance to free all resources that were allocated with onMount handler.
 
-**onSetData(data: any)**
+*onSetData(data: any)* - should make DOM update.
 
-**onDestroy()**
+*onDestroy()* - time to free resources, allocated by component instance, 
+including all callbacks, observers, listeners, intervals and timeouts, eah.
 
 #### Methods:
-
+*controlSum(data: any): string | number | any* - this method can reduce calculations 
+during data updating, should return product of its argument that determines 
+that data is not changed if previous calculated product is same.
+If your onSetData recursively calculates fibonacchi number, it can be important.
 
 ## How to use Compo.JS?
-Create definitions of components
+Create definition of components
 
 Create instance of Compo
 
