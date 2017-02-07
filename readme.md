@@ -64,7 +64,7 @@ and all what can be used in any HTMLElement markup - can be used here.
 
 ### Additional attributes
 As you can see - example uses small set of additional attributes 
-in the component definition, lets explain that.
+in the component definition, let me explain them.
 
 #### In the root of component definition
 * **as** - name of component, by this name it can be instantiated. 
@@ -73,16 +73,16 @@ Think about this attribute value as about name of class.
 #### In the component definition tree
 * **ref** - specifyes hook name of the element, element can be 
 accessed from constructor script via **this.ref['value of ref attribute']**
-* **tagName** - Compo.JS utilizes power of browser parser to prepare 
+* **tagName** - Compo.JS utilizes power of browser to prepare 
 definitions, so - tags such as TR and TD cannot be used as root of 
-components and anywhere outside of TABLE, but you can define any tag,
+components and anywhere outside of TABLE tag, but you can define any tag,
 anywhere by using tagName attribute.
-* **useTag** - you can define some universal purpose components and 
+* **useTag** - you can define some "universal purpose" components and 
 instantiate them with different tag names.
 
-The difference between **tagName** and **useTag** is - tagName attribute - 
-will change tagName during parsing of definition,  useTag - during 
-instance creation.
+The difference between **tagName** and **useTag** is - the tagName attribute - 
+will change tagName during declaration of component,  useTag - during 
+instantiation.
 
 If Element with ref="content" is specified inside component definition, 
 then this Element will be used to mount children Elements in.
