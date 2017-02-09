@@ -1,12 +1,12 @@
 # Compo.JS
-Extremely light, fast and easy to understand **UI** library 
-for web application programming, provides Custom Elements technology.
+Extremely light, fast and easy to understand tool, that 
+provides painless Custom Elements technology.
 
-**Get power of Custom Elements right now** with 6 kB of clear code.
+14 kB of documented, not minified code.
 
 ## What Compo.JS is?
 * **Small (really small!) and well documented browser script 
-contains one global constructor**
+contains one constructor**
 * **HTML based definition of components**
 * **Small set of additional attributes**
 * **Natural, manageble DOM Nodes as component instances**
@@ -21,7 +21,19 @@ contains one global constructor**
 * **NUMBER OF NEW CONCEPTIONS**
 * **COFFEE MAKER**
 
-## How to create UI component with Compo.JS ?
+## Where can You use the Compo.JS?
+You can use Compo.JS as View layer of any kind of MVC.
+Compo.JS is ready to Flux, reactive programming, 
+and event driven programming. 
+
+## What You need to start using Compo.JS
+You need just compo.js file, text editor and browser.
+
+## Wat You need to know to start using Compo.JS
+You need to know HTML and Javascript, old good Javascript.
+You also need to know basics of DOM API.
+
+## How to create UI components with Compo.JS ?
 Component definition - is the markup of one sample HTMLElement.
 Just write some HTML markup and embedded constructor script,
 like this:
@@ -30,8 +42,6 @@ like this:
 			<input ref="input" placeholder="type your name here">
 			<h1>Hallo <span ref="name">Anonimous</span>!</h1>
 			<script>
-			//constructor, 
-			//also you can use CONSTRUCTOR tag instead of SCRIPT tag
 				this.ref.input.onkeyup = function(e){
 					this.setData(this.ref.input.value);
 				}.bind(this);
@@ -40,10 +50,10 @@ like this:
 				};
 			</script>
 		</div>
-
-The "constructor" is the body of function.
-This function will be binded to HTMLElement, that will be instantiated 
-by Compo.JS and executed with *this*, referenced to it HTMLElement.
+		//Here:
+		//"this" - is the reference to DIV, that is instance of "hallo-world".
+		//attribute "ref" - is some one like *id*, inside the component.
+		//"this.ref" - is the table of references to corresponded elements.
 
 Looks like web page, when i was young, is not it? 
 Yes, but it is **reusable component**.
@@ -57,84 +67,55 @@ for example:
 			<hallo-world></hallo-world>
 		</div>
 
+Okay, lets complete these examples and run "double-hallo-world" app:
 
-### Attributes
-One component definition - is the markup for one HTMLElement, 
-and all what can be used in any HTMLElement markup - can be used here.
-
-### Additional attributes
-As you can see - example uses small set of additional attributes 
-in the component definition, let me explain them.
-
-#### In the root of component definition
-* **as** - name of component, by this name it can be instantiated. 
-Think about this attribute value as about name of class.
-
-#### In the component definition tree
-* **ref** - specifyes hook name of the element, element can be 
-accessed from constructor script via **this.ref['value of ref attribute']**
-* **tagName** - Compo.JS utilizes power of browser to prepare 
-definitions, so - tags such as TR and TD cannot be used as root of 
-components and anywhere outside of TABLE tag, but you can define any tag,
-anywhere by using tagName attribute.
-* **useTag** - you can define some "universal purpose" components and 
-instantiate them with different tag names.
-
-The difference between **tagName** and **useTag** is - the tagName attribute - 
-will change tagName during declaration of component,  useTag - during 
-instantiation.
-
-If Element with ref="content" is specified inside component definition, 
-then this Element will be used to mount children Elements in.
-For example:
-
-	//definition of sample-component
-	<div as="sample-component">
-		<h1>Hallo</h1>
-		<div ref="content"></div>
-	</div>
-	//and using of sample-component inside container
-	<div as="container">
-		You are here
-		<sample-component>
-			This should be placed into content
-		</sample-component>
-	</div>
-
-The resulted structure will be
-
-	<div as="container">
-		You are here
-		<div as="sample-component">
-			<h1>Hallo</h1>
-			<div ref="content">
-				This should be placed into content
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<meta http-equiv="content-type" content="text/html;charset=utf-8">
+			<title>Double Hallo</title>
+		<head>
+		<script src="compo.js"></script>
+		<script type="text/compo" id="components">
+			
+			//any text can be placed between components definitions,
+			//except HTML markup.
+			
+			//hallo-world component
+			<div as="hallo-world">
+				<h1 ref="content"></h1>
+				<input ref="input" placeholder="type your name here">
+				<h2>Hallo <span ref="name">Anonimous</span>!</h2>
+				<constructor>
+					//CONSTRUCTOR tag should be used inside SCRIPT tag
+					this.ref.input.onkeyup = function(e){
+						this.setData(this.ref.input.value);
+					}.bind(this);
+					this.onSetData = function(data){
+						this.ref.name.innerText = data || 'Anonimous';
+					};
+				</constructor>
 			</div>
-		</div>
-	</div>
-	
-If the Element with ref="content" is not specified, then children will be 
-simple appended.
+			
+			//root of app 
+			<div as="double-hallo-world">
+				<hallo-world>Hallo first</hallo-world>
+				<hr>
+				<hallo-world>Hallo second</hallo-world>
+			</div>
 
-### Lifecicle and lifecicle handlers
-The lifecicle of component instance is very simple, instance can be:
-+ **created** by Compo.create method, 
-+ **mounted** by instance.mount method, 
-+ **updated** by instance.setData, instance.mergeData or instance.update methods, 
-+ **unmounted** by instance.unmount, 
-+ and finally, recursively **destroyed** by instance.destroy method. 
+		</script>
 
-Respectively Compo.JS produces five lifecicle events:
-* when instanse is created (by Compo.create method) and 
-constructor script is executed, then **create** event is fired, 
-you can handle it by specifying **this.onCreate** method inside 
-constructor script.
-* when instance is mounted into DOM tree, then **mount** event is fired,
-handle it by **this.onMount** method.
-* before instance is unmounted, **unmount** event occures, **this.onUnmount** 
-handler can catch it.
-* before instance is destroyed, it will be automatically unmounted, 
-then **this.onDestroy** method will be called.
+		<body style="margin:50px;">
+			<script defer="defer">
+				var compo = new Compo();
+				compo.parse(components.textContent);
+				compo.create('double-hallo-world').mount(document.body);
+			</script>
+		</body>
+	</html>
 
-All of these handlers optionally can be defined in the constructor script. 
+You can find this example in ./examples folder of this repo.
 
+More examples and descriptions You can find in 
+the ./howto.md, detailed API - in the api-doc.md

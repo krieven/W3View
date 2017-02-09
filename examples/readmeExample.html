@@ -1,0 +1,45 @@
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<meta http-equiv="content-type" content="text/html;charset=utf-8">
+			<title>Double Hallo</title>
+		<head>
+		<script src="../compo.js"></script>
+		<script type="text/compo" id="components">
+			
+			//any text can be placed between components definitions,
+			//except HTML markup.
+			
+			//hallo-world component
+			<div as="hallo-world">
+				<h1 ref="content"></h1>
+				<input ref="input" placeholder="type your name here">
+				<h2>Hallo <span ref="name">Anonimous</span>!</h2>
+				<constructor>
+					//CONSTRUCTOR tag should be used inside SCRIPT tag
+					this.ref.input.onkeyup = function(e){
+						this.setData(this.ref.input.value);
+					}.bind(this);
+					this.onSetData = function(data){
+						this.ref.name.innerText = data || 'Anonimous';
+					};
+				</constructor>
+			</div>
+			
+			//root of app 
+			<div as="double-hallo-world">
+				<hallo-world>Hallo first</hallo-world>
+				<hr>
+				<hallo-world>Hallo second</hallo-world>
+			</div>
+
+		</script>
+
+		<body style="margin:50px;">
+			<script defer="defer">
+				var compo = new Compo();
+				compo.parse(components.textContent);
+				compo.create('double-hallo-world').mount(document.body);
+			</script>
+		</body>
+	</html>

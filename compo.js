@@ -1,9 +1,10 @@
 'use strict';
 
-function Compo(){
+function Compo(appConf){
 	this.registry = {};
 	var compo = this;
 	var mixin = {factory:this};
+	mixin.factory.appConf=appConf;
 	/**
 	 * Mount element into target content
 	 * at index position
@@ -199,10 +200,9 @@ function Compo(){
 			//определить имя тэга
 			//если тэг определён для создаваемого инстанса
 			//с помощью атрибута, необходимо использовать значение атрибута
-			var tagname = attr && attr.getNamedItem ?
-				attr.getNamedItem('useTag') : false;
 			//иначе нужно применить имя тэга из препарата
-			tagname = tagname ? tagname.value : prep.tgn;
+			var tagname = attr && attr.getNamedItem &&
+				(tagname = attr.getNamedItem('useTag')) ? tagname.value : prep.tgn;
 			//создаём инстанс 
 			instance=document.createElement(tagname);
 			instance.as=prep.as;

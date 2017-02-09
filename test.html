@@ -70,6 +70,7 @@ Hallo
       </list-item>
     </array-iterator>
     <constructor>
+      console.log(this.factory.appConf.appName);
       this.onSetData=function(data){
         this.ref.list.setData(data);
       };
