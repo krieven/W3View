@@ -50,9 +50,10 @@ Hallo
     <h1>Hallo</h1>
     <hallo-world>
       <p>Welcome to Compo.JS sample app</p>
+      <div ref="content">
+        this "content" is the ref for "app", not for "hallo-world"
+      </div>
     </hallo-world>
-
-    <div ref="content"></div>
     
     <hallo-world>
       <any-tag useTag="h2">Welcome to Compo.JS sample app again</any-tag>
@@ -73,6 +74,7 @@ Hallo
       console.log(this.factory.appConf.appName);
       this.onSetData=function(data){
         this.ref.list.setData(data);
+        this.ref.content.innerText = data.date;
       };
     </constructor>
   </div>

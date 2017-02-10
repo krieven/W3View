@@ -4,7 +4,13 @@ provides painless Custom Elements technology.
 
 14 kB of documented, not minified code.
 
-## What Compo.JS is?
+There can be more than one instance of Compo 
+and the number of separate applications can be mounted on the page.
+Also one Compo app can use the number of mounting points on the page, 
+and it can run the number of Compo apps inside one Compo app. 
+This is the real power of Javascript, of old good Javascript.
+
+## What Compo.JS is ?
 * **Small (really small!) and well documented browser script 
 contains one constructor**
 * **HTML based definition of components**
@@ -21,15 +27,22 @@ contains one constructor**
 * **NUMBER OF NEW CONCEPTIONS**
 * **COFFEE MAKER**
 
-## Where can You use the Compo.JS?
+## What is main Conception, the Compo.JS provides?
+The main conception of Compo.JS is - NO NEW CONCEPTIONS and the 
+second conception is - NO NEW WORDS, allways the props and crutches is 
+hidden under the new words and well formed conceptions, i mean.
+
+## Where can You use the Compo.JS ?
 You can use Compo.JS as View layer of any kind of MVC.
 Compo.JS is ready to Flux, reactive programming, 
-and event driven programming. 
+and event driven programming. All what You can do with HTML and Javascript,
+You can do with Compo.JS components.
 
-## What You need to start using Compo.JS
+## What You need to start using Compo.JS ?
 You need just compo.js file, text editor and browser.
+Any browser, including IE6.
 
-## Wat You need to know to start using Compo.JS
+## What You need to know to start using Compo.JS ?
 You need to know HTML and Javascript, old good Javascript.
 You also need to know basics of DOM API.
 

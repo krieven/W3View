@@ -1,16 +1,21 @@
 # Compo.JS API
 
 ## API of Compo
+Compo is the constructor function, instance of compo can be created by calling of
+
+	var compo = new Compo();
+
+Each Compo instance contains two methods
 * parse
 * create
-
 
 ## API of Compo.JS components
 Each Compo.JS component is instance of HTMLElement and extends it API by
 
 ### Properties:
-*ref* - table of hooks - elements in the component tree, marked by **ref**
-attribute. Only ref's, defined in this component definition are accesible.
+*ref* - table of references, - elements in the component tree, marked by **ref**
+attribute can be accessed from constructor via this.ref[value_of_ref_attribute].
+Only ref's, defined in the current component definition are accesible.
 
 *factory* - instance of Compo, that is created this component instance.
 
