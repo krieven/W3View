@@ -57,29 +57,53 @@ anywhere by using tagName attribute.
 **tagName** attribute can also be used in the component definition subtree, 
 for example:
 
-  <div as="list-item" tagName="tr">
-    <div tagName="td" style="padding:20px;">
-      Number of elements in the array:
-      <h1 ref="id"></h1>
-    </div>
-    <div tagName="td" style="padding:20px;">
-      Updating time:
-      <h1 ref="content"></h1>
-    </div>
-    <constructor>
-      this.controlSum=function(data){
-        return data.id+"*"+data.content;
-      }
-      this.onSetData=function(data){
-        this.ref.id.innerText=data.id;
-        this.ref.content.innerText=data.content;
-      };
-    </constructor>
-  </div>
+		//table row definition
+		<div as="list-item" tagName="tr">
+			<div tagName="td" style="padding:20px;">
+				Number of elements in the array:
+				<h1 ref="id"></h1>
+			</div>
+			<div tagName="td" style="padding:20px;">
+				Updating time:
+				<h1 ref="content"></h1>
+			</div>
+			<constructor>
+				this.controlSum=function(data){
+					return data.id+"/*/"+data.content;
+				}
+				this.onSetData=function(data){
+					//data should be {id: any, content: any}
+					this.ref.id.innerText=data.id;
+					this.ref.content.innerText=data.content;
+				};
+			</constructor>
+		</div>
 
+		//creating the table with "array-iterator" builtin component
+		<div as="app">
+
+			<array-iterator ref="list" useTag="table" style="border: 1px solid black;">
+				<list-item 
+					style="font-weight:bold;background-color:#FFFFFF;color:#000000;">
+				</list-item>
+				<list-item 
+					style="font-weight:bold;color:#FFFFFF;background-color:#000000;">
+				</list-item>
+				<list-item 
+					style="font-weight:bold;color:white;background-color:green;">
+				</list-item>
+			</array-iterator>
+
+	    <constructor>
+				this.onSetData=function(data){
+					//data should be {id: any, content: any}[]
+					this.ref.list.setData(data);
+				};
+			</constructor>
+		</div>
 
 #### In the component definition tree
-* **ref** - specifyes reference name of the element, element can be 
+* **ref** - specifyes reference name of the element, the element can be 
 accessed from constructor script via **this.ref['value of ref attribute']**
 * **useTag** - you can define some "general purpose" components and then 
 instantiate them with different tag names.
@@ -87,9 +111,9 @@ instantiate them with different tag names.
 The difference between **tagName** and **useTag** is that the tagName attribute 
 will change tagName during declaration of component,  useTag - during 
 instantiation. The tagName attribute can be used with any tag, but useTag
-have effect only with Custom Elements.
+have effect only with Custom Elements. See previous example.
 
-**Special ref="content"**, If element with ref="content" is specified 
+**Special! ref="content"**, If element with ref="content" is specified 
 inside component definition, 
 then this element will be used to mount children elements in.
 For example:
@@ -153,6 +177,66 @@ then **this.onDestroy** method will be called.
 
 All of these handlers optionally can be defined in the constructor script. 
 
+### Writing the constructor
+As of Compo component definition is similar to whole HTML page, in the 
+constructor You can make all, what You can make in the regular SCRIPT tag, 
+but there is the differences. 
+The constructor script body is body of function that will be binded to 
+component instance, therefore:
++ **this** - in the scope of component *this* is the reference to component 
+itself.
++ You already have the table of references to elements in the subtree of 
+component, marked by **ref** attribute.
+
+The lifecicle handlers should be defined here, all callbacks, that is passed
+outside the component (such as *window.onresize* and so on) should be detached.
+If callback is attached to event source by constructor itself or by onCreate
+handler, then it should be detached by onDestroy handler.
+If it is attached by onMount handler, then it sholuld be detached by onUnmount.
+You should ensure that all attached callbacks will be detached after destroying
+of component instance. Elsewhere You can take the memory leak. 
+
+In the onSetData handler You should specify - where data will be placed in the
+component, for examle:
+
+		<div as="c-someone">
+			<h2 ref="title"></H2>
+			<p ref="description"></p>
+			<c-details ref="details"></c-details>
+			<constructor>
+
+				this.onSetData = function( data ){
+					this.ref.title.innerText = data.title;
+					this.ref.description.innerText = data.description;
+					if( data.description && data.description.trim() ){
+						this.ref.description.style.display = '';
+					} else {
+						this.ref.description.style.display = 'none';
+					}
+					this.ref.details.setData(data.details);
+				}
+
+				var resize = function(){
+					// just for example :), in the real world use
+					// style sheet
+					this.style.width = window.innerWidth/2+'px';
+				}.bind(this);
+				
+				this.onMount = function(){
+					window.addEventListener('resize', resize);
+				}
+				this.onUnmount = function(){
+					window.removeEventListener('resize', resize);
+				}
+
+			</constructor>
+		</div>
+
+As You can see 
++ **onSetData** handler updates properties of DOM nodes.
++ **onMount** adds listener to window.
++ **onUnmount** removes listener.  
+
 ## Using of Compo.JS API
 Create instance of Compo, there can be more than one instance of Compo 
 and the number of separate applications can be mounted on the page.
@@ -180,18 +264,18 @@ optionally you can specify index in target.children, where
 instance will be placed
 
 	instance.mount(document.element, index); 
-		
+
 set data and update
 
-		instance.setData({some:data, that: instance, should: recive});
+	instance.setData({some:data, that: instance, should: recive});
 
 or
 
-		instance.mergeData(data); //it is your opinion
+	instance.mergeData(data); //it is your opinion
 
 or
 
-		instance.update(); //if data already setted and can be changed by external routine
+		instance.update(); //if data already setted and probably changed by external routine
 
 when you need to remove the instance from DOM tree
 
