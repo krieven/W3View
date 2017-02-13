@@ -139,6 +139,7 @@ function Compo(appConf){
 		res.script='';
 		var ch=root.childNodes;
 		for(var i=0; i < ch.length; i++){
+			if(ch[i].nodeType > 3) continue;
 			if(!ch[i].tagName){
 				if(ch[i].textContent.trim()){
 					res.ch.push({nodeValue:ch[i].textContent});

@@ -48,17 +48,8 @@ Hallo
 
   <div as="app">   
     <h1>Hallo</h1>
-    <hallo-world>
-      <p>Welcome to Compo.JS sample app</p>
-      <div ref="content">
-        this "content" is the ref for "app", not for "hallo-world"
-      </div>
-    </hallo-world>
-    
-    <hallo-world>
-      <any-tag useTag="h2">Welcome to Compo.JS sample app again</any-tag>
-    </hallo-world>
-
+    <div ref="content">
+    </div>
     <array-iterator ref="list" useTag="table" style="border: 1px solid black;">
       <list-item 
         style="font-weight:bold;background-color:#FFFFFF;color:#000000;">
@@ -132,8 +123,8 @@ Hallo
               setTimeout(
                 function(){
 var st=new Date().getTime();
-                  //b.innerHTML=(b.innerHTML+'');
-//console.log('set innerHTML=innerHTML ', list.length, 'rows in', new Date().getTime()-st);
+                  b.innerHTML=(b.innerHTML+'');
+console.log('set innerHTML=innerHTML ', list.length, 'rows in', new Date().getTime()-st);
                 },0
               );
             }, 0);
