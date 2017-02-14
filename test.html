@@ -45,9 +45,9 @@ Hallo
       };
     </constructor>
   </div>
-
+  
   <div as="app">   
-    <h1>Hallo</h1>
+    <h1>Hallo</h1><!--the comment-->
     <div ref="content">
     </div>
     <array-iterator ref="list" useTag="table" style="border: 1px solid black;">
@@ -78,7 +78,9 @@ Hallo
 <script type="text/javascript">
 
   var compo = new Compo({appName: 'The application'});
+  console.time('parsing');
   compo.parse(document.getElementById('compo').textContent);
+  console.timeEnd('parsing');
   //console.dir(compo);
   var b=compo.create('app');
 

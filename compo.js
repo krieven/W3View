@@ -141,7 +141,11 @@ function Compo(appConf){
 		for(var i=0; i < ch.length; i++){
 			if(ch[i].nodeType > 3) continue;
 			if(!ch[i].tagName){
-				if(ch[i].textContent.trim()){
+				if(ch[i].textContent.trim){
+					if(ch[i].textContent.trim()){
+						res.ch.push({nodeValue:ch[i].textContent});
+					}
+				} else {
 					res.ch.push({nodeValue:ch[i].textContent});
 				}
 				continue;
@@ -169,7 +173,7 @@ function Compo(appConf){
 	 */
 	compo.parse=function(str){
 		var matrix=document.createElement('div');
-		matrix.innerHTML=str.trim();
+		matrix.innerHTML=str;
 		var ch=matrix.children;
 		for(var i=0;i<ch.length;i++){
 			var asName=(ch[i].getAttribute('as') || '').toUpperCase();
@@ -288,9 +292,11 @@ function Compo(appConf){
 		//пользовательское событие на создание
 		if(compo.registry[name]){
 			if(compo.registry[name].prep && compo.registry[name].prep.script){
-				instance.constructor=compo.registry[name].prep.script;
-				compo.copyProps(mixin, instance);
-				instance.constructor();
+				instance.__init = compo.registry[name].prep.script;
+				for(var k in mixin){
+					instance[k] = mixin[k];
+				}
+				instance.__init();
 				instance.onCreate();
 			}
 		}
