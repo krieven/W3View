@@ -50,7 +50,7 @@ You can do with Compo.JS components.
 
 ## What You need to start using Compo.JS ?
 You need just compo.js file, text editor and browser.
-Any browser, including IE6.
+Any browser, including IE9.
 
 ## What You need to know to start using Compo.JS ?
 You need to know HTML and Javascript, old good Javascript.
