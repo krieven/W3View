@@ -15,7 +15,7 @@ function Compo(appConf){
 	mixin.mount=function(target, index){
 		target = target.ref && target.ref.content ? target.ref.content : target;
 		this.unmount();
-		if(index === undefined || target.childrem.length <= index ) 
+		if(index === undefined || target.children.length <= index ) 
 			target.appendChild(this);
 		else target.insertBefore(this,target.children[index < 0 ? 0 : index]);
 		this.onMount();
