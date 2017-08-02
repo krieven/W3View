@@ -3,7 +3,7 @@
 		<head>
 			<meta http-equiv="content-type" content="text/html;charset=utf-8">
 			<title>Double Hallo</title>
-			<script src="../compo.js"></script>
+			<script src="../cofa.js"></script>
 			<script type="text/compo" id="components">
 			
 			//any text can be placed between components definitions,
@@ -37,7 +37,7 @@
 
 		<body style="margin:50px;">
 			<script defer="defer">
-				var compo = new Compo();
+				var compo = new CoFa();
 				compo.parse(components.textContent);
 				compo.create('double-hallo-world').mount(document.body);
 			</script>

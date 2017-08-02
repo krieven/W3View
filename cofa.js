@@ -1,10 +1,15 @@
 'use strict';
 
-function Compo(appConf){
-	this.registry = {};
-	var compo = this;
-	var mixin = {factory:this};
-	mixin.factory.appConf=appConf;
+function CoFa(appContext){
+	var registry = {};
+	var factory = this;
+	var mixin = {};
+	/**
+	 * [{ registry:{}, deref: {}}]
+	 */
+	var imports = [];
+
+	var document = CoFa.document || window.document;
 	/**
 	 * Mount element into target content
 	 * at index position
@@ -28,45 +33,15 @@ function Compo(appConf){
 		if(this.parentNode) this.parentNode.removeChild(this);
 	}
 	/**
-	 * mergeData and setData - public API methods for
+	 * setData - public API methods for
 	 * setting data into element, user defined onSetData callback will
 	 * be called immediately
-	 * mergeData - create or partially update this.data by recursive merging
 	 * setData - set this.data as link to its argument
 	 * 
 	 * @param {any} data
 	 */
-	mixin.mergeData=function(data){
-		this.data=this.data || {};
-		compo.copyProps(data,this.data);
-		this.setData(this.data);
-	};
-	mixin.setData=function(data){
-		this.data=data;
-		if(typeof this.controlSum === 'function'){
-			var newSum = this.controlSum(data);
-			if(newSum !== undefined && newSum === this.oldSum){
-				return;
-			}
-			this.oldSum = newSum;
-		}
-		this.onSetData(this.data);
-	};
-	/**
-	 * Update element properties from its data
-	 * 
-	 * @param {boolean} ignoreSum - if true,
-	 * then controlSum checking will be ignored
-	 */
-	mixin.update=function(ignoreSum){
-		if (!ignoreSum) {
-			this.setData(this.data);
-		} else {
-			if(typeof this.controlSum === 'function'){
-				this.oldSum = this.controlSum(this.data);
-			}
-			this.onSetData(this.data);
-		}
+	mixin.setData=function(data,opts){
+		this.onSetData(data,opts);
 	};
 	/**
 	 * recursively destroy self and subtree
@@ -89,23 +64,14 @@ function Compo(appConf){
 	///lifecycle callbacks
 	/**
 	 * all of these callbacks already presented in each
-	 * instance of Compo components.
+	 * instance of CoFa components.
 	 * Author of component can override each of them.
 	 */
 	/**
-	 * Mock, callback on this.mergeData and this.setData
+	 * Mock, callback on this.setData
 	 */
-	mixin.onSetData=function(data){};
-	/**
-	 * controlSum
-	 * this method can be used for reduce
-	 * calculations during rerender of this element
-	 * 
-	 * if the result of this method is not undefined and same as 
-	 * previous, onSetData will not be called
-	 * and rerender will not be performed
-	 */
-	mixin.controlSum=function(data){return undefined;};
+	mixin.onSetData=function(data,opts){};
+
 	/**
 	 * Mock, callbacks on element.mount and element.unmount
 	 * in this time you can touch parentElement if needed,
@@ -114,6 +80,7 @@ function Compo(appConf){
 	 */
 	mixin.onMount=function(){};
 	mixin.onUnmount=function(){};
+
 	/**
 	 * Mock, callback called immediately after element created
 	 * before mount 
@@ -126,35 +93,59 @@ function Compo(appConf){
 	 * observables and event listeners
 	 */
 	mixin.onDestroy=function(){};
+	
+	this.findPrep=function(find){
+		var name=(find + '').toUpperCase();
+		return (registry[name] && registry[name].prep) ? registry[name].prep : undefined;
+	};
+	var initInstance=function(instance, name){
+		var prep = factory.findPrep(name);
+		if(prep){
+			if(prep.super){
+				initInstance(instance,prep.super);
+			}
+			if(prep.script){
+				instance.__ = prep.script;
+				instance.__(appContext,factory,document);
+				instance.onCreate();
+			}
+		}
+	};
 	/**
 	 * Make preparat from sample HTMLElement
 	 */
+	function nmToObj(nm){
+		var res = {};
+		for(var i=0;i<nm.length;i++){
+			res[nm[i].name.toLowerCase()]=nm[i].value;
+		}
+		return res;
+	};
+	function setAttributes(instance, attr){
+		if(attr && instance && instance.setAttribute)
+		for(var key in attr){
+				instance.setAttribute(key, attr[key]);
+		}
+	}
 	function prepare (root){
 		var res={};
-		res.tgn=root.getAttribute('tagName') || root.tagName;
-		res.as=root.getAttribute('as');
-		res.ref=root.getAttribute('ref');
-		res.attr=root.attributes;
+		res.tgn=root.getAttribute('tagname') || root.tagName;
+		res.as=root.getAttribute('as') || undefined;
+		res.attr=nmToObj(root.attributes);
 		res.ch=[];
-		res.script='';
+		res.super = root.getAttribute('super') || undefined;
 		var ch=root.childNodes;
 		for(var i=0; i < ch.length; i++){
 			if(ch[i].nodeType > 3) continue;
 			if(!ch[i].tagName){
-				if(ch[i].textContent.trim){
-					if(ch[i].textContent.trim()){
-						res.ch.push({nodeValue:ch[i].textContent});
-					}
-				} else {
-					res.ch.push({nodeValue:ch[i].textContent});
-				}
+				res.ch.push({text:ch[i].textContent});
 				continue;
 			}
 			var tgn=ch[i].tagName.toUpperCase();
 			if(tgn==='CONSTRUCTOR' || tgn==='SCRIPT'){
-				res.script="\n"+ch[i].textContent+
-					"\n//# sourceURL=compo/"+res.as+".constructor";
-				res.script = new Function(res.script);
+				var construct="\n"+(ch[i].textContent || ch[i].innerText)+
+					"\n//# sourceURL=cofa/"+res.as+"";
+				res.script = new Function('appContext,factory,document', construct);
 			} else {
 				var child = prepare(ch[i]);
 				delete child.script;
@@ -162,7 +153,6 @@ function Compo(appConf){
 				res.ch.push(child);
 			}
 		}
-		res.script = res.script || function(){};
 		return res;
 	}
 	/**
@@ -171,17 +161,20 @@ function Compo(appConf){
 	 * @param {string} str
 	 * @returns {void} 
 	 */
-	compo.parse=function(str){
+	factory.parse=function(str){
 		var matrix=document.createElement('div');
 		matrix.innerHTML=str;
 		var ch=matrix.children;
 		for(var i=0;i<ch.length;i++){
 			var asName=(ch[i].getAttribute('as') || '').toUpperCase();
-			if( asName && !compo.registry[asName] ) {
-				compo.registry[asName]={};
-				var prep = prepare(ch[i]);
-				delete prep.ref;
-				compo.registry[asName].prep=prep;
+			if( asName ) {
+				if(!registry[asName]){
+					var prep = prepare(ch[i]);
+					registry[asName]={};
+					registry[asName].prep=prep;
+				} else {
+					console.error(asName + ' - already registered component')
+				}
 			}
 		}
 	};
@@ -191,36 +184,30 @@ function Compo(appConf){
 	 * does all dirty work at DOM nodes creation,
 	 * attribute setting, adding children and references registration
 	 */
-	compo.create=function(name, attr, ch, root){
-		name=name.toUpperCase();
+	factory.create=function(name, attr, ch, root){
 		var instance;
 		//если есть зарегистрированный компонент с таким именем
 		//тогда создадим его инстанс из препарата
-		if(compo.registry[name]){
-			//взять препарат
-			var prep=compo.registry[name].prep;
+		var prep=this.findPrep(name);
+		if(prep){
 			//если в препарате есть функция для создания
 			//инстанса, возвратить результат её работы
-			if(prep.create) return prep.create('',attr,ch,root);
+			if(prep.create) return prep.create(attr,ch,root);
 			//определить имя тэга
 			//если тэг определён для создаваемого инстанса
 			//с помощью атрибута, необходимо использовать значение атрибута
 			//иначе нужно применить имя тэга из препарата
-			var tagname = attr && attr.getNamedItem &&
-				(tagname = attr.getNamedItem('useTag')) ? tagname.value : prep.tgn;
+			var tagname = (attr && attr.usetag) ? attr.usetag : prep.tgn;
 			//создаём инстанс 
 			instance=document.createElement(tagname);
 			instance.as=prep.as;
 			//назначить ссылку на элемент для вставки контента,
 			//по умолчанию - на самого себя 
 			instance.ref={content:instance};
+			//*/
 			//если в препарате указаны атрибуты
 			//пройти и установить их в инстанс
-			if(prep.attr && prep.attr.length)
-			for(var i=0;i < prep.attr.length;i++){
-				var at=prep.attr[i];
-				instance.setAttribute(at.name, at.value);
-			}
+			setAttributes(instance, prep.attr)
 			//если в препарате указаны вложенные ноды
 			//пройти и добавить их
 			if(prep.ch && prep.ch.length)
@@ -228,14 +215,14 @@ function Compo(appConf){
 				//если нода текстовая
 				if(!prep.ch[i].tgn){
 					//создать и установить её
-					instance.appendChild(document.createTextNode(prep.ch[i].nodeValue));
+					instance.appendChild(document.createTextNode(prep.ch[i].text));
 					continue;
 				}
 				//иначе создать ноду этой фабрикой,
 				//указывая в качестве корня себя и
 				//в качестве параметров ноды - атрибуты и 
 				//вложенные ноды из её описания в инстансе
-				var cch=compo.create(prep.ch[i].tgn, prep.ch[i].attr, prep.ch[i].ch,instance);
+				var cch=factory.create(prep.ch[i].tgn, prep.ch[i].attr, prep.ch[i].ch,instance);
 				//если у созданной ноды есть атрибут ref
 				//добавить ссылку на ноду в ref инстанса
 				var ref=cch.getAttribute('ref');
@@ -246,6 +233,7 @@ function Compo(appConf){
 				instance.appendChild(cch);
 				if (cch.onMount) cch.onMount();
 			}
+			//*/
 		} 
 		//если нет зарегистрированного компонента с таким именем
 		//просто создадим элемент
@@ -259,21 +247,18 @@ function Compo(appConf){
 		//или если Вам так вдруг захотелось и Вы сами указали параметры
 		if(!root) root=instance;
 		//ставим атрибуты
-		if(attr && attr.length)
-		for(var i = 0; i < attr.length; i++){
-			instance.setAttribute(attr[i].name, attr[i].value);
-		}
+		setAttributes(instance, attr);
 		//вставляем дочерние ноды в ref.content
 		if(ch && ch.length)
 		for(var i = 0; i < ch.length; i++){
 			//если нода текстовая
 			if(!ch[i].tgn){
-				instance.ref.content.appendChild(document.createTextNode(ch[i].nodeValue));
+				instance.ref.content.appendChild(document.createTextNode(ch[i].text));
 				continue;
 			}
 			//иначе создаём этой фабрикой, указывая атрибуты и деток из 
 			//параметров
-			var cch=compo.create(ch[i].tgn, ch[i].attr, ch[i].ch, root);
+			var cch=factory.create(ch[i].tgn, ch[i].attr, ch[i].ch, root);
 			//устанавливаем ref в корень, если он есть
 			var ref=cch.getAttribute('ref');
 			if(ref){
@@ -287,18 +272,14 @@ function Compo(appConf){
 				instance.ref.content.appendChild(cch);
 			}
 		}
-		//микшируем Compo API, если инстанс - экземпляр зарегистрированного
+		//микшируем CoFa API, если инстанс - экземпляр зарегистрированного
 		//компонента, вызываем конструктор и отрабатываем
 		//пользовательское событие на создание
-		if(compo.registry[name]){
-			if(compo.registry[name].prep && compo.registry[name].prep.script){
-				instance.__init = compo.registry[name].prep.script;
-				for(var k in mixin){
-					instance[k] = mixin[k];
-				}
-				instance.__init();
-				instance.onCreate();
+		if(prep){
+			for(var k in mixin){
+				instance[k] = mixin[k];
 			}
+			initInstance(instance, name);
 		}
 		//всем создаваемым нодам микшируем деструктор
 		//для каскадного разрушения
@@ -306,86 +287,47 @@ function Compo(appConf){
 		return instance;
 	};
 
-	/**
-	 * recursively merges two object's ownPropertys 
-	 * 
-	 * @param {Object} from - sourсe object
-	 * @param {Object} to - destination object
-	 * @returns void
-	 */
-	compo.copyProps=function(from,to){
-		if(typeof from !== 'object' || typeof to !== 'object'){ return; }
-			for(var k in from){
-				if(!from.hasOwnProperty(k)) continue;
-				if(typeof from[k] === 'object' && !(from[k] instanceof Array)){
-						if(from[k]===to[k]) continue;
-						to[k]=to[k] || {};
-						compo.copyProps(from[k], to[k]);
-						continue;
-				}
-				to[k] = from[k];
-			}
-	};
-	//TODO remove this helper, 
-	//replaced by "array-iterator" builtin component
-	compo.setArray=function(target,array,tofill,fillers){
-		var ready=target.children;
-		for(var i=0;i<ready.length || i<array.length;i++){
-			if(ready[i] && i>=array.length){
-				target.removeChild(ready[i]);
-				i--;
-				continue;
-			}
-			var tfl=tofill[i%tofill.length];
-			var fill=fillers[i%fillers.length];
-			if(!ready[i]){
-				
-				tfl=tfl.cloneNode(true);
-				
-				fill(tfl,i,array[i]);
-				target.appendChild(tfl);
-				continue;
-			}
-			fill(ready[i],i,array[i]);
-		}	
+	//var factory = this;
+	function byExample(tpl){
+		if(!tpl.as){
+			throw new Error('Sample should be registered component');
+		}
+		var res = factory.create(tpl.as, nmToObj(tpl.attributes));
+		return res;
 	};
 	///builtin components
-	//ANY-TAG
-	compo.parse('<div as="ANY-TAG"></div>');
 	//ARRAY-ITERATOR
-	compo.parse('<div as="ARRAY-ITERATOR"></div>');
-	compo.registry['ARRAY-ITERATOR'].prep.script = function(){
+	factory.parse('<div as="ARRAY-ITERATOR"></div>');
+	factory.findPrep('ARRAY-ITERATOR').script = function(appContext,factory,document){
 		var templates=[];
 		while(this.children.length > 0){
 			templates.push(this.removeChild(this.children[0]));
 		}
 		this.ref = {};
-		var factory =this.factory;
-		function byExample(tpl){
-			if(!tpl.as){
-				throw new Error('template must be registered \"Compo\" component');
+
+		this.onSetData = function(array, opts){
+			if(!array) array=[];
+			if(!Array.isArray(array)) {
+				array=[array];
 			}
-			var res = factory.create(tpl.as, tpl.attributes)
-			return res;
-		}
-		this.onSetData = function(data){
-			if(!data || !Array.isArray(data)){
-				data = [];
-			}
-			for(var i=0; i < data.length || i < this.children.length; i++){
-				if(this.children[i] && data.length <= i){
+			for(var i=0; i < array.length || i < this.children.length; i++){
+				if(this.children[i] && array.length <= i){
 					this.children[i].destroy();
 					i--;
 					continue;
 				}
-				if(!this.children[i]){
-					var child=byExample(templates[i%templates.length]);
-					child.setData(data[i]);
+				var item = array[i];
+				var child=this.children[i];
+				if(!child){
+				  child=byExample(templates[i%templates.length]);
 					child.mount(this);
-					continue;
 				}
-				this.children[i].setData(data[i]);
+				child.setData(item, opts, i);
 			}
 		}
 	};
+};
+
+if(typeof (module) === 'object'){
+	module.exports = CoFa;
 }

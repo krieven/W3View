@@ -1,0 +1,22 @@
+{
+  "name": "cofa",
+  "version": "1.0.0",
+  "description": "The HTML was created for this",
+  "main": "cofabu.js",
+  "directories": {
+    "example": "examples"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vitalydmitriev1970/Compo.JS.git"
+  },
+  "author": "Vitaly Dmitriev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vitalydmitriev1970/Compo.JS/issues"
+  },
+  "homepage": "https://github.com/vitalydmitriev1970/Compo.JS#readme"
+}
