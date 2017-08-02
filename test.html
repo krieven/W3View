@@ -11,7 +11,7 @@ Hallo
 </head>
 <body>
 
-<script id='compo' type="text/compo">
+<script id='w3view' type="text/w3view">
 
   <div as="list-item" tagName="tr">
     <div tagName="td" style="padding:20px;">
@@ -62,7 +62,7 @@ Hallo
       </list-item>
     </array-iterator>
     <constructor>
-      console.log(this.factory.appConf.appName);
+      console.log(appContext.appName);
       this.onSetData=function(data){
         this.ref.list.setData(data);
         this.ref.content.innerText = data.date;
@@ -74,19 +74,19 @@ Hallo
 
 <div id="appb"></div>
 
-<script type="text/javascript" src="compo.js"></script>
+<script type="text/javascript" src="w3view.js"></script>
 <script type="text/javascript">
 
-  var compo = new Compo({appName: 'The application'});
+  var w3view = new W3View({appName: 'The application'});
   console.time('parsing');
-  compo.parse(document.getElementById('compo').textContent);
+  w3view.parse(document.getElementById('w3view').textContent);
   console.timeEnd('parsing');
-  //console.dir(compo);
-  var b=compo.create('app');
+  //console.dir(w3view);
+  var b=w3view.create('app');
 
   b.mount(document.getElementById('appb'));
 
-  console.log(compo.registry);
+  console.log(w3view.registry);
   var list = [];
 
   b.setData(list);

@@ -2,7 +2,7 @@
   "name": "cofa",
   "version": "1.0.0",
   "description": "The HTML was created for this",
-  "main": "cofabu.js",
+  
   "directories": {
     "example": "examples"
   },
@@ -11,12 +11,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/vitalydmitriev1970/Compo.JS.git"
+    "url": "git+https://github.com/vitalydmitriev1970/W3View.git"
   },
   "author": "Vitaly Dmitriev",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/vitalydmitriev1970/Compo.JS/issues"
+    "url": "https://github.com/vitalydmitriev1970/W3View/issues"
   },
-  "homepage": "https://github.com/vitalydmitriev1970/Compo.JS#readme"
+  "homepage": "https://github.com/vitalydmitriev1970/W3View#readme"
 }

@@ -1,6 +1,6 @@
 'use strict';
 
-function CoFa(appContext){
+function W3View(appContext){
 	var registry = {};
 	var factory = this;
 	var mixin = {};
@@ -9,7 +9,7 @@ function CoFa(appContext){
 	 */
 	var imports = [];
 
-	var document = CoFa.document || window.document;
+	var document = W3View.document || window.document;
 	/**
 	 * Mount element into target content
 	 * at index position
@@ -64,7 +64,7 @@ function CoFa(appContext){
 	///lifecycle callbacks
 	/**
 	 * all of these callbacks already presented in each
-	 * instance of CoFa components.
+	 * instance of W3View components.
 	 * Author of component can override each of them.
 	 */
 	/**
@@ -272,7 +272,7 @@ function CoFa(appContext){
 				instance.ref.content.appendChild(cch);
 			}
 		}
-		//микшируем CoFa API, если инстанс - экземпляр зарегистрированного
+		//микшируем W3View API, если инстанс - экземпляр зарегистрированного
 		//компонента, вызываем конструктор и отрабатываем
 		//пользовательское событие на создание
 		if(prep){
@@ -329,5 +329,5 @@ function CoFa(appContext){
 };
 
 if(typeof (module) === 'object'){
-	module.exports = CoFa;
+	module.exports = W3View;
 }

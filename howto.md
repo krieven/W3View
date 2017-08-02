@@ -1,22 +1,22 @@
-# How to use Compo.JS
+# How to use W3View
 Firstly, You need to define Your components. 
 Definition of components can be placed in the 
-page inside &lt;SCRIPT&gt; tag with type="text/compo",
+page inside &lt;SCRIPT&gt; tag with type="text/w3view",
 and readed from its textContent property
 or it can be loaded via XHR or JSONP.
 
 Anyway it is the string, that should be 
-parsed by **Compo.parse** method.
+parsed by **W3View.parse** method.
 This string can contain any number of components definitions.
 
-## Creating of UI component with Compo.JS
+## Creating of UI component with W3View
 One component definition - is the markup of one HTMLElement,
 it can contain embedded constructor script,
 like this:
 
-		<div as="hallo-world">
+		<div as="hello-world">
 			<input ref="input" placeholder="type your name here">
-			<h1>Hallo <span ref="name">Anonimous</span>!</h1>
+			<h1>Hello <span ref="name">Anonimous</span>!</h1>
 			<script>
 			//constructor, 
 			//also you can use CONSTRUCTOR tag instead of SCRIPT tag
@@ -30,13 +30,13 @@ like this:
 		</div>
 
 ####Here:
-+ "this" - is the reference to DIV, that is instance of "hallo-world".
++ "this" - is the reference to DIV, that is instance of "hello-world".
 + attribute "ref" - is some one like *id*, inside the component.
 + "this.ref" - is the table of references to corresponded elements.
 
 The "constructor" is the body of function.
 This function will be binded to HTMLElement, that will be instantiated 
-by Compo.JS and executed with *this*, referenced to this instance.
+by W3View and executed with *this*, referenced to this instance.
 
 ### Attributes
 One component definition - is the markup for one HTMLElement, 
@@ -49,7 +49,7 @@ in the component definition, here is the explanation of them.
 #### In the root of component definition
 * **as** - name of component, by this name it can be instantiated. 
 Think about this attribute value as about name of component class.
-* **tagName** - Compo.JS utilizes power of browser to prepare 
+* **tagName** - W3View utilizes power of browser to prepare 
 definitions, so - tags such as TR and TD cannot be used as root of 
 components and anywhere outside of TABLE tag, but you can define any tag,
 anywhere by using tagName attribute. 
@@ -68,9 +68,6 @@ for example:
 				<h1 ref="content"></h1>
 			</div>
 			<constructor>
-				this.controlSum=function(data){
-					return data.id+"/*/"+data.content;
-				}
 				this.onSetData=function(data){
 					//data should be {id: any, content: any}
 					this.ref.id.innerText=data.id;
@@ -120,7 +117,7 @@ For example:
 
 	//definition of sample-component
 	<div as="sample-component">
-		<h1>Hallo</h1>
+		<h1>Hello</h1>
 		<div ref="content"></div>
 	</div>
 	
@@ -141,7 +138,7 @@ The resulted structure will be
 	<div as="container">
 		You are here
 		<div as="sample-component">
-			<h1>Hallo</h1>
+			<h1>Hello</h1>
 			<div ref="content">
 				This should be placed into content of "sample-component"
 				<div ref="content">
@@ -157,14 +154,14 @@ simple appended to the root of component.
 
 ### Lifecicle and lifecicle handlers
 The lifecicle of component instance is very simple, instance can be:
-+ **created** by Compo.create method, 
++ **created** by W3View.create method, 
 + **mounted** by instance.mount method, 
 + **updated** by instance.setData, instance.mergeData or instance.update methods, 
 + **unmounted** by instance.unmount, 
 + and finally, recursively **destroyed** by instance.destroy method. 
 
-Respectively Compo.JS produces five lifecicle events:
-* when instanse is created (by Compo.create method) and 
+Respectively W3View produces five lifecicle events:
+* when instanse is created (by W3View.create method) and 
 constructor script is executed, then **create** event is fired, 
 you can handle it by specifying **this.onCreate** method inside 
 constructor script.
@@ -178,7 +175,7 @@ then **this.onDestroy** method will be called.
 All of these handlers optionally can be defined in the constructor script. 
 
 ### Writing the constructor
-As of Compo component definition is similar to whole HTML page, in the 
+As of W3View component definition is similar to whole HTML page, in the 
 constructor You can make all, what You can make in the regular SCRIPT tag, 
 but there is the differences. 
 The constructor script body is body of function that will be binded to 
@@ -237,27 +234,27 @@ As You can see
 + **onMount** adds listener to window.
 + **onUnmount** removes listener.  
 
-## Using of Compo.JS API
-Create instance of Compo, there can be more than one instance of Compo 
+## Using of W3View API
+Create instance of W3View, there can be more than one instance of W3View 
 and the number of separate applications can be mounted on the page.
-Also one Compo app can use the number of mounting points on the page, 
-and it can run the number of Compo apps inside one Compo app. 
+Also one W3View app can use the number of mounting points on the page, 
+and it can run the number of W3View apps inside one W3View app. 
 This is the real power of Javascript, of old good Javascript.
 
-	var compo = new Compo(appConf);
+	var w3view = new W3View(appConf);
 
 Here - appConf is any object, it can be accessed as **this.factory.appConf**
 inside constructors of components.
 
 Parse definition of components from string,
-string can contain any number of definitions and you can call compo.parse
+string can contain any number of definitions and you can call w3view.parse
 more then one times to add new components.
 
-	compo.parse(componentsDefinitionString); 
+	w3view.parse(componentsDefinitionString); 
 
-create component instance from Compo by name
+create component instance from W3View by name
 
-	var instance = compo.create('double-hallo-world'); 
+	var instance = w3view.create('double-hello-world'); 
 
 append instance into current DOM tree,
 optionally you can specify index in target.children, where

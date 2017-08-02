@@ -1,23 +1,23 @@
-# Compo.JS API
+# W3View API
 
-## API of Compo
-Compo is the constructor function, instance of compo can be created by calling of
+## API of W3View
+W3View is the constructor function, instance of w3view can be created by calling of
 
-	var compo = new Compo();
+	var w3view = new W3View();
 
-Each Compo instance contains two methods
+Each W3View instance contains two methods
 * parse
 * create
 
-## API of Compo.JS components
-Each Compo.JS component is instance of HTMLElement and extends it API by
+## API of W3View components
+Each W3View component is instance of HTMLElement and extends it API by
 
 ### Properties:
 *ref* - table of references, - elements in the component tree, marked by **ref**
 attribute can be accessed from constructor via this.ref[value_of_ref_attribute].
 Only ref's, defined in the current component definition are accesible.
 
-*factory* - instance of Compo, that is created this component instance.
+*factory* - instance of W3View, that is created this component instance.
 
 ### Lifecicle methods:
 It is recomended to use lifecicle methods 
@@ -36,11 +36,6 @@ will be called automatically before mounting.
 
 *setData(data: any)* - sets data and calls onSetData handler.
 
-*mergeData(data: Object)* - merges its argument into previously setted data 
-and calls setData with result of merging as argument.
-
-*update()* - just calls setData with previously setted data as argument.
-
 *destroy()* - calls unmount if mounted, then calls onDestroy event handler 
 and recursively destroys all DOM subtree of this instance 
 (executes destroy on all mounted children).
@@ -58,10 +53,4 @@ Its chance to free all resources that were allocated with onMount handler.
 
 *onDestroy()* - time to free resources, allocated by component instance, 
 including all callbacks, observers, listeners, intervals and timeouts, eah.
-
-### Methods:
-*controlSum(data: any): string | number | any* - this method can reduce calculations 
-during data updating, should return product of its argument that determines 
-that data is not changed if previous calculated product is same.
-If your onSetData recursively calculates fibonacchi number, it can be important.
 

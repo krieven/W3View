@@ -3,10 +3,10 @@
 		<head>
 			<meta http-equiv="content-type" content="text/html;charset=utf-8">
 			<title>calendar</title>
-			<script src="../cofa.js"></script>
-			<script type="text/compo" id="compoCalendar">
+			<script src="../w3view.js"></script>
+			<script type="text/w3view" id="w3viewCalendar">
 
-				<div as="compo-calendar">
+				<div as="w3view-calendar">
 					<div>
 						<div><<</div>
 						<div>>></div>
@@ -38,11 +38,11 @@
 
 		<body style="margin:50px;">
 			<script defer="defer">
-				var compo = new CoFa();
-				compo.parse(compoCalendar.textContent);
-				compo.create('compo-calendar').mount(document.body);
+				var w3view = new W3View();
+				w3view.parse(w3viewCalendar.textContent);
+				w3view.create('w3view-calendar').mount(document.body);
 
-				var app = compo.create('years');
+				var app = w3view.create('years');
 				app.mount(document.body);
 				var data = [[0,1,2]];
 				function loop(){
