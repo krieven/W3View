@@ -12,7 +12,7 @@ methods mixed in, they also can contain the table of inner references,
 that is DOM nodes too. 
 + The definition of component is just HTML markup, 
 plus optional lifecicle handlers in the embedded script. 
-+ Definition of Como.JS component is not template - it is data structure. 
++ Definition of W3View component is not template - it is data structure. 
 
 Each instance of W3View contains its own namespace and independed 
 set of components. 
@@ -133,7 +133,7 @@ run "double-hello-world" app:
 
 		<body style="margin:50px;">
 			<script defer="defer">
-				var w3view = new w3view();
+				var w3view = new W3view();
 				w3view.parse(components.textContent);
 				w3view.create('double-hello-world').mount(document.body);
 			</script>

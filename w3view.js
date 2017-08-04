@@ -40,8 +40,8 @@ function W3View(appContext){
 	 * 
 	 * @param {any} data
 	 */
-	mixin.setData=function(data,opts){
-		this.onSetData(data,opts);
+	mixin.setData=function(data,opts,a1){
+		this.onSetData(data,opts,a1);
 	};
 	/**
 	 * recursively destroy self and subtree
@@ -144,7 +144,7 @@ function W3View(appContext){
 			var tgn=ch[i].tagName.toUpperCase();
 			if(tgn==='CONSTRUCTOR' || tgn==='SCRIPT'){
 				var construct="\n"+(ch[i].textContent || ch[i].innerText)+
-					"\n//# sourceURL=cofa/"+res.as+"";
+					"\n//# sourceURL=W3View:///"+res.as+"";
 				res.script = new Function('appContext,factory,document', construct);
 			} else {
 				var child = prepare(ch[i]);

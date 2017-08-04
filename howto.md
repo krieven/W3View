@@ -29,14 +29,14 @@ like this:
 			</script>
 		</div>
 
-####Here:
+#### Here:
 + "this" - is the reference to DIV, that is instance of "hello-world".
-+ attribute "ref" - is some one like *id*, inside the component.
++ attribute "ref" - is some one like **id**, inside the component.
 + "this.ref" - is the table of references to corresponded elements.
 
 The "constructor" is the body of function.
 This function will be binded to HTMLElement, that will be instantiated 
-by W3View and executed with *this*, referenced to this instance.
+by W3View and executed with **this**, referenced to this instance.
 
 ### Attributes
 One component definition - is the markup for one HTMLElement, 
@@ -49,6 +49,10 @@ in the component definition, here is the explanation of them.
 #### In the root of component definition
 * **as** - name of component, by this name it can be instantiated. 
 Think about this attribute value as about name of component class.
+* **super** - the Custon Element can extends behavior of other Custom W3view Element
+if this attribute is specified in the root or component definition. 
+The constructor of super component will be called before calling the constructor of current. Value of **super** attribute
+should be the name of Custom W3view Element.
 * **tagName** - W3View utilizes power of browser to prepare 
 definitions, so - tags such as TR and TD cannot be used as root of 
 components and anywhere outside of TABLE tag, but you can define any tag,
@@ -99,18 +103,21 @@ for example:
 			</constructor>
 		</div>
 
-#### In the component definition tree
+#### In the component definition subtree
+
 * **ref** - specifyes reference name of the element, the element can be 
-accessed from constructor script via **this.ref['value of ref attribute']**
+accessed from constructor script via **this.ref.refName**
 * **useTag** - you can define some "general purpose" components and then 
 instantiate them with different tag names.
 
 The difference between **tagName** and **useTag** is that the tagName attribute 
 will change tagName during declaration of component,  useTag - during 
 instantiation. The tagName attribute can be used with any tag, but useTag
-have effect only with Custom Elements. See previous example.
+have effect only with Custom W3view Elements. See previous example.
 
-**Special! ref="content"**, If element with ref="content" is specified 
+
+***Special !!*** 
+**ref="content"**, If element with ref="content" is specified 
 inside component definition, 
 then this element will be used to mount children elements in.
 For example:
@@ -161,15 +168,15 @@ The lifecicle of component instance is very simple, instance can be:
 + and finally, recursively **destroyed** by instance.destroy method. 
 
 Respectively W3View produces five lifecicle events:
-* when instanse is created (by W3View.create method) and 
+* when instanse is **created** (by W3View.create method) and 
 constructor script is executed, then **create** event is fired, 
 you can handle it by specifying **this.onCreate** method inside 
 constructor script.
-* when instance is mounted into DOM tree, then **mount** event is fired,
+* when instance is **mounted** into DOM tree, then **mount** event is fired,
 handle it by **this.onMount** method.
-* before instance is unmounted, **unmount** event occures, **this.onUnmount** 
+* before instance is **unmounted**, **unmount** event occures, **this.onUnmount** 
 handler can catch it.
-* before instance is destroyed, it will be automatically unmounted, 
+* before instance is **destroyed**, it will be automatically unmounted, 
 then **this.onDestroy** method will be called.
 
 All of these handlers optionally can be defined in the constructor script. 
@@ -184,6 +191,11 @@ component instance, therefore:
 itself.
 + You already have the table of references to elements in the subtree of 
 component, marked by **ref** attribute.
+
+The constructor recives three arguments:
+*	appContext
+* factory
+* document
 
 The lifecicle handlers should be defined here, all callbacks, that is passed
 outside the component (such as *window.onresize* and so on) should be detached.
@@ -238,12 +250,11 @@ As You can see
 Create instance of W3View, there can be more than one instance of W3View 
 and the number of separate applications can be mounted on the page.
 Also one W3View app can use the number of mounting points on the page, 
-and it can run the number of W3View apps inside one W3View app. 
-This is the real power of Javascript, of old good Javascript.
+and it can run the number of W3View apps inside one W3View app.
 
-	var w3view = new W3View(appConf);
+	var w3view = new W3View(appContext);
 
-Here - appConf is any object, it can be accessed as **this.factory.appConf**
+Here - appContext is any object, it can be accessed as **appContext**
 inside constructors of components.
 
 Parse definition of components from string,
@@ -254,7 +265,7 @@ more then one times to add new components.
 
 create component instance from W3View by name
 
-	var instance = w3view.create('double-hello-world'); 
+	var instance = w3view.create('double-hello-world', {tagname: 'a', href: '/hello'});
 
 append instance into current DOM tree,
 optionally you can specify index in target.children, where
@@ -264,19 +275,11 @@ instance will be placed
 
 set data and update
 
-	instance.setData({some:data, that: instance, should: recive});
-
-or
-
-	instance.mergeData(data); //it is your opinion
-
-or
-
-		instance.update(); //if data already setted and probably changed by external routine
+	instance.setData({some:data, that: instance, should: recive}, options, additional);
 
 when you need to remove the instance from DOM tree
 
-		instance.unmount(); //you can mount it later
+		instance.unmount(); //you can mount it again, later
 		
 when you will remove the element permanently, call
 
