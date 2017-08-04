@@ -133,7 +133,7 @@ run "double-hello-world" app:
 
 		<body style="margin:50px;">
 			<script defer="defer">
-				var w3view = new W3view();
+				var w3view = new W3View();
 				w3view.parse(components.textContent);
 				w3view.create('double-hello-world').mount(document.body);
 			</script>
