@@ -112,7 +112,7 @@ instantiate them with different tag names.
 
 The difference between **tagName** and **useTag** is that the tagName attribute 
 will change tagName during declaration of component,  useTag - during 
-instantiation. The tagName attribute can be used with any tag, but useTag
+instantiation. The **tagName** attribute can be used with any tag, but **useTag**
 have effect only with Custom W3view Elements. See previous example.
 
 
@@ -159,15 +159,15 @@ The resulted structure will be
 If the Element with ref="content" is not specified, then children will be 
 simple appended to the root of component.
 
-### Lifecicle and lifecicle handlers
-The lifecicle of component instance is very simple, instance can be:
+### Lifecycle and lifecycle handlers
+The lifecycle of component instance is very simple, instance can be:
 + **created** by W3View.create method, 
 + **mounted** by instance.mount method, 
-+ **updated** by instance.setData, instance.mergeData or instance.update methods, 
++ **updated** by instance.setData method, 
 + **unmounted** by instance.unmount, 
 + and finally, recursively **destroyed** by instance.destroy method. 
 
-Respectively W3View produces five lifecicle events:
+Respectively W3View produces five lifecycle events:
 * when instanse is **created** (by W3View.create method) and 
 constructor script is executed, then **create** event is fired, 
 you can handle it by specifying **this.onCreate** method inside 
@@ -192,12 +192,11 @@ itself.
 + You already have the table of references to elements in the subtree of 
 component, marked by **ref** attribute.
 
-The constructor recives three arguments:
-*	appContext
-* factory
-* document
+The constructor is the body of function that recives two arguments:
+*	appContext - that you have passed into W3View constructor
+* factory - the current istance of W3View.
 
-The lifecicle handlers should be defined here, all callbacks, that is passed
+The lifecycle handlers should be defined here, all callbacks, that is passed
 outside the component (such as *window.onresize* and so on) should be detached.
 If callback is attached to event source by constructor itself or by onCreate
 handler, then it should be detached by onDestroy handler.
@@ -267,7 +266,7 @@ create component instance from W3View by name
 
 	var instance = w3view.create('double-hello-world', {tagname: 'a', href: '/hello'});
 
-append instance into current DOM tree,
+mount instance into current DOM tree,
 optionally you can specify index in target.children, where
 instance will be placed
 
@@ -279,10 +278,10 @@ set data and update
 
 when you need to remove the instance from DOM tree
 
-		instance.unmount(); //you can mount it again, later
+	instance.unmount(); //you can mount it again, later
 		
 when you will remove the element permanently, call
 
-		instance.destroy(); // and forget it
+	instance.destroy(); // and forget it
 
 

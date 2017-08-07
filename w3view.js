@@ -36,9 +36,10 @@ function W3View(appContext){
 	 * setData - public API methods for
 	 * setting data into element, user defined onSetData callback will
 	 * be called immediately
-	 * setData - set this.data as link to its argument
 	 * 
 	 * @param {any} data
+	 * @param {any} opts
+	 * @param {any} a1
 	 */
 	mixin.setData=function(data,opts,a1){
 		this.onSetData(data,opts,a1);

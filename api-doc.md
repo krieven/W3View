@@ -19,10 +19,10 @@ Each W3View component is instance of HTMLElement and extends it API by
 attribute can be accessed from constructor via this.ref[value_of_ref_attribute].
 Only ref's, defined in the current component definition are accesible.
 
-### Lifecicle methods:
-It is recomended to use lifecicle methods 
+### Lifecycle methods:
+It is recomended to use lifecycle methods 
 for components instead of standard appendChild, insertBefore and removeChild 
-methods, for properly lifecicle executions.
+methods, for properly lifecycle executions.
 
 *mount(target: HTMLElement, index?: number)* - mounts instance into DOM subtree 
 of target (in the target.ref.content 
@@ -56,3 +56,55 @@ Its chance to free all resources that were allocated with onMount handler.
 *onDestroy()* - time to free resources, allocated by component instance, 
 including all callbacks, observers, listeners, intervals and timeouts, eah.
 
+## BUILTIN components
+There is just one builtin component, called **ARRAY-ITERATOR**.
+
+**ARRAY-ITERATOR** allows you render tables and lists in your app. 
+
+It should recive array as data into setData. 
+
+The children of ARRAY-ITERATOR instance should be W3View elements. 
+These children are samples for rows.
+
+
+		//table row definition
+		<div as="list-item" tagName="tr">
+			<div tagName="td" style="padding:20px;">
+				Number of elements in the array:
+				<h1 ref="id"></h1>
+			</div>
+			<div tagName="td" style="padding:20px;">
+				Updating time:
+				<h1 ref="content"></h1>
+			</div>
+			<constructor>
+				this.onSetData=function(data,opts,i){
+					//data should be {id: any, content: any}
+					// i - is the index of data in the array
+					this.ref.id.innerText = data.id;
+					this.ref.content.innerText = i + '.  ' + data.content;
+				};
+			</constructor>
+		</div>
+
+		//creating the table with "array-iterator" builtin component
+		<div as="app">
+			<array-iterator ref="list" useTag="table" style="border: 1px solid black;">
+				<list-item 
+					style="font-weight:bold;background-color:#FFFFFF;color:#000000;">
+				</list-item>
+				<list-item 
+					style="font-weight:bold;background-color:#000000;color:#FFFFFF;">
+				</list-item>
+			</array-iterator>
+	    <constructor>
+				this.onSetData=function(data){
+					//data should be array of  {id: any, content: any}
+					this.ref.list.setData(data);
+				};
+			</constructor>
+		</div>
+
+In this example all even rows will have black background and white text, 
+ all odd rows - white background and black text.
+ 

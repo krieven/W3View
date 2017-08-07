@@ -19,16 +19,16 @@ Hallo
       <h1 ref="id"></h1>
     </div>
     <div tagName="td" style="padding:20px;">
-      Updating time:
+      Index / Updating time:
       <h1 ref="content"></h1>
     </div>
     <constructor>
       this.controlSum=function(data){
         return data.id+data.content;
       }
-      this.onSetData=function(data){
+      this.onSetData=function(data,opts,i){
         this.ref.id.innerText=data.id;
-        this.ref.content.innerText=data.content;
+        this.ref.content.innerText=i+' / '+data.content;
       };
     </constructor>
   </div>
