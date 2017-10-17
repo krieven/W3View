@@ -225,9 +225,7 @@ component, for examle:
 				}
 
 				var resize = function(){
-					// just for example :), in the real world use
-					// style sheet
-					this.style.width = window.innerWidth/2+'px';
+					this.style.width = window.innerWidth/2+150+'px';
 				}.bind(this);
 				
 				this.onMount = function(){

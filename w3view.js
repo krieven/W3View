@@ -1,3 +1,7 @@
+/**
+ * @author Vitaly Dmitriev, 2016
+ */
+
 'use strict';
 
 function W3View(appContext){
@@ -99,6 +103,7 @@ function W3View(appContext){
 		var name=(find + '').toUpperCase();
 		return (registry[name] && registry[name].prep) ? registry[name].prep : undefined;
 	};
+
 	var initInstance=function(instance, name){
 		var prep = factory.findPrep(name);
 		if(prep){
@@ -121,13 +126,15 @@ function W3View(appContext){
 			res[nm[i].name.toLowerCase()]=nm[i].value;
 		}
 		return res;
-	};
+	}
+
 	function setAttributes(instance, attr){
 		if(attr && instance && instance.setAttribute)
 		for(var key in attr){
 				instance.setAttribute(key, attr[key]);
 		}
 	}
+
 	function prepare (root){
 		var res={};
 		res.tgn=root.getAttribute('tagname') || root.tagName;
@@ -156,6 +163,7 @@ function W3View(appContext){
 		}
 		return res;
 	}
+	
 	/**
 	 * register Components, takes definitions from
 	 * string, append new definitions into registry
@@ -166,6 +174,11 @@ function W3View(appContext){
 		var matrix=document.createElement('div');
 		matrix.innerHTML=str;
 		var ch=matrix.children;
+		factory.register(ch);
+	}
+
+
+	factory.register = function(ch){
 		for(var i=0;i<ch.length;i++){
 			var asName=(ch[i].getAttribute('as') || '').toUpperCase();
 			if( asName ) {
