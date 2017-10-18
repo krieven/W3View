@@ -1,13 +1,20 @@
 # How to use W3View
 Firstly, You need to define Your components. 
+
 Definition of components can be placed in the 
 page inside &lt;SCRIPT&gt; tag with type="text/w3view",
 and readed from its textContent property
 or it can be loaded via XHR or JSONP.
-
-Anyway it is the string, that should be 
-parsed by **W3View.parse** method.
+In this case definition is the string, that should be 
+parsed by **W3View.parse(String)** method.
 This string can contain any number of components definitions.
+
+Also definitions can be placed in the hidden &lt;DIV&gt; 
+(or loaded by HTML Import) and registered by **W3View.register(HTMLElement[])**  
+method, in this case you should set unknown type for embedded scripts, - 
+they should not be executed automatically by the browser.
+
+In both cases you can use &lt;CONSTRUCTOR&gt; tag for embedded scripts.
 
 ## Creating of UI component with W3View
 One component definition - is the markup of one HTMLElement,
@@ -17,7 +24,7 @@ like this:
 		<div as="hello-world">
 			<input ref="input" placeholder="type your name here">
 			<h1>Hello <span ref="name">Anonimous</span>!</h1>
-			<script>
+			<script type="constructor">
 			//constructor, 
 			//also you can use CONSTRUCTOR tag instead of SCRIPT tag
 				this.ref.input.onkeyup = function(e){
@@ -49,7 +56,7 @@ in the component definition, here is the explanation of them.
 #### In the root of component definition
 * **as** - name of component, by this name it can be instantiated. 
 Think about this attribute value as about name of component class.
-* **super** - the Custon Element can extends behavior of other Custom W3view Element
+* **super** - the W3View component can extends behavior of other Custom W3view Element
 if this attribute is specified in the root or component definition. 
 The constructor of super component will be called before calling the constructor of current. Value of **super** attribute
 should be the name of Custom W3view Element.
@@ -157,7 +164,7 @@ The resulted structure will be
 	</div>
 	
 If the Element with ref="content" is not specified, then children will be 
-simple appended to the root of component.
+simple appended into the root of component.
 
 ### Lifecycle and lifecycle handlers
 The lifecycle of component instance is very simple, instance can be:
@@ -244,42 +251,42 @@ As You can see
 + **onUnmount** removes listener.  
 
 ## Using of W3View API
-Create instance of W3View, there can be more than one instance of W3View 
+- Create instance of W3View, there can be more than one instance of W3View 
 and the number of separate applications can be mounted on the page.
 Also one W3View app can use the number of mounting points on the page, 
 and it can run the number of W3View apps inside one W3View app.
 
-	var w3view = new W3View(appContext);
+		var w3view = new W3View(appContext);
 
-Here - appContext is any object, it can be accessed as **appContext**
-inside constructors of components.
+	Here - appContext is any object, it can be accessed as **appContext**
+	inside constructors of components.
 
-Parse definition of components from string,
+- Parse definition of components from string,
 string can contain any number of definitions and you can call w3view.parse
 more then one times to add new components.
 
-	w3view.parse(componentsDefinitionString); 
+		w3view.parse(componentsDefinitionString); 
 
-create component instance from W3View by name
+- Create component instance from W3View by name
 
-	var instance = w3view.create('double-hello-world', {tagname: 'a', href: '/hello'});
+		var instance = w3view.create('double-hello-world', {tagname: 'a', href: '/hello'});
 
-mount instance into current DOM tree,
+- Mount instance into current DOM tree,
 optionally you can specify index in target.children, where
 instance will be placed
 
-	instance.mount(document.element, index); 
+		instance.mount(document.element, index); 
 
-set data and update
+- set data and update
 
-	instance.setData({some:data, that: instance, should: recive}, options, additional);
+		instance.setData({some:data, that: instance, should: recive}, options, additional);
 
-when you need to remove the instance from DOM tree
+- when you need to remove the instance from DOM tree
 
-	instance.unmount(); //you can mount it again, later
+		instance.unmount(); //you can mount it again, later
 		
-when you will remove the element permanently, call
+- when you will remove the element permanently, call
 
-	instance.destroy(); // and forget it
+		instance.destroy(); // and forget it
 
 
