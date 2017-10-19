@@ -39,9 +39,10 @@
           }.bind(this);
 
           var keyDown=function(e){
-            var sh={38:+1, 40:-1,37000:-1,39000:+1}[e.keyCode];
+            var sh={38:+1, 40:-1}[e.keyCode];
             if(sh !== undefined){
-              if(!e.ctrlKey && !e.altKey && !e.shiftKey) e.preventDefault(); else return;
+              if(!e.ctrlKey && !e.altKey && !e.shiftKey) e.preventDefault(); 
+              else return;
               data.offset-=sh;
               this.setData(data);
             }
@@ -49,8 +50,7 @@
 
           var wheel =function(e){
             e.preventDefault();
-            var delta= e.deltaY;
-            if(delta>0){
+            if(e.deltaY>0){
               data.offset++;
             } else{
               data.offset--;
