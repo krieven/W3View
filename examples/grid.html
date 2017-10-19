@@ -22,10 +22,9 @@
 
           var data = {};
           this.onSetData=function(input){
-            data = input;
+            data = input || {list:[]};
             data.len=data.len=Math.round(this.ref.scroll.offsetHeight/30);
             data.offset = data.offset>(data.list.length-data.len)?(data.list.length-data.len):data.offset;
-
             if(data.offset+data.len > data.list.length) data.offset=data.list.length-data.len;
             if(data.offset < 0) data.offset=0;
             
@@ -48,7 +47,7 @@
             }
           }.bind(this);
 
-          var wheel =function(e){
+          this.ref.tb.onwheel =function(e){
             e.preventDefault();
             if(e.deltaY>0){
               data.offset++;
@@ -62,13 +61,11 @@
           this.onMount = function(){
             window.addEventListener('resize',resize);
             window.addEventListener('keydown',keyDown);
-            this.ref.tb.addEventListener('wheel',wheel);
           };
 
           this.onUnmount = function(){
             window.removeEventListener('resize',resize);
             window.removeEventListener('keydown',keyDown);
-            this.ref.tb.removeEventListener('wheel',wheel);
           };
 
         </script>
