@@ -20,9 +20,9 @@
         <scrollbar ref="scroll"></scrollbar>
         <script type="/javascript">
 
-          var state = {};
-          this.onSetData=function(data){
-            state = data;
+          var data = {};
+          this.onSetData=function(input){
+            data = input;
             data.len=data.len=Math.round(this.ref.scroll.offsetHeight/30);
             data.offset = data.offset>(data.list.length-data.len)?(data.list.length-data.len):data.offset;
 
@@ -35,26 +35,40 @@
           };
 
           var resize =  function(){
-            this.setData(state);
+            this.setData(data);
           }.bind(this);
 
           var keyDown=function(e){
             var sh={38:+1, 40:-1,37000:-1,39000:+1}[e.keyCode];
             if(sh !== undefined){
               if(!e.ctrlKey && !e.altKey && !e.shiftKey) e.preventDefault(); else return;
-              state.offset-=sh;
-              this.setData(state);
+              data.offset-=sh;
+              this.setData(data);
             }
+          }.bind(this);
+
+          var wheel =function(e){
+            e.preventDefault();
+            var delta= e.deltaY;
+            if(delta>0){
+              data.offset++;
+            } else{
+              data.offset--;
+            }
+            this.setData(data);
+            return false;
           }.bind(this);
 
           this.onMount = function(){
             window.addEventListener('resize',resize);
             window.addEventListener('keydown',keyDown);
+            this.ref.tb.addEventListener('wheel',wheel);
           };
 
           this.onUnmount = function(){
             window.removeEventListener('resize',resize);
             window.removeEventListener('keydown',keyDown);
+            this.ref.tb.removeEventListener('wheel',wheel);
           };
 
         </script>
