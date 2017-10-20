@@ -57,6 +57,8 @@
             this.setData(data);
             return false;
           }.bind(this);
+          
+          this.ref.tb.onpointerdown = this.ref.scroll.getScrolling();
 
           this.onMount = function(){
             window.addEventListener('resize',resize);
@@ -110,7 +112,7 @@
           border:2px solid black;
           background-color:#999999;margin-top:0px;'></div>
         <script type="/javascript">
-          var app = null, data = {};
+          var app = {}, data = {};
           var hh = 0;
 
           this.onSetData=function(input){
@@ -121,19 +123,36 @@
             hh=this.ref.scroller.offsetHeight-h;
             this.ref.scroller.style.top=(data.offset/data.list.length*(this.offsetHeight-hh))+'px';
           };
-
+          var invert = 1;
           var downAt = 0;
           var offsetAt = 0;
-          this.ref.scroller.onmousedown=function(e){
+          
+          this.getScrolling = function(){
+            return function(e){
+              // if(e.pointerType!=='touch') return;
+              invert=-1;
+              scrolling(e);
+              e.preventDefault();
+            }.bind(this);
+          };
+
+          var scrolling = this.ref.scroller.onmousedown=function (e){
             downAt = e.clientY;
             offsetAt = data.offset;
             document.body.addEventListener('mousemove', onmousemove);
             document.body.addEventListener('mouseup', onmouseup);
+
+            document.body.addEventListener('pointermove', onmousemove);
+            document.body.addEventListener('pointerup', onmouseup);
           };
 
           var onmouseup=function(e){
             document.body.removeEventListener('mousemove', onmousemove);
             document.body.removeEventListener('mouseup', onmouseup);
+
+            document.body.removeEventListener('pointermove', onmousemove);
+            document.body.removeEventListener('pointerup', onmouseup);
+            invert=1;
           };
 
           var onmousemove=function(e){
@@ -142,7 +161,7 @@
             if(downAt<0) {eY=e.offsetY;}
             var dy = Math.round((eY-downAt)/(this.offsetHeight-hh)*data.list.length);
             
-            var offset = offsetAt+dy;
+            var offset = offsetAt+dy*invert;
             app.setData({list:data.list, offset:offset});
             return false;
           }.bind(this);
