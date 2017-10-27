@@ -2,7 +2,6 @@
   "name": "w3view",
   "version": "1.0.1",
   "description": "The HTML was created for this",
-  
   "directories": {
     "example": "examples"
   },
@@ -18,5 +17,9 @@
   "bugs": {
     "url": "https://github.com/vitalydmitriev1970/W3View/issues"
   },
-  "homepage": "https://github.com/vitalydmitriev1970/W3View#readme"
+  "homepage": "https://github.com/vitalydmitriev1970/W3View#readme",
+  "dependencies": {
+    "node-jsdom": "^3.1.5"
+  },
+  "main":"./w3view.js"
 }

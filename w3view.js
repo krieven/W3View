@@ -8,6 +8,9 @@ function W3View(appContext){
 	var registry = {};
 	var factory = this;
 	var mixin = {};
+
+	this.getRegistry = function(){return registry;};
+	this.setRegistry = function(newRegistry){registry=newRegistry;};
 	/**
 	 * [{ registry:{}, deref: {}}]
 	 */
@@ -302,7 +305,7 @@ function W3View(appContext){
 	};
 
 	//var factory = this;
-	function byExample(tpl){
+	factory.byExample = function byExample(tpl){
 		if(!tpl.as){
 			throw new Error('Sample should be registered component');
 		}
@@ -333,7 +336,7 @@ function W3View(appContext){
 				var item = array[i];
 				var child=this.children[i];
 				if(!child){
-				  child=byExample(templates[i%templates.length]);
+				  child=factory.byExample(templates[i%templates.length]);
 					child.mount(this);
 				}
 				child.setData(item, opts, i);
