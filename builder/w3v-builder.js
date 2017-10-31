@@ -1,13 +1,20 @@
 'use strict';
 
-const W3View = require('./w3view.js');
+const W3View = require('../w3view.js');
 const jsdom = require('node-jsdom');
 
-module.exports = function(src, pathName){
-	W3View.document = jsdom.jsdom("<html><body></body></html>");
+const builder = function(src){
+	W3View.document = jsdom.jsdom("<html/>");
 
 	const factory = new W3View();
 	factory.parse(src);
+
+	let modules;
+	if(factory.imports && factory.imports.length){
+		modules=factory.imports.map((item,i)=>{
+			return builder.loader(item.src);
+		});
+	}
 
 	const registry=factory.getRegistry();
 
@@ -32,10 +39,14 @@ module.exports = function(src, pathName){
 	buffer.push('var factory = new W3View(appContext);');
 	buffer.push('\tfactory.setRegistry(\n'+registryS+');');
 	buffer.push('\treturn factory;};');
-	buffer.push('//# sourceURL=W3View:///'+pathName);
+	buffer.push('//# sourceURL=W3View:///library');
 	buffer.push('if(typeof module === "object") {var W3View = require(\'w3view\'); module.exports = w3view;}');
 
 	return buffer.join("\n");
 };
 
+builder.loader=function(path){
+	throw new Error('builder.loader is abstract and should be implemented by builder')
+}
 
+module.exports = builder;

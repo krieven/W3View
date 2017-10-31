@@ -11,10 +11,14 @@ function W3View(appContext){
 
 	this.getRegistry = function(){return registry;};
 	this.setRegistry = function(newRegistry){registry=newRegistry;};
+	this.putModule = function(name, module){
+		modules[name] = module;
+	};
+	
 	/**
-	 * [{ registry:{}, deref: {}}]
+	 * 
 	 */
-	var imports = [];
+	var modules = {};
 
 	var document = W3View.document || window.document;
 	/**
@@ -178,11 +182,18 @@ function W3View(appContext){
 		matrix.innerHTML=str;
 		var ch=matrix.children;
 		factory.register(ch);
-	}
+	};
 
 
 	factory.register = function(ch){
 		for(var i=0;i<ch.length;i++){
+			if(ch[i].tagName.toUpperCase()==='IMPORT'){
+				factory.imports =factory.imports || [];
+				factory.imports.push(
+					{src:ch[i].getAttribute('src'), name:ch[i].getAttribute('name')}
+				);
+				continue;
+			}
 			var asName=(ch[i].getAttribute('as') || '').toUpperCase();
 			if( asName ) {
 				if(!registry[asName]){
