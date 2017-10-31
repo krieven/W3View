@@ -162,5 +162,5 @@ var factory = new W3View(appContext);
 //# sourceURL=W3View:///app
 }}}});
 	return factory;};
-//# sourceURL=W3View:///examples/window.w3v.html
+//# sourceURL=W3View:///library
 if(typeof module === "object") {var W3View = require('w3view'); module.exports = w3view;}

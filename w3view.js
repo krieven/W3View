@@ -217,6 +217,15 @@ function W3View(appContext){
 		//если есть зарегистрированный компонент с таким именем
 		//тогда создадим его инстанс из препарата
 		var prep=this.findPrep(name);
+		if(!prep ){
+			var path = name.split(':');
+			if(path.length>1 && modules[path[0]]){
+				return modules[path[0]].create(
+					path.slice(1).join(':'),
+					attr, ch, root
+				);
+			}
+		}
 		if(prep){
 			//если в препарате есть функция для создания
 			//инстанса, возвратить результат её работы

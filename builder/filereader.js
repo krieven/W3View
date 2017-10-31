@@ -8,7 +8,7 @@ const path = require('path');
 function reader(src, callback){
 	fs.readFile(src, function(err, dataBuff){
 		if(err) {
-			console.dir(err);
+			console.error(err);
 			return;
 		}
 		callback(dataBuff.toString());
@@ -17,7 +17,6 @@ function reader(src, callback){
 
 reader.makeSrc=function(currentSrc, nextPart){
 	var src=path.resolve(path.dirname(currentSrc), nextPart);
-	console.log(src);
 	return src;
 };
 

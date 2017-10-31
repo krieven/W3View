@@ -1,0 +1,154 @@
+      <div as='app' 
+        style='box-sizing:border-box;overflow:auto;
+        position:fixed;
+        left:0px;top:0px;width:100%;height:100%;
+        padding:20px;'>
+        
+        <array-iterator useTag='table' ref='tb' border=1 
+            style='float:left;width:98%;height:100%;'>
+          <row></row>
+        </array-iterator>
+        <scrollbar ref="scroll"></scrollbar>
+        <script type="/javascript">
+
+          var data = {};
+          this.onSetData=function(input){
+            data = input || {list:[]};
+            data.len=data.len=Math.round(this.ref.scroll.offsetHeight/30);
+            data.offset = data.offset>(data.list.length-data.len)?(data.list.length-data.len):data.offset;
+            if(data.offset+data.len > data.list.length) data.offset=data.list.length-data.len;
+            if(data.offset < 0) data.offset=0;
+            
+            var frame=data.list.slice(data.offset,data.offset+data.len);
+            this.ref.tb.setData(frame);
+            this.ref.scroll.setData({app:this, data:data});
+          };
+
+          var resize =  function(){
+            this.setData(data);
+          }.bind(this);
+
+          var keyDown=function(e){
+            var sh={38:+1, 40:-1}[e.keyCode];
+            if(sh !== undefined){
+              if(!e.ctrlKey && !e.altKey && !e.shiftKey) e.preventDefault(); 
+              else return;
+              data.offset-=sh;
+              this.setData(data);
+            }
+          }.bind(this);
+
+          this.ref.tb.onwheel =function(e){
+            e.preventDefault();
+            if(e.deltaY>0){
+              data.offset++;
+            } else{
+              data.offset--;
+            }
+            this.setData(data);
+            return false;
+          }.bind(this);
+          
+          this.onMount = function(){
+            window.addEventListener('resize',resize);
+            window.addEventListener('keydown',keyDown);
+          };
+
+          this.onUnmount = function(){
+            window.removeEventListener('resize',resize);
+            window.removeEventListener('keydown',keyDown);
+          };
+
+        </script>
+      </div>
+
+      <div as='row' super="array-iterator"  tagName='tr'>
+          <cell></cell>
+          <script type="/javascript">
+            var superSetData = this.onSetData.bind(this);
+
+            this.onSetData=function(data){
+              superSetData(data);
+              if(data[0]%3===0){
+                this.style.backgroundColor="#ccffcc";
+              }
+              else{
+                this.style.backgroundColor="";
+              }
+            };
+
+          </script>
+      </div>
+
+      <div as='cell' useTag="td"
+        style="text-align:center;width:10%;">
+        <script type="/javascript">
+
+          this.onSetData=function(data){
+            this.innerText=data;
+          };
+
+        </script>
+      </div>
+
+      <div as='scrollbar' 
+        style='float:right;width:2%; height: 100%;
+        border:1px solid black;'>
+        <div ref='scroller' 
+          style='cursor:pointer;position:relative; 
+          width:100%; height:100px;
+          min-height:20px;
+          border:2px solid black;
+          background-color:#999999;margin-top:0px;'></div>
+        <script type="/javascript">
+          var app = {}, data = {};
+          var hh = 0;
+
+          this.onSetData=function(input){
+            data = input.data;
+            app = input.app;
+            var h=data.len/data.list.length*this.offsetHeight;
+            this.ref.scroller.style.height=(h)+'px';
+            hh=this.ref.scroller.offsetHeight-h;
+            this.ref.scroller.style.top=(data.offset/data.list.length*(this.offsetHeight-hh))+'px';
+          };
+          var downAt = 0;
+          var offsetAt = 0;
+
+          var scrolling = this.ref.scroller.onmousedown=function (e){
+            downAt = e.clientY;
+            offsetAt = data.offset;
+            document.body.addEventListener('mousemove', onmousemove);
+            document.body.addEventListener('mouseup', onmouseup);
+          };
+
+          var onmouseup=function(e){
+            document.body.removeEventListener('mousemove', onmousemove);
+            document.body.removeEventListener('mouseup', onmouseup);
+          };
+
+          var onmousemove=function(e){
+            e.preventDefault();
+            var eY=e.clientY;
+            if(downAt<0) {eY=e.offsetY;}
+            var dy = Math.round((eY-downAt)/(this.offsetHeight-hh)*data.list.length);
+            
+            var offset = offsetAt+dy;
+            app.setData({list:data.list, offset:offset});
+            return false;
+          }.bind(this);
+
+          this.onclick = function(e){
+            if(e.target !== this) return;
+            offsetAt=0;
+            downAt=-1;
+            onmousemove(e);
+          };
+
+        </script>
+      </div>
+
+      <import src="./grid.w3v.html" name="grid"></import>
+
+      <import src="../examples/window.w3v.html" name="win"></import>
+ 
