@@ -2,8 +2,6 @@
 /**
  *
  */
-const fs = require('fs'); 
-const path = require('path');
 
 function reader(src, callback){
 	fs.readFile(src, function(err, dataBuff){
@@ -20,4 +18,8 @@ reader.makeSrc=function(currentSrc, nextPart){
 	return src;
 };
 
-module.exports = reader;
+if(typeof module !== 'undefined'){
+	var fs = require('fs'); 
+	var path = require('path');
+	module.exports = reader;
+}

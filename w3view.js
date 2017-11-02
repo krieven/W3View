@@ -10,7 +10,7 @@ function W3View(appContext){
 	var mixin = {};
 
 	this.getRegistry = function(){return registry;};
-	this.setRegistry = function(newRegistry){registry=newRegistry;};
+	this.setRegistry = function(newRegistry){registry=newRegistry; return factory;};
 	this.putModule = function(name, module){
 		modules[name] = module;
 	};

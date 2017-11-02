@@ -4,12 +4,15 @@ const reader=require('./filereader.js');
 
 console.time('loader');
 loader(null, __dirname+'/../examples/window.w3v.html', reader, function(data){
-	console.dir(data.create('grid:win:app').outerHTML);
+	console.dir(data.create('grid:grid:win:app').outerHTML);
 	console.timeEnd('loader');
 });
 
 console.time('loader1');
-loader(null, __dirname+'/../examples/grid.w3v.html', reader, function(data){
-	console.dir(data.create('grid:win:app').outerHTML);
+loader({}, __dirname+'/../examples/grid.w3v.html', reader, function(data){
+	console.dir(data.create('grid:win:modalwin').outerHTML);
 	console.timeEnd('loader1');
+	console.time('loader2');
+	(data.create('grid:win:modalwin'));
+	console.timeEnd('loader2');
 });

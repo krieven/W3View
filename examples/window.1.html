@@ -2,11 +2,12 @@
 <html>
 	<head>
 		<script src="../w3view.js"></script>
-		<script src="./window.js"></script>
+		<script src="./module.js"></script>
 	</head>
 	<body style="padding:50px;">
 		<script>
-			w3view().create('app').mount(document.body);
+			w3view().create('win:app')
+			.mount(document.body);
 		</script>
 	</body>
 </html>

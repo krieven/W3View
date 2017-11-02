@@ -1,12 +1,9 @@
 'use strict';
 
-const W3View = require('../w3view.js');
-const jsdom = require('node-jsdom');
-
 function moduleLoader(appContext, src, reader, onload){
-	W3View.document = W3View.document || jsdom.jsdom("<html/>");
+	W3View.document = W3View.document || jsdom("");
   moduleLoader.imported = moduleLoader.imported || {};
-  src = reader.makeSrc('',src);
+  src = reader.makeSrc('', src);
   reader(src,
     function(response){
       var factory = new W3View(appContext);
@@ -30,7 +27,8 @@ function moduleLoader(appContext, src, reader, onload){
             loading++;
             continue;
           }
-          factory.putModule(factory.imports[i].name, moduleLoader.imported[msrc])
+          factory.putModule(factory.imports[i].name, moduleLoader.imported[msrc]);
+          factory.imports[i].src = msrc;
         }
       }
       if(loading===0) onload(factory);
@@ -38,4 +36,8 @@ function moduleLoader(appContext, src, reader, onload){
   )
 };
 
-module.exports=moduleLoader;
+if(typeof module !=='undefined'){
+  var W3View = require('../w3view.js');
+  var jsdom = require('node-jsdom'); jsdom = jsdom.jsdom || jsdom;
+  module.exports=moduleLoader;
+}

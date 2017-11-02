@@ -4,21 +4,37 @@
  * for example
  * node build.js examples/window.w3v.html > examples/window.js
  */
-const fs = require('fs'); 
-const Path = require('path');
 
-const builder = require('./w3v-builder.js');
 
-const args = process.argv.slice(2);
+const loader = require('./moduleLoader.js');
+const converter = require('./converter.js');
+const reader = require('./filereader.js');
 
-const src = fs.readFileSync(args[0]);
+let src = process.argv[2];
 
-builder.loader=function(src){
-	let path = Path.normalize(Path.dirname(args[0])+'/'+src);
-	console.log(path);
-	return fs.readFileSync(path);
-};
+loader(null, src,reader,function(){
+	let buffer = [];
+	let imports = {};
+	var i = 0;
+	for(var path in loader.imported){
+		buffer.push('('+converter(loader.imported[path])+')(appContext)');
+		imports[path] = i;
+		i++;
+	}
 
-const result = builder(src);
+	buffer = [ 'function w3view(appContext){var factory=['+buffer.join(',')+']' ];
 
-console.log(result);
+	for(var path in loader.imported){
+		var factory=loader.imported[path];
+		if(factory.imports){
+			for(var i=0;i<factory.imports.length;i++){
+				buffer.push('factory['+imports[path]+'].putModule(\''+factory.imports[i].name+'\',factory['+i+'])');
+			}
+		}
+	}
+	buffer.push('return factory[0];};',
+	'//# sourceURL=W3View:///'+src
+	);
+
+	console.log(buffer.join(';\n'));
+});
