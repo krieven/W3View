@@ -44,15 +44,15 @@
 				var app = w3view.create('years');
 				app.mount(document.body);
 				var data = [[0,1,2]];
-				function loop(){
+				(function loop(){
 					app.setData(data);
 					if (data.length<30)
 						data.push([data.length,data.length+1,data.length+2]);
 					else
 						data.push(data.shift());
 					setTimeout(loop, 1);
-				};
-				loop();
+				})();
+				
 				
 			</script>
 		</body>

@@ -2,17 +2,17 @@
 /**
  * Usage: node build.js <path/to/src/file> > <path/to/dest/file>
  * for example
- * node build.js examples/window.w3v.html > examples/window.js
+ * node build.js ../examples/modules/window.w3v.html > ../examples/built/window.js
  */
 
 
-const loader = require('./moduleLoader.js');
+const loader = require('../loader/moduleLoader.js');
 const converter = require('./converter.js');
-const reader = require('./filereader.js');
+const reader = require('../loader/filereader.js');
 
 let src = process.argv[2];
 
-loader(null, src,reader,function(){
+loader(null, src, reader, function(){
 	let buffer = [];
 	let imports = {};
 	var i = 0;
@@ -28,12 +28,16 @@ loader(null, src,reader,function(){
 		var factory=loader.imported[path];
 		if(factory.imports){
 			for(var i=0;i<factory.imports.length;i++){
-				buffer.push('factory['+imports[path]+'].putModule(\''+factory.imports[i].name+'\',factory['+i+'])');
+				var msrc = factory.imports[i].src;
+				buffer.push(
+					'factory['+imports[path]+
+					'].putModule(\''+factory.imports[i].name+
+					'\',factory['+imports[msrc]+'])');
 			}
 		}
 	}
-	buffer.push('return factory[0];};',
-	'//# sourceURL=W3View:///'+src
+	buffer.push('return factory['+imports[reader.makeSrc(src)]+'];}',
+							'//# sourceURL=W3View:///'+src
 	);
 
 	console.log(buffer.join(';\n'));

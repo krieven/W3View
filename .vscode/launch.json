@@ -8,7 +8,8 @@
 			"type": "node",
 			"request": "launch",
 			"name": "Запустить программу",
-			"program": "${workspaceRoot}/build.js",
+			"args": ["examples/grid.w3v.html"],
+			"program": "${workspaceRoot}/builder/build.js",
 			"cwd": "${workspaceRoot}"
 		},
 		{

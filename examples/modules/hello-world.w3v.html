@@ -1,0 +1,26 @@
+			
+			//any text can be placed between components definitions,
+			//except HTML markup.
+			
+			//hello-world component
+			<div as="hello-world">
+				<h1 ref="content"></h1>
+				<input ref="input" placeholder="type your name here">
+				<h2>Hello <span ref="name">Anonimous</span>!</h2>
+				<script>
+					//CONSTRUCTOR tag should be used inside SCRIPT tag
+					this.ref.input.onkeyup = function(e){
+						this.setData(this.ref.input.value);
+					}.bind(this);
+					this.onSetData = function(data){
+						this.ref.name.innerText = data || 'Anonimous';
+					};
+				</script>
+			</div>
+			
+			//root of app 
+			<div as="double-hello-world">
+				<hello-world>Hello first</hello-world>
+				<hr>
+				<hello-world>Hello second</hello-world>
+			</div>

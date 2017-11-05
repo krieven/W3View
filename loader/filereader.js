@@ -14,7 +14,9 @@ function reader(src, callback){
 }
 
 reader.makeSrc=function(currentSrc, nextPart){
-	var src=path.resolve(path.dirname(currentSrc), nextPart);
+	nextPart = nextPart || '';
+	currentSrc = nextPart ? path.dirname(currentSrc) : currentSrc;
+	var src=path.resolve(currentSrc, nextPart);
 	return src;
 };
 

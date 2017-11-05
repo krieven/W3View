@@ -1,0 +1,134 @@
+
+
+      <div as="slider"  min="0" max="1" value="0">
+        <div style="padding:20px;border:1px solid black;">
+          <div ref="bar" style="height:10px;border:1px solid black;">
+            <div style="position:relative;height:0px;width:0px" ref="mover" >
+              <div style="position:absolute;margin:-10px 0 0 -10px;width:20px; height:30px;border:1px solid black;background-color:gray;"></div>
+            </div>
+          </div>
+        </div>
+        <script type="javascript">
+          var value;
+          var max, min, defValue;
+          this.onSetData=function(data){
+            min = parseInt(this.getAttribute('min') || "0", 10);
+            max = parseInt(this.getAttribute('max') || "1", 10);
+            defValue = parseInt(this.getAttribute('value') || "0",10);
+            
+            value = parseInt(data,10); if (isNaN(value)) value=defValue;
+
+            value = (value<min)?min:value;
+            value = (value>max)?max:value;
+
+            this.ref.mover.style.left = (100*(value - min) / (max - min)) + "%";
+
+            this.onchange(value);
+          };
+          this.ref.bar.onclick=function(e){
+            e.stopPropagation();
+            if(e.target===this.ref.bar)
+              this.setData((max-min)/this.ref.bar.offsetWidth*e.offsetX);
+          }.bind(this);
+          var downAt, valueAt;
+          var moverOnmousemove = function(e){
+            e.preventDefault(); e.stopPropagation();
+            var shift = e.clientX-downAt;
+            var v = valueAt + shift*(max-min)/this.ref.bar.offsetWidth;
+            this.setData(v);
+            return false;
+          }.bind(this);
+          var moverOnmouseup = function(e){
+            window.removeEventListener('mousemove', moverOnmousemove);
+            window.removeEventListener('mouseup', moverOnmouseup);
+          };
+          this.ref.mover.onmousedown = function(e){
+            downAt = e.clientX;
+            valueAt = value;
+            window.addEventListener('mousemove', moverOnmousemove);
+            window.addEventListener('mouseup', moverOnmouseup);
+          };
+          this.onchange=function(value){};
+          this.getValue=function(){
+            return value;
+          };
+          this.setData();
+        </script>
+      </div>
+
+      <div as='color-chooser' style='box-sizing:border-box;'>
+        <h1 ref="content" col="2"></h1>
+        
+        <slider ref="slider" min="0" max="255" value="128" style="background-color:white;" col="8"></slider>
+        <input type="text" ref="value" col="2"
+          style="text-align:right;height:50px;
+          font-size:40px;overflow:visible;border:0;
+          border-bottom:5px solid green;min-width:100px;padding:0px 10px;">
+        <clear></clear>
+        
+        <script type="javascript">
+          this.ref.slider.onchange = function(value){this.ref.value.value = value; this.onchange(value);}.bind(this);
+          
+          this.ref.value.onchange = function(e){
+            e.stopPropagation();
+            this.ref.slider.setData(this.ref.value.value);
+          }.bind(this);
+
+          this.ref.value.onkeydown = function(e){
+            var sh={38:+1, 40:-1,37000:-1,39000:+1}[e.keyCode];
+            if(sh !== undefined){
+              if(!e.ctrlKey && !e.altKey && !e.shiftKey) e.preventDefault(); else return;
+              this.setData(this.ref.value.value*1+sh);
+            }
+          }.bind(this);
+
+          this.onSetData = function(value){
+            this.ref.slider.setData(value);
+          };
+          
+          this.getValue = function(){return this.ref.slider.getValue();};
+
+          this.onchange=function(value){};
+
+          this.setData(this.getValue());
+        </script>
+      </div>
+
+      <div as="rgb-chooser" style="border:1px solid black; padding:20px;">
+        <color-chooser ref="red">Red</color-chooser>
+        <color-chooser ref="green">Green</color-chooser>
+        <color-chooser ref="blue">Blue</color-chooser>
+        <clear></clear>
+        <script type="javascript">
+
+          this.getValue=function(){
+            return "rgb("+this.ref.red.getValue()+
+                    ","+this.ref.green.getValue()+
+                    ","+this.ref.blue.getValue()+
+            ")";
+          };
+          
+          this.ref.red.onchange = function(value){this.onchange(this.getValue());}.bind(this);
+          this.ref.green.onchange = function(value){this.onchange(this.getValue());}.bind(this);
+          this.ref.blue.onchange = function(value){this.onchange(this.getValue());}.bind(this);
+
+          this.onchange=function(value){};
+
+        </script>
+      </div>
+
+      <div as="app">
+        <div style="height:100px;padding:20px 0px;font-size:20px;
+          text-align:center;border:1px solid black;border-bottom:0px;" id="disp">
+            <span ref="va" style="background-color:white; padding:10px;border-radius: 20px;"></span>
+        </div>
+        <rgb-chooser ref="control"></rgb-chooser>
+        <script>
+          this.ref.control.onchange = function(value){
+            disp.style.backgroundColor = value;
+            val.innerText = value;
+          };
+          this.ref.control.setData();
+        </script>
+      </div>
+

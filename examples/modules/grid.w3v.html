@@ -1,15 +1,15 @@
-      <div as='app' 
+      <div as='tbl' 
         style='box-sizing:border-box;overflow:auto;
-        position:fixed;
-        left:0px;top:0px;width:100%;height:100%;
+        min-height:300px;
+        width:100%;height:100%;
         padding:20px;'>
         
         <array-iterator useTag='table' ref='tb' border=1 
-            style='float:left;width:98%;height:100%;'>
+            style='float:left;width:98%;height:100%;overflow:auto;'>
           <row></row>
         </array-iterator>
         <scrollbar ref="scroll"></scrollbar>
-        <script type="/javascript">
+        <script>
 
           var data = {};
           this.onSetData=function(input){
@@ -24,7 +24,7 @@
             this.ref.scroll.setData({app:this, data:data});
           };
 
-          var resize =  function(){
+          var resize = this.onresize =  function(){
             this.setData(data);
           }.bind(this);
 
@@ -64,7 +64,7 @@
 
       <div as='row' super="array-iterator"  tagName='tr'>
           <cell></cell>
-          <script type="/javascript">
+          <script>
             var superSetData = this.onSetData.bind(this);
 
             this.onSetData=function(data){
@@ -82,7 +82,7 @@
 
       <div as='cell' useTag="td"
         style="text-align:center;width:10%;">
-        <script type="/javascript">
+        <script>
 
           this.onSetData=function(data){
             this.innerText=data;
@@ -100,7 +100,7 @@
           min-height:20px;
           border:2px solid black;
           background-color:#999999;margin-top:0px;'></div>
-        <script type="/javascript">
+        <script>
           var app = {}, data = {};
           var hh = 0;
 
@@ -148,7 +148,22 @@
         </script>
       </div>
 
-      <import src="./grid.w3v.html" name="grid"></import>
+      <div as=app>
+        <tbl ref="table" style="height:100%;position:relative;"></tbl>
+        <script>
+          var data=[];
+          for(var i =0; i<1000; i++){
+            data.push([i, '10'+i,  '20'+i, '30'+i, '40'+i, i, '10'+i,  '20'+i, '30'+i, '40'+i]);
+          }
+          this.onresize = function(){
+            this.ref.table.onresize();
+          }
+          this.onMount=function(){
+            this.ref.table.setData({list:data, offset:0});
+            this.parentElement.onresize=this.onresize.bind(this);
+          };
+        </script>
+      </div>
 
-      <import src="../examples/window.w3v.html" name="window"></import>
+      <import src="window.w3v.html" name="window"></import>
  

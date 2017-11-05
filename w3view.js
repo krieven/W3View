@@ -1,8 +1,8 @@
 /**
  * @author Vitaly Dmitriev, 2016
  */
-
 'use strict';
+String.prototype.trim = String.prototype.trim || function(){return this;};
 
 function W3View(appContext){
 	var registry = {};
@@ -12,6 +12,7 @@ function W3View(appContext){
 	this.getRegistry = function(){return registry;};
 	this.setRegistry = function(newRegistry){registry=newRegistry; return factory;};
 	this.putModule = function(name, module){
+		name = name.toUpperCase();
 		modules[name] = module;
 	};
 	
@@ -80,12 +81,12 @@ function W3View(appContext){
 	 * Author of component can override each of them.
 	 */
 	/**
-	 * Mock, callback on this.setData
+	 * callback on this.setData
 	 */
 	mixin.onSetData=function(data,opts){};
 
 	/**
-	 * Mock, callbacks on element.mount and element.unmount
+	 * callbacks on element.mount and element.unmount
 	 * in this time you can touch parentElement if needed,
 	 * onMount will be called after inserting into DOM tree
 	 * onUnmount - before removing
@@ -94,12 +95,12 @@ function W3View(appContext){
 	mixin.onUnmount=function(){};
 
 	/**
-	 * Mock, callback called immediately after element created
+	 * callback called immediately after element created
 	 * before mount 
 	 */
 	mixin.onCreate=function(){};
 	/**
-	 * Mock, callback called when destroy
+	 * callback called when destroy
 	 * Please cleanup all references to this,
 	 * including callbacks, placed into any kind of dispatchers,
 	 * observables and event listeners
@@ -151,18 +152,21 @@ function W3View(appContext){
 		res.super = root.getAttribute('super') || undefined;
 		var ch=root.childNodes;
 		for(var i=0; i < ch.length; i++){
-			if(ch[i].nodeType > 3) continue;
-			if(!ch[i].tagName){
-				res.ch.push({text:ch[i].textContent});
+			var cChild = ch[i];
+			var textContent = cChild.textContent || cChild.innerHTML || cChild.nodeValue || '';
+			if(cChild.nodeType > 3) continue;
+			if(!cChild.tagName){
+				if(textContent.trim())
+					res.ch.push(textContent);
 				continue;
 			}
-			var tgn=ch[i].tagName.toUpperCase();
+			var tgn=cChild.tagName.toUpperCase();
 			if(tgn==='CONSTRUCTOR' || tgn==='SCRIPT'){
-				var construct="\n"+(ch[i].textContent || ch[i].innerText)+
+				var construct="\n"+(textContent)+
 					"\n//# sourceURL=W3View:///"+res.as+"";
 				res.script = new Function('appContext,factory,document', construct);
 			} else {
-				var child = prepare(ch[i]);
+				var child = prepare(cChild);
 				delete child.script;
 				delete child.as;
 				res.ch.push(child);
@@ -207,6 +211,51 @@ function W3View(appContext){
 		}
 	};
 
+	function makeFromPrep(name, attr, ch, root){
+		//определить имя тэга
+		//если тэг определён для создаваемого инстанса
+		//с помощью атрибута, необходимо использовать значение атрибута
+		//иначе нужно применить имя тэга из препарата
+		var tagname = (attr && attr.usetag) ? attr.usetag : prep.tgn;
+		//создаём инстанс 
+		instance=document.createElement(tagname);
+		instance.as=prep.as;
+		//назначить ссылку на элемент для вставки контента,
+		//по умолчанию - на самого себя 
+		instance.ref={content:instance};
+		//*/
+		//если в препарате указаны атрибуты
+		//пройти и установить их в инстанс
+		setAttributes(instance, prep.attr);
+		//если в препарате указаны вложенные ноды
+		//пройти и добавить их
+		if(prep.ch && prep.ch.length)
+		for(var i=0;i < prep.ch.length;i++){
+			//если нода текстовая
+			if(!prep.ch[i].tgn){
+				//создать и установить её
+				instance.appendChild(document.createTextNode(prep.ch[i]));
+				continue;
+			}
+			//иначе создать ноду этой фабрикой,
+			//указывая в качестве корня себя и
+			//в качестве параметров ноды - атрибуты и 
+			//вложенные ноды из её описания в инстансе
+			var cch=factory.create(prep.ch[i].tgn, prep.ch[i].attr, prep.ch[i].ch,instance);
+			//если у созданной ноды есть атрибут ref
+			//добавить ссылку на ноду в ref инстанса
+			var ref=cch.getAttribute('ref');
+			if(ref){
+				instance.ref[ref]=cch;
+			}
+			//добавить ноду в инстанс 
+			instance.appendChild(cch);
+			if (cch.onMount) cch.onMount();
+		}
+		//*/
+		return instance;
+	}
+
 	/**
 	 * Magic method, - factory of components - 
 	 * does all dirty work at DOM nodes creation,
@@ -218,7 +267,7 @@ function W3View(appContext){
 		//тогда создадим его инстанс из препарата
 		var prep=this.findPrep(name);
 		if(!prep ){
-			var path = name.split(':');
+			var path = name.toUpperCase().split(':');
 			if(path.length>1 && modules[path[0]]){
 				return modules[path[0]].create(
 					path.slice(1).join(':'),
@@ -227,9 +276,6 @@ function W3View(appContext){
 			}
 		}
 		if(prep){
-			//если в препарате есть функция для создания
-			//инстанса, возвратить результат её работы
-			if(prep.create) return prep.create(attr,ch,root);
 			//определить имя тэга
 			//если тэг определён для создаваемого инстанса
 			//с помощью атрибута, необходимо использовать значение атрибута
@@ -244,7 +290,7 @@ function W3View(appContext){
 			//*/
 			//если в препарате указаны атрибуты
 			//пройти и установить их в инстанс
-			setAttributes(instance, prep.attr)
+			setAttributes(instance, prep.attr);
 			//если в препарате указаны вложенные ноды
 			//пройти и добавить их
 			if(prep.ch && prep.ch.length)
@@ -252,7 +298,7 @@ function W3View(appContext){
 				//если нода текстовая
 				if(!prep.ch[i].tgn){
 					//создать и установить её
-					instance.appendChild(document.createTextNode(prep.ch[i].text));
+					instance.appendChild(document.createTextNode(prep.ch[i]));
 					continue;
 				}
 				//иначе создать ноду этой фабрикой,
@@ -290,7 +336,7 @@ function W3View(appContext){
 		for(var i = 0; i < ch.length; i++){
 			//если нода текстовая
 			if(!ch[i].tgn){
-				instance.ref.content.appendChild(document.createTextNode(ch[i].text));
+				instance.ref.content.appendChild(document.createTextNode(ch[i]));
 				continue;
 			}
 			//иначе создаём этой фабрикой, указывая атрибуты и деток из 

@@ -1,9 +1,8 @@
 'use strict';
 
 function moduleLoader(appContext, src, reader, onload){
-	W3View.document = W3View.document || jsdom("");
   moduleLoader.imported = moduleLoader.imported || {};
-  src = reader.makeSrc('', src);
+  src = reader.makeSrc(src);
   reader(src,
     function(response){
       var factory = new W3View(appContext);
@@ -16,14 +15,15 @@ function moduleLoader(appContext, src, reader, onload){
         for(var i=0; i<factory.imports.length; i++){
           var msrc = reader.makeSrc(src, factory.imports[i].src);
           if(!moduleLoader.imported[msrc]){
-            (function(name,msrc){
+            (function(name,msrc,i){
               moduleLoader(appContext,msrc,reader,function(res){
                 loading--;
                 moduleLoader.imported[msrc]=res;
                 factory.putModule(name,res);
+                factory.imports[i].src=msrc;
                 if(loading===0) onload(factory);
               });
-            })(factory.imports[i].name, msrc);
+            })(factory.imports[i].name, msrc,i);
             loading++;
             continue;
           }
@@ -36,8 +36,12 @@ function moduleLoader(appContext, src, reader, onload){
   )
 };
 
-if(typeof module !=='undefined'){
-  var W3View = require('../w3view.js');
-  var jsdom = require('node-jsdom'); jsdom = jsdom.jsdom || jsdom;
+if(typeof process !== 'undefined' && typeof module !=='undefined' && typeof require === 'function'){
+  var W3View = require('../w3view.js') || W3View;
+  var jsdom = require('node-jsdom') || function() {return document;}; 
+  
+  jsdom = jsdom.jsdom || jsdom;
+ 	W3View.document = jsdom("");
+  
   module.exports=moduleLoader;
 }
