@@ -6,9 +6,9 @@
 
 11 kB of documented, not minified code.
 
-#In current version 
-- <a href="https://rawgit.com/vitalydmitriev1970/W3View/master/loader>Modularity and namespaces added</a
-- <a	href="https://rawgit.com/vitalydmitriev1970/W3View/master/examples/window.1.html>Prebuilding your modules into one js bundle</a> 
+# In current version 
+- <a href="https://rawgit.com/vitalydmitriev1970/W3View/master/loader">Modularity and namespaces added</a>
+- <a	href="https://rawgit.com/vitalydmitriev1970/W3View/master/examples/window.1.html">Prebuilding your modules into one js bundle</a> 
 
 ## What W3View does ?
 W3View generates **reusable UI components** from HTML based declarative 
