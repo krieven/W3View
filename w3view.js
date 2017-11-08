@@ -258,10 +258,16 @@ function W3View(appContext){
 	 */
 	factory.create=function(name, attr, ch, root){
 		var instance;
-		//если есть зарегистрированный компонент с таким именем
-		//тогда создадим его инстанс из препарата
 		var prep=this.findPrep(name);
-		if(!prep ){
+		if(prep){
+			if(factory.findPrep(prep.tgn)){
+				instance = factory.create(prep.tgn, prep.attr, prep.ch);
+			} else {
+				var tagname = (attr && attr.usetag) ? attr.usetag : prep.tgn;
+				instance = makeFromPrep(tagname, prep);
+			}
+		} 
+		else {
 			var path = name.toUpperCase().split(':');
 			if(path.length>1 && modules[path[0]]){
 				return modules[path[0]].create(
@@ -269,69 +275,42 @@ function W3View(appContext){
 					attr, ch, root
 				);
 			}
-		}
-		if(prep){
-			if(factory.findPrep(prep.tgn)){
-				instance = factory.create(prep.tgn, prep.attr, prep.ch);
-			} else {
-				//определить имя тэга
-				//если тэг определён для создаваемого инстанса
-				//с помощью атрибута, необходимо использовать значение атрибута
-				//иначе нужно применить имя тэга из препарата
-				var tagname = (attr && attr.usetag) ? attr.usetag : prep.tgn;
-				instance = makeFromPrep(tagname, prep);
-			}
-		} 
-		//если нет зарегистрированного компонента с таким именем
-		//просто создадим элемент
-		else {
 			instance=document.createElement(name);
 			instance.ref={content:instance};
 		}
-		//начинаем заполнять инстанс из параметров
+
 		if(!root) root=instance;
-		//ставим атрибуты
 		setAttributes(instance, attr);
-		//вставляем дочерние ноды в ref.content
 		if(ch && ch.length)
 		for(var i = 0; i < ch.length; i++){
-			//если нода текстовая
 			if(!ch[i].tgn){
 				instance.ref.content.appendChild(document.createTextNode(ch[i]));
 				continue;
 			}
-			//иначе создаём этой фабрикой, указывая атрибуты и деток из 
-			//параметров
 			var cch=factory.create(ch[i].tgn, ch[i].attr, ch[i].ch, root);
-			//устанавливаем ref в корень, если он есть
 			var ref=cch.getAttribute('ref');
 			if(ref){
 				root.ref=root.ref || {}; 
 				root.ref[ref]=cch;
 			}
-			//монтируем дочернюю ноду в контент текущей
 			if(cch.mount){
 				cch.mount(instance);
 			} else {
 				instance.ref.content.appendChild(cch);
 			}
 		}
-		//микшируем W3View API, если инстанс - экземпляр зарегистрированного
-		//компонента, вызываем конструктор и отрабатываем
-		//пользовательское событие на создание
+
 		if(prep){
 			for(var k in mixin){
 				instance[k] = instance[k] || mixin[k];
 			}
 			initInstance(instance, name);
 		}
-		//всем создаваемым нодам микшируем деструктор
-		//для каскадного разрушения
+
 		instance.destroy = mixin.destroy;
 		return instance;
 	};
 
-	//var factory = this;
 	factory.byExample = function byExample(tpl){
 		if(!tpl.as){
 			throw new Error('Sample should be registered component');
@@ -339,9 +318,11 @@ function W3View(appContext){
 		var res = factory.create(tpl.as, nmToObj(tpl.attributes));
 		return res;
 	};
+
 	///builtin components
 	//ARRAY-ITERATOR
 	factory.parse('<div as="ARRAY-ITERATOR"></div>');
+	factory.findPrep('ARRAY-ITERATOR').builtin=true;
 	factory.findPrep('ARRAY-ITERATOR').script = function(appContext,factory,document){
 		var templates=[];
 		while(this.children.length > 0){
