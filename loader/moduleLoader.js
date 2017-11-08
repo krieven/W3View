@@ -36,12 +36,8 @@ function moduleLoader(appContext, src, reader, onload){
   )
 };
 
-if(typeof process !== 'undefined' && typeof module !=='undefined' && typeof require === 'function'){
+if(typeof module !=='undefined' && typeof require === 'function'){
   var W3View = require('../w3view.js') || W3View;
-  var jsdom = require('node-jsdom') || function() {return document;}; 
-  
-  jsdom = jsdom.jsdom || jsdom;
- 	W3View.document = jsdom("");
   
   module.exports=moduleLoader;
 }

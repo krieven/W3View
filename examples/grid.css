@@ -1,6 +1,9 @@
 * {
   box-sizing: border-box;
 }
+body {
+  padding:50px;
+}
 clear {clear:both;display:block;}
 [col]{float:left}
 [col="1"]{width:	8.3333%;}

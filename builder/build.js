@@ -4,11 +4,15 @@
  * for example
  * node build.js ../examples/modules/window.w3v.html > ../examples/built/window.js
  */
-
-
 const loader = require('../loader/moduleLoader.js');
 const converter = require('./converter.js');
 const reader = require('../loader/filereader.js');
+
+var W3View = require('../w3view.js');
+var jsdom = require('node-jsdom'); 
+
+jsdom = jsdom.jsdom || jsdom;
+W3View.document = jsdom("");
 
 let src = process.argv[2];
 
@@ -39,6 +43,5 @@ loader(null, src, reader, function(){
 	buffer.push('return factory['+imports[reader.makeSrc(src)]+'];}',
 							'//# sourceURL=W3View:///'+src
 	);
-
 	console.log(buffer.join(';\n'));
 });

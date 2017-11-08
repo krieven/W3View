@@ -1,20 +1,22 @@
+      
       <div as='tbl' 
-        style='box-sizing:border-box;overflow:auto;
-        min-height:300px;
-        width:100%;height:100%;
-        padding:20px;'>
-        
+        style='box-sizing:border-box;border:1px solid black;min-height:100px;
+        width:100%;height:100%;overflow:hidden;position:relative;
+        padding:0px 20px 0px 0px;'>
         <array-iterator useTag='table' ref='tb' border=1 
-            style='float:left;width:98%;height:100%;overflow:auto;'>
+            style='width:100%;height:100%;min-height:100px;'>
           <row></row>
         </array-iterator>
-        <scrollbar ref="scroll"></scrollbar>
+        <scrollbar ref="scroll"
+          style='position:relative;width:20px; height: 100%;
+          border:1px solid black;top:-100%;left:100%;'>
+        </scrollbar>
         <script>
 
           var data = {};
           this.onSetData=function(input){
             data = input || {list:[]};
-            data.len=data.len=Math.round(this.ref.scroll.offsetHeight/30);
+            data.len = Math.round(this.parentElement.offsetHeight/30);
             data.offset = data.offset>(data.list.length-data.len)?(data.list.length-data.len):data.offset;
             if(data.offset+data.len > data.list.length) data.offset=data.list.length-data.len;
             if(data.offset < 0) data.offset=0;
@@ -50,15 +52,15 @@
           }.bind(this);
           
           this.onMount = function(){
-            window.addEventListener('resize',resize);
-            window.addEventListener('keydown',keyDown);
+            // window.addEventListener('resize',resize);
+            // window.addEventListener('keydown',keyDown);
           };
 
           this.onUnmount = function(){
-            window.removeEventListener('resize',resize);
-            window.removeEventListener('keydown',keyDown);
+            // window.removeEventListener('resize',resize);
+            // window.removeEventListener('keydown',keyDown);
           };
-
+          
         </script>
       </div>
 
@@ -91,13 +93,11 @@
         </script>
       </div>
 
-      <div as='scrollbar' 
-        style='float:right;width:2%; height: 100%;
-        border:1px solid black;'>
+      <div as='scrollbar'>
         <div ref='scroller' 
-          style='cursor:pointer;position:relative; 
+          style='cursor:pointer;position:relative;
           width:100%; height:100px;
-          min-height:20px;
+          min-height:20px;top:0px;
           border:2px solid black;
           background-color:#999999;margin-top:0px;'></div>
         <script>
@@ -138,7 +138,7 @@
             return false;
           }.bind(this);
 
-          this.onclick = function(e){
+          this.onmousedown = function(e){
             if(e.target !== this) return;
             offsetAt=0;
             downAt=-1;
@@ -149,7 +149,7 @@
       </div>
 
       <div as=app>
-        <tbl ref="table" style="height:100%;position:relative;"></tbl>
+        <tbl ref="table"></tbl>
         <script>
           var data=[];
           for(var i =0; i<1000; i++){

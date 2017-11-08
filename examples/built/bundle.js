@@ -28,6 +28,189 @@ return new W3View(appContext)
 			}
 		}
 	}}},
+"WIN":{"prep":{"tgn":"DIV","as":"win","attr":{"as":"win","style":"position:fixed;\n\t\t\t\t\t\t\t border:1px solid black;\n\t\t\t\t\t\t\t padding:5px;\n\t\t\t\t\t\t\t background-color: #cccccc;\n\t\t\t\t\t\t\t box-shadow: 5px 5px 5px rgba(0,0,0,0.3);\n\t\t\t\t\t\t\t "},"ch":[{"tgn":"DIV","attr":{"ref":"topbar","style":"padding:5px 10px;\n\t\t\t\t\t\tbackground-color:blue;color:#fff;\n\t\t\t\t\t\tfont-weight:bold;\n\t\t\t\t\t\tcursor:move;"},"ch":[{"tgn":"SPAN","attr":{"ref":"caption"},"ch":["caption"]},{"tgn":"BUTTON","attr":{"ref":"close","style":"float:right;cursor:pointer;\n\t\t\t\t\t\t\tpadding:0px 5px;\n\t\t\t\t\t\t\tborder:1px solid #fff;\n\t\t\t\t\t\t\tbackground-color:#f00;\n\t\t\t\t\t\t\tvertical-align:middle;color:#fff; font-weight:bold;"},"ch":["X"]},{"tgn":"DIV","attr":{"style":"clear:both;"},"ch":[]}]},{"tgn":"DIV","attr":{"ref":"content","style":"padding:10px;width:400px; min-width: 300px; min-height:150px;\n\t\t\t\t\t\tbackground-color:white;box-sizing: border-box; overflow:auto;"},"ch":[]},{"tgn":"DIV","attr":{"ref":"bottombar"},"ch":[{"tgn":"DIV","attr":{"ref":"resize","style":"float:right;\n\t\t\t\t\t\t\tpadding:5px;\n\t\t\t\t\t\t\tmargin:5px;\n\t\t\t\t\t\t\tcursor:se-resize;\n\t\t\t\t\t\t\tborder-width:0px 2px 2px 0px;\n\t\t\t\t\t\t\tborder-color: black;\n\t\t\t\t\t\t\tborder-style: solid;\n\t\t\t\t\t\t\t"},"ch":[]}]}],"script":function anonymous(appContext,factory,document
+/**/) {
+
+
+					this.ref.close.onclick=this.close=function(e){
+						e.stopPropagation();
+						if(this.onclose && !this.onclose()){
+							return;
+						}
+						this.unmount();
+					}.bind(this);
+					
+					this.onmousedown = this.ref.topbar.onclick = this.ref.resize.onclick = function(){
+						this.pop();
+					}.bind(this);
+					
+					this.pop=function(){
+						this.mount(this.parentElement);
+					}.bind(this);
+
+					var sx, sy, sh, sw, st, sl;
+					
+					var onDown=function(event){
+						event.stopPropagation();
+						sx=event.clientX; sy=event.clientY;
+						sh=this.ref.content.offsetHeight;
+						sw=this.ref.content.offsetWidth;
+						sl=this.offsetLeft;
+						st=this.offsetTop;
+					}.bind(this);
+
+					function onMouseDown(action){
+						return function(e){
+							onDown(e);
+							window.addEventListener('mousemove',action);
+							window.addEventListener('mouseup',function up(){
+								window.removeEventListener('mousemove',action);
+								window.removeEventListener('mouseup',up);
+							});
+						};
+					}
+
+					var resize=function(e){
+						e.preventDefault();
+						this.ref.content.style.width =  (sw+e.clientX-sx)+'px';
+						this.ref.content.style.height =  (sh+e.clientY-sy)+'px';
+						if(this.ref.content.onresize) this.ref.content.onresize();
+						return false;
+					}.bind(this);
+
+					this.ref.resize.onmousedown = onMouseDown(resize);
+
+					var move=function(e){
+						e.preventDefault();
+						var left = (sl+e.clientX-sx);
+						this.style.left =  (left)+'px';
+						var top = (st+e.clientY-sy);
+						this.style.top =  (top<0?0:top)+'px';
+						return false;
+					}.bind(this);
+
+					this.ref.topbar.onmousedown = onMouseDown(move);
+
+					this.onSetData=function(input){
+						this.ref.caption.innerText=input.caption;
+						this.ref.content.innerHTML=input.content;
+						return false;
+					};
+					
+					this.ref.caption.innerText=this.getAttribute('caption');
+				
+//# sourceURL=W3View:///win
+}}},
+"MODALWIN":{"prep":{"tgn":"DIV","as":"modalwin","attr":{"as":"modalwin","style":"position:fixed; \n\t\t\t\twidth:100%; height:100%; \n\t\t\t\tleft:0px; top:0px;\n\t\t\t\tpadding-left:30%;\n\t\t\t\tpadding-top:30vh;\n\t\t\t\tbackground-color:rgba(0,0,0,0.5);\n\t\t\t\t"},"ch":[{"tgn":"WIN","attr":{"ref":"modal","caption":"modal window"},"ch":[{"tgn":"HELLO:DOUBLE-HELLO-WORLD","attr":{},"ch":["\n\t\t\t\t\t\tHey! i am \"modal\" popup win, what is your name?\n\t\t\t\t\t\t",{"tgn":"DIV","attr":{"ref":"content"},"ch":[]}]},{"tgn":"DIV","attr":{"style":"text-align:right;"},"ch":[{"tgn":"BUTTON","attr":{"ref":"close"},"ch":["Close"]}]}]}],"script":function anonymous(appContext,factory,document
+/**/) {
+
+
+					this.ref.modal.onclose=function(){
+						this.unmount();
+					}.bind(this);
+					this.ref.close.onclick=function(e){
+						this.ref.modal.close(e);
+					}.bind(this);
+
+					this.ref.modal.pop=function(){};
+
+					this.onSetData=function(data){
+						this.ref.modal.caption.innerText=data.caption;
+						this.ref.content.innerHTML=data.content;
+					}
+				
+//# sourceURL=W3View:///modalwin
+}}},
+"EXT-WIN":{"prep":{"tgn":"WIN","as":"ext-win","attr":{"as":"ext-win","caption":"extended window","usetag":"a"},"ch":[{"tgn":"PRE","attr":{},"ch":["\n\n\tHelloooo! this window is EXT-WIN instance\n\tEXT-WIN - is extended win\n\n\n\t\t\t\t"]},{"tgn":"PRE","attr":{"style":"border:1px solid black;","ref":"zcaption"},"ch":[{"tgn":"BR","attr":{},"ch":[]}]}],"script":function anonymous(appContext,factory,document
+/**/) {
+
+
+					var pcolor;
+					var capt = this.ref.caption.innerHTML;
+					this.ref.content.addEventListener('mouseover', function(e){
+						pcolor=e.target.style.backgroundColor;
+						e.target.style.backgroundColor="#cccccc";
+						this.ref.caption.innerText=e.target.tagName+" "+capt;
+					}.bind(this));
+					this.ref.content.addEventListener('mouseout', function(e){
+						e.target.style.backgroundColor=pcolor || '';
+						this.ref.caption.innerText=capt;
+					}.bind(this));
+				
+//# sourceURL=W3View:///ext-win
+}}},
+"APP":{"prep":{"tgn":"DIV","as":"app","attr":{"as":"app"},"ch":[{"tgn":"BUTTON","attr":{"ref":"button"},"ch":["open win"]},{"tgn":"BUTTON","attr":{"ref":"button1"},"ch":["open modal win"]},{"tgn":"BUTTON","attr":{"ref":"button2"},"ch":["open grid-win"]},{"tgn":"BUTTON","attr":{"ref":"button3"},"ch":["open ext-win"]}],"script":function anonymous(appContext,factory,document
+/**/) {
+
+
+					this.ref.button.onclick=function(){
+						var win=factory.create('win');
+						win.onclose=function(){ win.destroy(); };
+						win.mount(this.parentElement);
+						win.setData({
+							caption:'I am popup win', 
+							content:"<h1>Hello popup</h1><p>This popup was generated by W3View.</p>"+
+							"<p>You can move and resize this popup window.</p>"+
+							"<p>You can click first button again to open new instances.</p>"+
+							"<p>Now is <b>"+new Date()+"</b></p>"
+						});
+						return false;
+					};
+					this.ref.button1.onclick=function(){
+					if(!this.win){
+							this.win=factory.create('modalwin');
+						}
+						this.win.mount(this.parentElement);
+						return false;
+					};
+					this.ref.button2.onclick=function(){
+						var win=factory.create('win');
+						win.onclose=function(){ this.destroy(); };
+						win.mount(this.parentElement);
+						var tb=factory.create('grid:app',{style:"height:100%;"}).mount(win);
+						win.onresize();
+						return false;
+					};
+
+					this.ref.button3.onclick=function(){
+						var win=factory.create('ext-win');
+						win.onclose=function(){ win.destroy(); };
+						win.mount(this.parentElement);					
+						return false;
+					};
+				
+//# sourceURL=W3View:///app
+}}}});
+})(appContext),(function(appContext){
+return new W3View(appContext)
+.setRegistry({"ARRAY-ITERATOR":{"prep":{"tgn":"DIV","as":"ARRAY-ITERATOR","attr":{"as":"ARRAY-ITERATOR"},"ch":[],"script":function (appContext,factory,document){
+		var templates=[];
+		while(this.children.length > 0){
+			templates.push(this.removeChild(this.children[0]));
+		}
+		this.ref = {};
+
+		this.onSetData = function(array, opts){
+			if(!array) array=[];
+			if(!Array.isArray(array)) {
+				array=[array];
+			}
+			for(var i=0; i < array.length || i < this.children.length; i++){
+				if(this.children[i] && array.length <= i){
+					this.children[i].destroy();
+					i--;
+					continue;
+				}
+				var item = array[i];
+				var child=this.children[i];
+				if(!child){
+				  child=factory.byExample(templates[i%templates.length]);
+					child.mount(this);
+				}
+				child.setData(item, opts, i);
+			}
+		}
+	}}},
 "TBL":{"prep":{"tgn":"DIV","as":"tbl","attr":{"as":"tbl","style":"box-sizing:border-box;overflow:auto;\n        min-height:300px;\n        width:100%;height:100%;\n        padding:20px;"},"ch":[{"tgn":"ARRAY-ITERATOR","attr":{"usetag":"table","ref":"tb","border":"1","style":"float:left;width:98%;height:100%;overflow:auto;"},"ch":[{"tgn":"ROW","attr":{},"ch":[]}]},{"tgn":"SCROLLBAR","attr":{"ref":"scroll"},"ch":[]}],"script":function anonymous(appContext,factory,document
 /**/) {
 
@@ -182,164 +365,6 @@ return new W3View(appContext)
             this.parentElement.onresize=this.onresize.bind(this);
           };
         
-//# sourceURL=W3View:///app
-}}}});
-})(appContext),(function(appContext){
-return new W3View(appContext)
-.setRegistry({"ARRAY-ITERATOR":{"prep":{"tgn":"DIV","as":"ARRAY-ITERATOR","attr":{"as":"ARRAY-ITERATOR"},"ch":[],"script":function (appContext,factory,document){
-		var templates=[];
-		while(this.children.length > 0){
-			templates.push(this.removeChild(this.children[0]));
-		}
-		this.ref = {};
-
-		this.onSetData = function(array, opts){
-			if(!array) array=[];
-			if(!Array.isArray(array)) {
-				array=[array];
-			}
-			for(var i=0; i < array.length || i < this.children.length; i++){
-				if(this.children[i] && array.length <= i){
-					this.children[i].destroy();
-					i--;
-					continue;
-				}
-				var item = array[i];
-				var child=this.children[i];
-				if(!child){
-				  child=factory.byExample(templates[i%templates.length]);
-					child.mount(this);
-				}
-				child.setData(item, opts, i);
-			}
-		}
-	}}},
-"WIN":{"prep":{"tgn":"DIV","as":"win","attr":{"as":"win","style":"position:fixed;\n\t\t\t\t\t\t\t border:1px solid black;\n\t\t\t\t\t\t\t padding:5px;\n\t\t\t\t\t\t\t background-color: #cccccc;\n\t\t\t\t\t\t\t box-shadow: 5px 5px 5px rgba(0,0,0,0.3);\n\t\t\t\t\t\t\t "},"ch":[{"tgn":"DIV","attr":{"ref":"topbar","style":"padding:5px 10px;\n\t\t\t\t\t\tbackground-color:blue;color:#fff;\n\t\t\t\t\t\tfont-weight:bold;\n\t\t\t\t\t\tcursor:move;"},"ch":[{"tgn":"SPAN","attr":{"ref":"caption"},"ch":["caption"]},{"tgn":"BUTTON","attr":{"ref":"close","style":"float:right;cursor:pointer;\n\t\t\t\t\t\t\tpadding:0px 5px;\n\t\t\t\t\t\t\tborder:1px solid #fff;\n\t\t\t\t\t\t\tbackground-color:#f00;\n\t\t\t\t\t\t\tvertical-align:middle;color:#fff; font-weight:bold;"},"ch":["X"]},{"tgn":"DIV","attr":{"style":"clear:both;"},"ch":[]}]},{"tgn":"DIV","attr":{"ref":"content","style":"padding:10px;width:400px; min-width: 300px; min-height:150px;\n\t\t\t\t\t\tbackground-color:white;box-sizing: border-box; overflow:auto;"},"ch":[]},{"tgn":"DIV","attr":{"ref":"bottombar"},"ch":[{"tgn":"DIV","attr":{"ref":"resize","style":"float:right;\n\t\t\t\t\t\t\tpadding:5px;\n\t\t\t\t\t\t\tmargin:5px;\n\t\t\t\t\t\t\tcursor:se-resize;\n\t\t\t\t\t\t\tborder-width:0px 2px 2px 0px;\n\t\t\t\t\t\t\tborder-color: black;\n\t\t\t\t\t\t\tborder-style: solid;\n\t\t\t\t\t\t\t"},"ch":[]}]}],"script":function anonymous(appContext,factory,document
-/**/) {
-
-
-					this.ref.close.onclick=this.close=function(e){
-						e.stopPropagation();
-						if(this.onclose && !this.onclose()){
-							return;
-						}
-						this.unmount();
-					}.bind(this);
-					
-					this.onmousedown = this.ref.topbar.onclick = this.ref.resize.onclick = function(){
-						this.pop();
-					}.bind(this);
-					
-					this.pop=function(){
-						this.mount(this.parentElement);
-					}.bind(this);
-
-					var sx, sy, sh, sw, st, sl;
-					
-					var onDown=function(event){
-						event.stopPropagation();
-						sx=event.clientX; sy=event.clientY;
-						sh=this.ref.content.offsetHeight;
-						sw=this.ref.content.offsetWidth;
-						sl=this.offsetLeft;
-						st=this.offsetTop;
-					}.bind(this);
-
-					function onMouseDown(action){
-						return function(e){
-							onDown(e);
-							window.addEventListener('mousemove',action);
-							window.addEventListener('mouseup',function up(){
-								window.removeEventListener('mousemove',action);
-								window.removeEventListener('mouseup',up);
-							});
-						};
-					}
-
-					var resize=function(e){
-						e.preventDefault();
-						this.ref.content.style.width =  (sw+e.clientX-sx)+'px';
-						this.ref.content.style.height =  (sh+e.clientY-sy)+'px';
-						if(this.ref.content.onresize) this.ref.content.onresize();
-						return false;
-					}.bind(this);
-
-					this.ref.resize.onmousedown = onMouseDown(resize);
-
-					var move=function(e){
-						e.preventDefault();
-						var left = (sl+e.clientX-sx);
-						this.style.left =  (left)+'px';
-						var top = (st+e.clientY-sy);
-						this.style.top =  (top<0?0:top)+'px';
-						return false;
-					}.bind(this);
-
-					this.ref.topbar.onmousedown = onMouseDown(move);
-
-					this.onSetData=function(input){
-						this.ref.caption.innerText=input.caption;
-						this.ref.content.innerHTML=input.content;
-						return false;
-					};
-					
-					this.ref.caption.innerText=this.getAttribute('caption');
-				
-//# sourceURL=W3View:///win
-}}},
-"MODALWIN":{"prep":{"tgn":"DIV","as":"modalwin","attr":{"as":"modalwin","style":"position:fixed; \n\t\t\t\twidth:100%; height:100%; \n\t\t\t\tleft:0px; top:0px;\n\t\t\t\tpadding-left:30%;\n\t\t\t\tpadding-top:30vh;\n\t\t\t\tbackground-color:rgba(0,0,0,0.5);\n\t\t\t\t"},"ch":[{"tgn":"WIN","attr":{"ref":"modal","caption":"modal window"},"ch":[{"tgn":"HELLO:DOUBLE-HELLO-WORLD","attr":{},"ch":["\n\t\t\t\t\t\tHey! i am \"modal\" popup win, what is your name?\n\t\t\t\t\t\t",{"tgn":"DIV","attr":{"ref":"content"},"ch":[]}]},{"tgn":"DIV","attr":{"style":"text-align:right;"},"ch":[{"tgn":"BUTTON","attr":{"ref":"close"},"ch":["Close"]}]}]}],"script":function anonymous(appContext,factory,document
-/**/) {
-
-
-					this.ref.modal.onclose=function(){
-						this.unmount();
-					}.bind(this);
-					this.ref.close.onclick=function(e){
-						this.ref.modal.close(e);
-					}.bind(this);
-
-					this.ref.modal.pop=function(){};
-
-					this.onSetData=function(data){
-						this.ref.modal.caption.innerText=data.caption;
-						this.ref.content.innerHTML=data.content;
-					}
-				
-//# sourceURL=W3View:///modalwin
-}}},
-"GRID-WIN":{"prep":{"tgn":"WIN","as":"grid-win","attr":{"as":"grid-win"},"ch":["\n\t\t\t\tHhheelloooo\n\t\t\t"]}},
-"APP":{"prep":{"tgn":"DIV","as":"app","attr":{"as":"app"},"ch":[{"tgn":"BUTTON","attr":{"ref":"button"},"ch":["click me"]},{"tgn":"BUTTON","attr":{"ref":"button1"},"ch":["click me too"]},{"tgn":"BUTTON","attr":{"ref":"button2"},"ch":["click me too"]}],"script":function anonymous(appContext,factory,document
-/**/) {
-
-
-					this.ref.button.onclick=function(){
-						var win=factory.create('grid-win');
-						win.onclose=function(){ this.destroy(); };
-						win.mount(this.parentElement);
-						win.setData({
-							caption:'I am popup win', 
-							content:"<h1>Hello popup</h1><p>This popup was generated by W3View.</p>"+
-							"<p>You can move and resize this popup window.</p>"+
-							"<p>You can click first button again to open new instances.</p>"
-						});
-						return false;
-					};
-					this.ref.button1.onclick=function(){
-					if(!this.win){
-							this.win=factory.create('modalwin');
-						}
-						this.win.mount(this.parentElement);
-						return false;
-					};
-					this.ref.button2.onclick=function(){
-						var win=factory.create('win');
-						win.onclose=function(){ this.destroy(); };
-						win.mount(this.parentElement);
-						var tb=factory.create('grid:app',{style:"height:100%;"}).mount(win);
-						win.onresize();
-						return false;
-					};
-				
 //# sourceURL=W3View:///app
 }}}});
 })(appContext),(function(appContext){
@@ -533,10 +558,9 @@ return new W3View(appContext)
 }}},
 "DOUBLE-HELLO-WORLD":{"prep":{"tgn":"DIV","as":"double-hello-world","attr":{"as":"double-hello-world"},"ch":[{"tgn":"HELLO-WORLD","attr":{},"ch":["Hello first"]},{"tgn":"HR","attr":{},"ch":[]},{"tgn":"HELLO-WORLD","attr":{},"ch":["Hello second"]}]}}});
 })(appContext)];
-factory[0].putModule('window',factory[1]);
-factory[1].putModule('grid',factory[0]);
-factory[1].putModule('grid1',factory[0]);
-factory[1].putModule('slider',factory[2]);
-factory[1].putModule('hello',factory[3]);
+factory[0].putModule('grid',factory[1]);
+factory[0].putModule('slider',factory[2]);
+factory[0].putModule('hello',factory[3]);
+factory[1].putModule('window',factory[0]);
 return factory[0];};
-//# sourceURL=W3View:///examples/modules/grid.w3v.html
+//# sourceURL=W3View:///examples/modules/window.w3v.html

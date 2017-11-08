@@ -211,14 +211,9 @@ function W3View(appContext){
 		}
 	};
 
-	function makeFromPrep(name, attr, ch, root){
-		//определить имя тэга
-		//если тэг определён для создаваемого инстанса
-		//с помощью атрибута, необходимо использовать значение атрибута
-		//иначе нужно применить имя тэга из препарата
-		var tagname = (attr && attr.usetag) ? attr.usetag : prep.tgn;
+	function makeFromPrep(tagname, prep){
 		//создаём инстанс 
-		instance=document.createElement(tagname);
+		var instance=document.createElement(tagname);
 		instance.as=prep.as;
 		//назначить ссылку на элемент для вставки контента,
 		//по умолчанию - на самого себя 
@@ -276,47 +271,16 @@ function W3View(appContext){
 			}
 		}
 		if(prep){
-			//определить имя тэга
-			//если тэг определён для создаваемого инстанса
-			//с помощью атрибута, необходимо использовать значение атрибута
-			//иначе нужно применить имя тэга из препарата
-			var tagname = (attr && attr.usetag) ? attr.usetag : prep.tgn;
-			//создаём инстанс 
-			instance=document.createElement(tagname);
-			instance.as=prep.as;
-			//назначить ссылку на элемент для вставки контента,
-			//по умолчанию - на самого себя 
-			instance.ref={content:instance};
-			//*/
-			//если в препарате указаны атрибуты
-			//пройти и установить их в инстанс
-			setAttributes(instance, prep.attr);
-			//если в препарате указаны вложенные ноды
-			//пройти и добавить их
-			if(prep.ch && prep.ch.length)
-			for(var i=0;i < prep.ch.length;i++){
-				//если нода текстовая
-				if(!prep.ch[i].tgn){
-					//создать и установить её
-					instance.appendChild(document.createTextNode(prep.ch[i]));
-					continue;
-				}
-				//иначе создать ноду этой фабрикой,
-				//указывая в качестве корня себя и
-				//в качестве параметров ноды - атрибуты и 
-				//вложенные ноды из её описания в инстансе
-				var cch=factory.create(prep.ch[i].tgn, prep.ch[i].attr, prep.ch[i].ch,instance);
-				//если у созданной ноды есть атрибут ref
-				//добавить ссылку на ноду в ref инстанса
-				var ref=cch.getAttribute('ref');
-				if(ref){
-					instance.ref[ref]=cch;
-				}
-				//добавить ноду в инстанс 
-				instance.appendChild(cch);
-				if (cch.onMount) cch.onMount();
+			if(factory.findPrep(prep.tgn)){
+				instance = factory.create(prep.tgn, prep.attr, prep.ch);
+			} else {
+				//определить имя тэга
+				//если тэг определён для создаваемого инстанса
+				//с помощью атрибута, необходимо использовать значение атрибута
+				//иначе нужно применить имя тэга из препарата
+				var tagname = (attr && attr.usetag) ? attr.usetag : prep.tgn;
+				instance = makeFromPrep(tagname, prep);
 			}
-			//*/
 		} 
 		//если нет зарегистрированного компонента с таким именем
 		//просто создадим элемент
@@ -325,9 +289,6 @@ function W3View(appContext){
 			instance.ref={content:instance};
 		}
 		//начинаем заполнять инстанс из параметров
-		// - такой вариант выполняется всегда при условии, если
-		//инстанс является вложенной нодой,
-		//или если Вам так вдруг захотелось и Вы сами указали параметры
 		if(!root) root=instance;
 		//ставим атрибуты
 		setAttributes(instance, attr);
@@ -360,7 +321,7 @@ function W3View(appContext){
 		//пользовательское событие на создание
 		if(prep){
 			for(var k in mixin){
-				instance[k] = mixin[k];
+				instance[k] = instance[k] || mixin[k];
 			}
 			initInstance(instance, name);
 		}
