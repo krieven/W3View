@@ -16,11 +16,12 @@
 				<h2>Hello <span ref="name">Anonimous</span>!</h2>
 				<constructor>
 					//CONSTRUCTOR tag should be used inside SCRIPT tag
-					this.ref.input.onkeyup = function(e){
-						this.setData(this.ref.input.value);
-					}.bind(this);
+					var me=this;
+					this.ref.input.onkeydown=this.ref.input.onkeyup = function(e){
+						me.setData(me.ref.input.value);
+					};
 					this.onSetData = function(data){
-						this.ref.name.innerText = data || 'Anonimous';
+						me.ref.name.innerText = data || 'Anonimous';
 					};
 				</constructor>
 			</div>

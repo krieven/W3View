@@ -6,6 +6,10 @@
 
 11 kB of documented, not minified code.
 
+#In current version 
+- <a href="https://rawgit.com/vitalydmitriev1970/W3View/master/loader>Modularity and namespaces added</a
+- <a	href="https://rawgit.com/vitalydmitriev1970/W3View/master/examples/window.1.html>Prebuilding your modules into one js bundle</a> 
+
 ## What W3View does ?
 W3View generates **reusable UI components** from HTML based declarative 
 definitions.
@@ -62,11 +66,12 @@ like this:
 			<input ref="input" placeholder="type your name here">
 			<h1>Hello <span ref="name">Anonimous</span>!</h1>
 			<script>
-				this.ref.input.onkeyup = function(e){
-					this.setData(this.ref.input.value);
-				}.bind(this);
+				var me=this;
+				this.ref.input.onkeydown=this.ref.input.onkeyup = function(e){
+					me.setData(me.ref.input.value);
+				};
 				this.onSetData = function(data){
-					this.ref.name.innerText = data || 'Anonimous';
+					me.ref.name.innerText = data || 'Anonimous';
 				};
 			</script>
 		</div>
@@ -109,11 +114,12 @@ run "double-hello-world" app:
 				<h2>Hello <span ref="name">Anonimous</span>!</h2>
 				<constructor>
 					//CONSTRUCTOR tag should be used inside SCRIPT tag
-					this.ref.input.onkeyup = function(e){
-						this.setData(this.ref.input.value);
-					}.bind(this);
+					var me=this;
+					this.ref.input.onkeydown=this.ref.input.onkeyup = function(e){
+						me.setData(me.ref.input.value);
+					};
 					this.onSetData = function(data){
-						this.ref.name.innerText = data || 'Anonimous';
+						me.ref.name.innerText = data || 'Anonimous';
 					};
 				</constructor>
 			</div>

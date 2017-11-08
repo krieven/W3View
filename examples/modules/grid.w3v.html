@@ -1,16 +1,20 @@
       
       <div as='tbl' 
-        style='box-sizing:border-box;border:1px solid black;min-height:100px;
-        width:100%;height:100%;overflow:hidden;position:relative;
+        style='box-sizing:border-box;border:1px solid black;
+        width:100%;height:100%;
         padding:0px 20px 0px 0px;'>
-        <array-iterator useTag='table' ref='tb' border=1 
-            style='width:100%;height:100%;min-height:100px;'>
-          <row></row>
-        </array-iterator>
-        <scrollbar ref="scroll"
-          style='position:relative;width:20px; height: 100%;
-          border:1px solid black;top:-100%;left:100%;'>
-        </scrollbar>
+        <div style="float:left;width:100%;height:100%;overflow:hidden;min-height:150px;">
+          <array-iterator useTag='table' ref='tb' border=1 
+              style='width:100%;height:100%;min-height:150px;overflow:hidden;'>
+            <row></row>
+          </array-iterator>
+        </div>
+        <div style="float:left;height:100%;width:0px;overflow:visible;">
+          <scrollbar ref="scroll"
+            style='width:20px; height: 100%; min-height:150px;
+            border:1px solid black;'>
+          </scrollbar>
+        </div>
         <script>
 
           var data = {};

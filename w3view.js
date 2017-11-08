@@ -9,8 +9,17 @@ function W3View(appContext){
 	var factory = this;
 	var mixin = {};
 
-	this.getRegistry = function(){return registry;};
-	this.setRegistry = function(newRegistry){registry=newRegistry; return factory;};
+	this.getRegistry = function(){
+		var result={};
+		for(var k in registry)
+			if(!registry[k].builtin) result[k]=registry[k];
+		return result;
+	};
+	this.setRegistry = function(newRegistry){
+		for(var k in newRegistry)
+			registry[k]=newRegistry[k]; 
+		return factory;
+	};
 	this.putModule = function(name, module){
 		name = name.toUpperCase();
 		modules[name] = module;
@@ -322,7 +331,7 @@ function W3View(appContext){
 	///builtin components
 	//ARRAY-ITERATOR
 	factory.parse('<div as="ARRAY-ITERATOR"></div>');
-	factory.findPrep('ARRAY-ITERATOR').builtin=true;
+	registry['ARRAY-ITERATOR'].builtin=true;
 	factory.findPrep('ARRAY-ITERATOR').script = function(appContext,factory,document){
 		var templates=[];
 		while(this.children.length > 0){

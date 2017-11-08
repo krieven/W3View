@@ -148,12 +148,12 @@
 				<div>
 
 
-				Helloooo! this window is EXT-WIN instance
+				Helloooo! this window is EXT-WIN instance<br>
 				EXT-WIN - is extended win
 
 
 				</div>
-				<button style="border:1px solid black;display:block;width:100%;margin-top:30px;" ref=zcaption>
+				<button style="display:block;width:100%;margin-top:30px;" ref=zcaption>
 					BUTTON
 				</button>
 				<script>
@@ -172,9 +172,9 @@
 			</win>
 
 			<win as="grid-win" caption="window with grid">
-				<grid:app style="height:100%;" ref="grid"></grid:app>
+				<grid:app style="height:100%;min-height: 150px;" ref="grid"></grid:app>
 				<script>
-					this.onMount = function(){this.ref.grid.onresize();}
+					this.onMount = function(){this.ref.grid.mount(this); this.onMount=function(){};}
 				</script>
 			</win>
 			
