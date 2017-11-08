@@ -93,7 +93,7 @@ return new W3View(appContext)
 				
 //# sourceURL=W3View:///modalwin
 }}},
-"EXT-WIN":{"prep":{"tgn":"WIN","as":"ext-win","attr":{"as":"ext-win","caption":"extended window","usetag":"a"},"ch":[{"tgn":"DIV","attr":{},"ch":["\n\n\n\t\t\t\tHelloooo! this window is EXT-WIN instance\n\t\t\t\tEXT-WIN - is extended win\n\n\n\t\t\t\t"]},{"tgn":"BUTTON","attr":{"style":"border:1px solid black;display:block;width:100%;margin-top:30px;","ref":"zcaption"},"ch":["\n\t\t\t\t\tBUTTON\n\t\t\t\t"]}],"script":function anonymous(appContext,factory,document
+"EXT-WIN":{"prep":{"tgn":"WIN","as":"ext-win","attr":{"as":"ext-win","caption":"extended window","usetag":"a"},"ch":[{"tgn":"DIV","attr":{},"ch":["\n\n\n\t\t\t\tHelloooo! this window is EXT-WIN instance",{"tgn":"BR","attr":{},"ch":[]},"\n\t\t\t\tEXT-WIN - is extended win\n\n\n\t\t\t\t"]},{"tgn":"BUTTON","attr":{"style":"display:block;width:100%;margin-top:30px;","ref":"zcaption"},"ch":["\n\t\t\t\t\tBUTTON\n\t\t\t\t"]}],"script":function anonymous(appContext,factory,document
 /**/) {
 
 
@@ -111,11 +111,11 @@ return new W3View(appContext)
 				
 //# sourceURL=W3View:///ext-win
 }}},
-"GRID-WIN":{"prep":{"tgn":"WIN","as":"grid-win","attr":{"as":"grid-win","caption":"window with grid"},"ch":[{"tgn":"GRID:APP","attr":{"style":"height:100%;","ref":"grid"},"ch":[]}],"script":function anonymous(appContext,factory,document
+"GRID-WIN":{"prep":{"tgn":"WIN","as":"grid-win","attr":{"as":"grid-win","caption":"window with grid"},"ch":[{"tgn":"GRID:APP","attr":{"style":"height:100%;min-height: 150px;","ref":"grid"},"ch":[]}],"script":function anonymous(appContext,factory,document
 /**/) {
 
 
-					this.onMount = function(){this.ref.grid.onresize();}
+					this.onMount = function(){this.ref.grid.mount(this); this.onMount=function(){};}
 				
 //# sourceURL=W3View:///grid-win
 }}},
@@ -161,7 +161,7 @@ return new W3View(appContext)
 }}}});
 })(appContext),(function(appContext){
 return new W3View(appContext)
-.setRegistry({"TBL":{"prep":{"tgn":"DIV","as":"tbl","attr":{"as":"tbl","style":"box-sizing:border-box;border:1px solid black;min-height:100px;\n        width:100%;height:100%;overflow:hidden;position:relative;\n        padding:0px 20px 0px 0px;"},"ch":[{"tgn":"ARRAY-ITERATOR","attr":{"usetag":"table","ref":"tb","border":"1","style":"width:100%;height:100%;min-height:100px;"},"ch":[{"tgn":"ROW","attr":{},"ch":[]}]},{"tgn":"SCROLLBAR","attr":{"ref":"scroll","style":"position:relative;width:20px; height: 100%;\n          border:1px solid black;top:-100%;left:100%;"},"ch":[]}],"script":function anonymous(appContext,factory,document
+.setRegistry({"TBL":{"prep":{"tgn":"DIV","as":"tbl","attr":{"as":"tbl","style":"box-sizing:border-box;border:1px solid black;\n        width:100%;height:100%;\n        padding:0px 20px 0px 0px;"},"ch":[{"tgn":"DIV","attr":{"style":"float:left;width:100%;height:100%;overflow:hidden;min-height:150px;"},"ch":[{"tgn":"ARRAY-ITERATOR","attr":{"usetag":"table","ref":"tb","border":"1","style":"width:100%;height:100%;min-height:150px;overflow:hidden;"},"ch":[{"tgn":"ROW","attr":{},"ch":[]}]}]},{"tgn":"DIV","attr":{"style":"float:left;height:100%;width:0px;overflow:visible;"},"ch":[{"tgn":"SCROLLBAR","attr":{"ref":"scroll","style":"width:20px; height: 100%; min-height:150px;\n            border:1px solid black;"},"ch":[]}]}],"script":function anonymous(appContext,factory,document
 /**/) {
 
 
