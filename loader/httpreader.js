@@ -24,18 +24,18 @@ reader.makeSrc=function(currentSrc, nextPart){
 reader.get = function(src, callback){
 	var xhr;
 	try {
-		xhr = new ActiveXObject("Msxml2.XMLHTTP");
+		xhr =  new XMLHttpRequest();
 	} catch (e) {
 		try {
 			xhr = new ActiveXObject("Microsoft.XMLHTTP");
 		} catch (e) {
-			xhr =  new XMLHttpRequest();
+			xhr = new ActiveXObject("Msxml2.XMLHTTP");			
 		}
 	}
 	xhr.onreadystatechange=function(){
-		if(this.readyState!=4) return;
-		if(this.status!=200) return callback(this.status+"\n"+this.responseText, "");
-		callback(!1, this.responseText);
+		if(xhr.readyState!=4) return;
+		if(xhr.status!=200) return callback(xhr.status+"\n"+xhr.responseText, "");
+		callback(!1, xhr.responseText);
 	};
 	xhr.open('get',src,true);
 	xhr.send(null);
@@ -67,3 +67,4 @@ reader.normalize=function(path){
 	return res.join('/');
 };
 
+reader.showSrc=true;

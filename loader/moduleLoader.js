@@ -6,6 +6,7 @@ function moduleLoader(appContext, src, reader, onload){
   reader(src,
     function(response){
       var factory = new W3View(appContext);
+      if(reader.showSrc) factory.src = src;
       factory.parse(response);
 
       moduleLoader.imported[src]=factory;

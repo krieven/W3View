@@ -124,8 +124,8 @@ function W3View(appContext){
 	var initInstance=function(instance, name){
 		var prep = factory.findPrep(name);
 		if(prep){
-			if(prep.super){
-				initInstance(instance,prep.super);
+			if(prep.superE){
+				initInstance(instance,prep.superE);
 			}
 			if(prep.script){
 				instance.__ = prep.script;
@@ -158,7 +158,7 @@ function W3View(appContext){
 		res.as=root.getAttribute('as') || undefined;
 		res.attr=nmToObj(root.attributes);
 		res.ch=[];
-		res.super = root.getAttribute('super') || undefined;
+		res.superE = root.getAttribute('super') || undefined;
 		var ch=root.childNodes;
 		for(var i=0; i < ch.length; i++){
 			var cChild = ch[i];
@@ -172,7 +172,7 @@ function W3View(appContext){
 			var tgn=cChild.tagName.toUpperCase();
 			if(tgn==='CONSTRUCTOR' || tgn==='SCRIPT'){
 				var construct="\n"+(textContent)+
-					"\n//# sourceURL=W3View:///"+res.as+"";
+					"\n//# sourceURL=W3View:///"+(factory.src?factory.src:'')+"<"+res.as+">";
 				res.script = new Function('appContext,factory,document', construct);
 			} else {
 				var child = prepare(cChild);

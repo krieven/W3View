@@ -71,7 +71,7 @@ return new W3View(appContext)
 					
 					this.ref.caption.innerText=this.getAttribute('caption');
 				
-//# sourceURL=W3View:///win
+//# sourceURL=W3View:///<win>
 }}},
 "MODALWIN":{"prep":{"tgn":"DIV","as":"modalwin","attr":{"as":"modalwin","style":"position:fixed; \n\t\t\t\twidth:100%; height:100%; \n\t\t\t\tleft:0px; top:0px;\n\t\t\t\tpadding-left:30%;\n\t\t\t\tpadding-top:30vh;\n\t\t\t\tbackground-color:rgba(0,0,0,0.5);\n\t\t\t\t"},"ch":[{"tgn":"WIN","attr":{"ref":"modal","caption":"modal window"},"ch":[{"tgn":"HELLO:DOUBLE-HELLO-WORLD","attr":{},"ch":["\n\t\t\t\t\t\tHey! i am \"modal\" popup win, what is your name?\n\t\t\t\t\t\t",{"tgn":"DIV","attr":{"ref":"content"},"ch":[]}]},{"tgn":"DIV","attr":{"style":"text-align:right;"},"ch":[{"tgn":"BUTTON","attr":{"ref":"close"},"ch":["Close"]}]}]}],"script":function anonymous(appContext,factory,document
 /**/) {
@@ -91,7 +91,7 @@ return new W3View(appContext)
 						this.ref.content.innerHTML=data.content;
 					}
 				
-//# sourceURL=W3View:///modalwin
+//# sourceURL=W3View:///<modalwin>
 }}},
 "EXT-WIN":{"prep":{"tgn":"WIN","as":"ext-win","attr":{"as":"ext-win","caption":"extended window","usetag":"a"},"ch":[{"tgn":"DIV","attr":{},"ch":["\n\n\n\t\t\t\tHelloooo! this window is EXT-WIN instance",{"tgn":"BR","attr":{},"ch":[]},"\n\t\t\t\tEXT-WIN - is extended win\n\n\n\t\t\t\t"]},{"tgn":"BUTTON","attr":{"style":"display:block;width:100%;margin-top:30px;","ref":"zcaption"},"ch":["\n\t\t\t\t\tBUTTON\n\t\t\t\t"]}],"script":function anonymous(appContext,factory,document
 /**/) {
@@ -109,7 +109,7 @@ return new W3View(appContext)
 						this.ref.caption.innerText=capt;
 					}.bind(this));
 				
-//# sourceURL=W3View:///ext-win
+//# sourceURL=W3View:///<ext-win>
 }}},
 "GRID-WIN":{"prep":{"tgn":"WIN","as":"grid-win","attr":{"as":"grid-win","caption":"window with grid"},"ch":[{"tgn":"GRID:APP","attr":{"style":"height:100%;min-height: 150px;","ref":"grid"},"ch":[]}],"script":function anonymous(appContext,factory,document
 /**/) {
@@ -117,7 +117,7 @@ return new W3View(appContext)
 
 					this.onMount = function(){this.ref.grid.mount(this); this.onMount=function(){};}
 				
-//# sourceURL=W3View:///grid-win
+//# sourceURL=W3View:///<grid-win>
 }}},
 "APP":{"prep":{"tgn":"DIV","as":"app","attr":{"as":"app"},"ch":[{"tgn":"BUTTON","attr":{"ref":"button"},"ch":["open win"]},{"tgn":"BUTTON","attr":{"ref":"button1"},"ch":["open modal win"]},{"tgn":"BUTTON","attr":{"ref":"button2"},"ch":["open grid-win"]},{"tgn":"BUTTON","attr":{"ref":"button3"},"ch":["open ext-win"]}],"script":function anonymous(appContext,factory,document
 /**/) {
@@ -157,7 +157,7 @@ return new W3View(appContext)
 						return false;
 					};
 				
-//# sourceURL=W3View:///app
+//# sourceURL=W3View:///<app>
 }}}});
 })(appContext),(function(appContext){
 return new W3View(appContext)
@@ -215,9 +215,9 @@ return new W3View(appContext)
           };
           
         
-//# sourceURL=W3View:///tbl
+//# sourceURL=W3View:///<tbl>
 }}},
-"ROW":{"prep":{"tgn":"tr","as":"row","attr":{"as":"row","super":"array-iterator","tagname":"tr"},"ch":[{"tgn":"CELL","attr":{},"ch":[]}],"super":"array-iterator","script":function anonymous(appContext,factory,document
+"ROW":{"prep":{"tgn":"tr","as":"row","attr":{"as":"row","super":"array-iterator","tagname":"tr"},"ch":[{"tgn":"CELL","attr":{},"ch":[]}],"superE":"array-iterator","script":function anonymous(appContext,factory,document
 /**/) {
 
 
@@ -234,7 +234,7 @@ return new W3View(appContext)
             };
 
           
-//# sourceURL=W3View:///row
+//# sourceURL=W3View:///<row>
 }}},
 "CELL":{"prep":{"tgn":"DIV","as":"cell","attr":{"as":"cell","usetag":"td","style":"text-align:center;width:10%;"},"ch":[],"script":function anonymous(appContext,factory,document
 /**/) {
@@ -246,7 +246,7 @@ return new W3View(appContext)
           };
 
         
-//# sourceURL=W3View:///cell
+//# sourceURL=W3View:///<cell>
 }}},
 "SCROLLBAR":{"prep":{"tgn":"DIV","as":"scrollbar","attr":{"as":"scrollbar"},"ch":[{"tgn":"DIV","attr":{"ref":"scroller","style":"cursor:pointer;position:relative;\n          width:100%; height:100px;\n          min-height:20px;top:0px;\n          border:2px solid black;\n          background-color:#999999;margin-top:0px;"},"ch":[]}],"script":function anonymous(appContext,factory,document
 /**/) {
@@ -297,7 +297,7 @@ return new W3View(appContext)
           };
 
         
-//# sourceURL=W3View:///scrollbar
+//# sourceURL=W3View:///<scrollbar>
 }}},
 "APP":{"prep":{"tgn":"DIV","as":"app","attr":{"as":"app"},"ch":[{"tgn":"TBL","attr":{"ref":"table"},"ch":[]}],"script":function anonymous(appContext,factory,document
 /**/) {
@@ -315,7 +315,7 @@ return new W3View(appContext)
             this.parentElement.onresize=this.onresize.bind(this);
           };
         
-//# sourceURL=W3View:///app
+//# sourceURL=W3View:///<app>
 }}}});
 })(appContext),(function(appContext){
 return new W3View(appContext)
@@ -368,7 +368,7 @@ return new W3View(appContext)
           };
           this.setData();
         
-//# sourceURL=W3View:///slider
+//# sourceURL=W3View:///<slider>
 }}},
 "COLOR-CHOOSER":{"prep":{"tgn":"DIV","as":"color-chooser","attr":{"as":"color-chooser","style":"box-sizing:border-box;"},"ch":[{"tgn":"H1","attr":{"ref":"content","col":"2"},"ch":[]},{"tgn":"SLIDER","attr":{"ref":"slider","min":"0","max":"255","value":"128","style":"background-color:white;","col":"8"},"ch":[]},{"tgn":"INPUT","attr":{"type":"text","ref":"value","col":"2","style":"text-align:right;height:50px;\n          font-size:40px;overflow:visible;border:0;\n          border-bottom:5px solid green;min-width:100px;padding:0px 10px;"},"ch":[]},{"tgn":"CLEAR","attr":{},"ch":[]}],"script":function anonymous(appContext,factory,document
 /**/) {
@@ -399,7 +399,7 @@ return new W3View(appContext)
 
           this.setData(this.getValue());
         
-//# sourceURL=W3View:///color-chooser
+//# sourceURL=W3View:///<color-chooser>
 }}},
 "RGB-CHOOSER":{"prep":{"tgn":"DIV","as":"rgb-chooser","attr":{"as":"rgb-chooser","style":"border:1px solid black; padding:20px;"},"ch":[{"tgn":"COLOR-CHOOSER","attr":{"ref":"red"},"ch":["Red"]},{"tgn":"COLOR-CHOOSER","attr":{"ref":"green"},"ch":["Green"]},{"tgn":"COLOR-CHOOSER","attr":{"ref":"blue"},"ch":["Blue"]},{"tgn":"CLEAR","attr":{},"ch":[]}],"script":function anonymous(appContext,factory,document
 /**/) {
@@ -420,7 +420,7 @@ return new W3View(appContext)
           this.onchange=function(value){};
 
         
-//# sourceURL=W3View:///rgb-chooser
+//# sourceURL=W3View:///<rgb-chooser>
 }}},
 "APP":{"prep":{"tgn":"DIV","as":"app","attr":{"as":"app"},"ch":[{"tgn":"DIV","attr":{"style":"height:100px;padding:20px 0px;font-size:20px;\n          text-align:center;border:1px solid black;border-bottom:0px;","id":"disp"},"ch":[{"tgn":"SPAN","attr":{"ref":"va","style":"background-color:white; padding:10px;border-radius: 20px;"},"ch":[]}]},{"tgn":"RGB-CHOOSER","attr":{"ref":"control"},"ch":[]}],"script":function anonymous(appContext,factory,document
 /**/) {
@@ -432,7 +432,7 @@ return new W3View(appContext)
           };
           this.ref.control.setData();
         
-//# sourceURL=W3View:///app
+//# sourceURL=W3View:///<app>
 }}}});
 })(appContext),(function(appContext){
 return new W3View(appContext)
@@ -448,7 +448,7 @@ return new W3View(appContext)
 						this.ref.name.innerText = data || 'Anonimous';
 					};
 				
-//# sourceURL=W3View:///hello-world
+//# sourceURL=W3View:///<hello-world>
 }}},
 "DOUBLE-HELLO-WORLD":{"prep":{"tgn":"DIV","as":"double-hello-world","attr":{"as":"double-hello-world"},"ch":[{"tgn":"HELLO-WORLD","attr":{},"ch":["Hello first"]},{"tgn":"HR","attr":{},"ch":[]},{"tgn":"HELLO-WORLD","attr":{},"ch":["Hello second"]}]}}});
 })(appContext)];
