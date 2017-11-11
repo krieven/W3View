@@ -45,7 +45,7 @@
 				</div>
 				<script type="constructor">
 					this.ref.close.onclick=this.close=function(e){
-						e.stopPropagation();
+            if(e && e.stopPropagation) e.stopPropagation(); else event.returnValue = false;
 						if(this.onclose && !this.onclose()){
 							return;
 						}
@@ -63,7 +63,8 @@
 					var sx, sy, sh, sw, st, sl;
 					
 					var onDown=function(event){
-						event.stopPropagation();
+           if (event && event.stopPropagation) event.stopPropagation();
+            else window.event.returnValue = false;
 						sx=event.clientX; sy=event.clientY;
 						sh=this.ref.content.offsetHeight;
 						sw=this.ref.content.offsetWidth;

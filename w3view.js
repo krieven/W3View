@@ -124,8 +124,8 @@ function W3View(appContext){
 	var initInstance=function(instance, name){
 		var prep = factory.findPrep(name);
 		if(prep){
-			if(prep.superE){
-				initInstance(instance,prep.superE);
+			if(prep.superc){
+				initInstance(instance,prep.superc);
 			}
 			if(prep.script){
 				instance.__ = prep.script;
@@ -148,17 +148,18 @@ function W3View(appContext){
 	function setAttributes(instance, attr){
 		if(attr && instance && instance.setAttribute)
 		for(var key in attr){
-				instance.setAttribute(key, attr[key]);
+			instance.setAttribute(key, attr[key]);
 		}
 	}
 
 	function prepare (root){
 		var res={};
 		res.tgn=root.getAttribute('tagname') || root.tagName;
-		res.as=root.getAttribute('as') || undefined;
+		res.as=root.getAttribute('as');
 		res.attr=nmToObj(root.attributes);
+		if(res.attr.ref) {res.attr.refname=res.attr.ref; delete res.attr.ref;}
 		res.ch=[];
-		res.superE = root.getAttribute('super') || undefined;
+		res.superc = root.getAttribute('super');
 		var ch=root.childNodes;
 		for(var i=0; i < ch.length; i++){
 			var cChild = ch[i];
@@ -200,10 +201,11 @@ function W3View(appContext){
 
 	factory.register = function(ch){
 		for(var i=0;i<ch.length;i++){
-			if(ch[i].tagName.toUpperCase()==='IMPORT'){
+			if(ch[i].tagName.toUpperCase()==='IMPORT' && ch[i].getAttribute('type') &&
+					ch[i].getAttribute('type').toLowerCase()==='html'){
 				factory.imports =factory.imports || [];
 				factory.imports.push(
-					{src:ch[i].getAttribute('src'), name:ch[i].getAttribute('name')}
+					{src:ch[i].getAttribute('src'), name:ch[i].getAttribute('as')}
 				);
 				continue;
 			}
@@ -248,7 +250,7 @@ function W3View(appContext){
 			var cch=factory.create(prep.ch[i].tgn, prep.ch[i].attr, prep.ch[i].ch,instance);
 			//если у созданной ноды есть атрибут ref
 			//добавить ссылку на ноду в ref инстанса
-			var ref=cch.getAttribute('ref');
+			var ref=cch.getAttribute('refname');
 			if(ref){
 				instance.ref[ref]=cch;
 			}
@@ -297,7 +299,7 @@ function W3View(appContext){
 				continue;
 			}
 			var cch=factory.create(ch[i].tgn, ch[i].attr, ch[i].ch, root);
-			var ref=cch.getAttribute('ref');
+			var ref=cch.getAttribute('refname');
 			if(ref){
 				root.ref=root.ref || {}; 
 				root.ref[ref]=cch;
@@ -337,7 +339,6 @@ function W3View(appContext){
 		while(this.children.length > 0){
 			templates.push(this.removeChild(this.children[0]));
 		}
-		this.ref = {};
 
 		this.onSetData = function(array, opts){
 			if(!array) array=[];

@@ -26,7 +26,7 @@
             this.onchange(value);
           };
           this.ref.bar.onclick=function(e){
-            e.stopPropagation();
+            if(e && e.stopPropagation) e.stopPropagation(); else event.returnValue = false;
             if(e.target===this.ref.bar)
               this.setData((max-min)/this.ref.bar.offsetWidth*e.offsetX);
           }.bind(this);
@@ -70,7 +70,7 @@
           this.ref.slider.onchange = function(value){this.ref.value.value = value; this.onchange(value);}.bind(this);
           
           this.ref.value.onchange = function(e){
-            e.stopPropagation();
+            if(e && e.stopPropagation) e.stopPropagation(); else event.returnValue = false;
             this.ref.slider.setData(this.ref.value.value);
           }.bind(this);
 

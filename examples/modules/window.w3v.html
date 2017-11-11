@@ -1,8 +1,9 @@
-			
-			<import src="./grid.w3v.html" name="grid"></import>
-			<import src="./slider.w3v.html" name="slider"></import>
-			<import src="./hello-world.w3v.html" name="hello"></import>
-			
+
+
+			<import src="./grid.w3v.html" as="grid" type="html"></import>
+			<import src="./slider.w3v.html" as="slider" type="html"></import>
+			<import src="./hello-world.w3v.html" as="hello" type="html"></import>
+
 			<div as="win" 
 				style="position:fixed;
 							 border:1px solid black;
@@ -41,7 +42,8 @@
 				</div>
 				<script>
 					this.ref.close.onclick=this.close=function(e){
-						e.stopPropagation();
+						e = e || window.event;
+            if(e && e.stopPropagation) e.stopPropagation(); else event.returnValue = false;
 						if(this.onclose && !this.onclose()){
 							return;
 						}
@@ -59,7 +61,9 @@
 					var sx, sy, sh, sw, st, sl;
 					
 					var onDown=function(event){
-						event.stopPropagation();
+						event = event || window.event;
+           if (event && event.stopPropagation) event.stopPropagation();
+            else window.event.returnValue = false;
 						sx=event.clientX; sy=event.clientY;
 						sh=this.ref.content.offsetHeight;
 						sw=this.ref.content.offsetWidth;
@@ -79,7 +83,8 @@
 					}
 
 					var resize=function(e){
-						e.preventDefault();
+						e = e || window.event;
+						if(e.preventDefault) e.preventDefault(); else e.returnValue = false;
 						this.ref.content.style.width =  (sw+e.clientX-sx)+'px';
 						this.ref.content.style.height =  (sh+e.clientY-sy)+'px';
 						if(this.ref.content.onresize) this.ref.content.onresize();
@@ -89,7 +94,8 @@
 					this.ref.resize.onmousedown = onMouseDown(resize);
 
 					var move=function(e){
-						e.preventDefault();
+						e = e || window.event;
+						if(e.preventDefault) e.preventDefault(); else e.returnValue = false;
 						var left = (sl+e.clientX-sx);
 						this.style.left =  (left)+'px';
 						var top = (st+e.clientY-sy);
@@ -132,6 +138,7 @@
 						this.unmount();
 					}.bind(this);
 					this.ref.close.onclick=function(e){
+						e = e || window.event;
 						this.ref.modal.close(e);
 					}.bind(this);
 
@@ -160,11 +167,13 @@
 					var pcolor;
 					var capt = this.ref.caption.innerHTML;
 					this.ref.content.addEventListener('mouseover', function(e){
+						e = e || window.event;
 						pcolor=e.target.style.backgroundColor;
 						e.target.style.backgroundColor="#cccccc";
 						this.ref.caption.innerText=e.target.tagName+" "+capt;
 					}.bind(this));
 					this.ref.content.addEventListener('mouseout', function(e){
+						e = e || window.event;
 						e.target.style.backgroundColor=pcolor || '';
 						this.ref.caption.innerText=capt;
 					}.bind(this));
