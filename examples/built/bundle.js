@@ -1,6 +1,6 @@
 function w3view(appContext){var factory=[(function(appContext){
 return new W3View(appContext)
-.setRegistry({"WIN":{"prep":{"tgn":"DIV","as":"win","attr":{"as":"win","style":"position:fixed;\n\t\t\t\t\t\t\t border:1px solid black;\n\t\t\t\t\t\t\t padding:5px;\n\t\t\t\t\t\t\t background-color: #cccccc;\n\t\t\t\t\t\t\t box-shadow: 5px 5px 5px rgba(0,0,0,0.3);\n\t\t\t\t\t\t\t "},"ch":[{"tgn":"DIV","attr":{"style":"padding:5px 10px;\n\t\t\t\t\t\tbackground-color:blue;color:#fff;\n\t\t\t\t\t\tfont-weight:bold;\n\t\t\t\t\t\tcursor:move;","refname":"topbar"},"ch":[{"tgn":"SPAN","attr":{"refname":"caption"},"ch":["caption"],"superc":null},{"tgn":"BUTTON","attr":{"style":"float:right;cursor:pointer;\n\t\t\t\t\t\t\tpadding:0px 5px;\n\t\t\t\t\t\t\tborder:1px solid #fff;\n\t\t\t\t\t\t\tbackground-color:#f00;\n\t\t\t\t\t\t\tvertical-align:middle;color:#fff; font-weight:bold;","refname":"close"},"ch":["X"],"superc":null},{"tgn":"DIV","attr":{"style":"clear:both;"},"ch":[],"superc":null}],"superc":null},{"tgn":"DIV","attr":{"style":"padding:10px;width:400px; min-width: 300px; min-height:150px;border:1px solid gray;\n\t\t\t\t\t\tbackground-color:white;box-sizing: border-box; overflow:auto;","refname":"content"},"ch":[],"superc":null},{"tgn":"DIV","attr":{"refname":"bottombar"},"ch":[{"tgn":"DIV","attr":{"style":"float:right;\n\t\t\t\t\t\t\tpadding:5px;\n\t\t\t\t\t\t\tmargin:5px;\n\t\t\t\t\t\t\tcursor:se-resize;\n\t\t\t\t\t\t\tborder-width:0px 2px 2px 0px;\n\t\t\t\t\t\t\tborder-color: black;\n\t\t\t\t\t\t\tborder-style: solid;\n\t\t\t\t\t\t\t","refname":"resize"},"ch":[],"superc":null}],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
+.setRegistry({"WIN":{"prep":{"tgn":"DIV","as":"win","attr":{"as":"win","style":"position:fixed;\n\t\t\t\t\t\t\t border:1px solid black;\n\t\t\t\t\t\t\t padding:5px;\n\t\t\t\t\t\t\t background-color: #cccccc;\n\t\t\t\t\t\t\t box-shadow: 5px 5px 5px rgba(0,0,0,0.3);\n\t\t\t\t\t\t\t "},"ch":[{"tgn":"DIV","attr":{"style":"padding:5px 10px;\n\t\t\t\t\t\tbackground-color:blue;color:#fff;\n\t\t\t\t\t\tfont-weight:bold;\n\t\t\t\t\t\tcursor:move;","_ref":"topbar"},"ch":[{"tgn":"SPAN","attr":{"_ref":"caption"},"ch":["caption"],"superc":null},{"tgn":"BUTTON","attr":{"style":"float:right;cursor:pointer;\n\t\t\t\t\t\t\tpadding:0px 5px;\n\t\t\t\t\t\t\tborder:1px solid #fff;\n\t\t\t\t\t\t\tbackground-color:#f00;\n\t\t\t\t\t\t\tvertical-align:middle;color:#fff; font-weight:bold;","_ref":"close"},"ch":["X"],"superc":null},{"tgn":"DIV","attr":{"style":"clear:both;"},"ch":[],"superc":null}],"superc":null},{"tgn":"DIV","attr":{"style":"padding:10px;width:400px; min-width: 300px; min-height:150px;border:1px solid gray;\n\t\t\t\t\t\tbackground-color:white;box-sizing: border-box; overflow:auto;","_ref":"content"},"ch":[],"superc":null},{"tgn":"DIV","attr":{"_ref":"bottombar"},"ch":[{"tgn":"DIV","attr":{"style":"float:right;\n\t\t\t\t\t\t\tpadding:5px;\n\t\t\t\t\t\t\tmargin:5px;\n\t\t\t\t\t\t\tcursor:se-resize;\n\t\t\t\t\t\t\tborder-width:0px 2px 2px 0px;\n\t\t\t\t\t\t\tborder-color: black;\n\t\t\t\t\t\t\tborder-style: solid;\n\t\t\t\t\t\t\t","_ref":"resize"},"ch":[],"superc":null}],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
 /**/) {
 
 
@@ -78,7 +78,7 @@ return new W3View(appContext)
 				
 //# sourceURL=W3View:///<win>
 }}},
-"MODALWIN":{"prep":{"tgn":"DIV","as":"modalwin","attr":{"as":"modalwin","style":"position:fixed; \n\t\t\t\twidth:100%; height:100%; \n\t\t\t\tleft:0px; top:0px;\n\t\t\t\tpadding-left:30%;\n\t\t\t\tpadding-top:30vh;\n\t\t\t\tbackground-color:rgba(0,0,0,0.5);\n\t\t\t\t"},"ch":[{"tgn":"WIN","attr":{"caption":"modal window","refname":"modal"},"ch":[{"tgn":"HELLO:DOUBLE-HELLO-WORLD","attr":{},"ch":["\n\t\t\t\t\t\tHey! i am \"modal\" popup win, what is your name?\n\t\t\t\t\t\t",{"tgn":"DIV","attr":{"refname":"content"},"ch":[],"superc":null}],"superc":null},{"tgn":"DIV","attr":{"style":"text-align:right;"},"ch":[{"tgn":"BUTTON","attr":{"refname":"close"},"ch":["Close"],"superc":null}],"superc":null}],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
+"MODALWIN":{"prep":{"tgn":"DIV","as":"modalwin","attr":{"as":"modalwin","style":"position:fixed; \n\t\t\t\twidth:100%; height:100%; \n\t\t\t\tleft:0px; top:0px;\n\t\t\t\tpadding-left:30%;\n\t\t\t\tpadding-top:30vh;\n\t\t\t\tbackground-color:rgba(0,0,0,0.5);\n\t\t\t\t"},"ch":[{"tgn":"WIN","attr":{"caption":"modal window","_ref":"modal"},"ch":[{"tgn":"HELLO:DOUBLE-HELLO-WORLD","attr":{},"ch":["\n\t\t\t\t\t\tHey! i am \"modal\" popup win, what is your name?\n\t\t\t\t\t\t",{"tgn":"DIV","attr":{"_ref":"content"},"ch":[],"superc":null}],"superc":null},{"tgn":"DIV","attr":{"style":"text-align:right;"},"ch":[{"tgn":"BUTTON","attr":{"_ref":"close"},"ch":["Close"],"superc":null}],"superc":null}],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
 /**/) {
 
 
@@ -99,7 +99,7 @@ return new W3View(appContext)
 				
 //# sourceURL=W3View:///<modalwin>
 }}},
-"EXT-WIN":{"prep":{"tgn":"WIN","as":"ext-win","attr":{"as":"ext-win","caption":"extended window","usetag":"a"},"ch":[{"tgn":"DIV","attr":{},"ch":["\n\n\n\t\t\t\tHelloooo! this window is EXT-WIN instance",{"tgn":"BR","attr":{},"ch":[],"superc":null},"\n\t\t\t\tEXT-WIN - is extended win\n\n\n\t\t\t\t"],"superc":null},{"tgn":"BUTTON","attr":{"style":"display:block;width:100%;margin-top:30px;","refname":"zcaption"},"ch":["\n\t\t\t\t\tBUTTON\n\t\t\t\t"],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
+"EXT-WIN":{"prep":{"tgn":"WIN","as":"ext-win","attr":{"as":"ext-win","caption":"extended window","usetag":"a"},"ch":[{"tgn":"DIV","attr":{},"ch":["\n\n\n\t\t\t\tHelloooo! this window is EXT-WIN instance",{"tgn":"BR","attr":{},"ch":[],"superc":null},"\n\t\t\t\tEXT-WIN - is extended win\n\n\n\t\t\t\t"],"superc":null},{"tgn":"BUTTON","attr":{"style":"display:block;width:100%;margin-top:30px;","_ref":"zcaption"},"ch":["\n\t\t\t\t\tBUTTON\n\t\t\t\t"],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
 /**/) {
 
 
@@ -119,7 +119,7 @@ return new W3View(appContext)
 				
 //# sourceURL=W3View:///<ext-win>
 }}},
-"GRID-WIN":{"prep":{"tgn":"WIN","as":"grid-win","attr":{"as":"grid-win","caption":"window with grid"},"ch":[{"tgn":"GRID:APP","attr":{"style":"height:100%;min-height: 150px;","refname":"grid"},"ch":[],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
+"GRID-WIN":{"prep":{"tgn":"WIN","as":"grid-win","attr":{"as":"grid-win","caption":"window with grid"},"ch":[{"tgn":"GRID:APP","attr":{"style":"height:100%;min-height: 150px;","_ref":"grid"},"ch":[],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
 /**/) {
 
 
@@ -127,7 +127,19 @@ return new W3View(appContext)
 				
 //# sourceURL=W3View:///<grid-win>
 }}},
-"APP":{"prep":{"tgn":"DIV","as":"app","attr":{"as":"app"},"ch":[{"tgn":"BUTTON","attr":{"refname":"button"},"ch":["open win"],"superc":null},{"tgn":"BUTTON","attr":{"refname":"button1"},"ch":["open modal win"],"superc":null},{"tgn":"BUTTON","attr":{"refname":"button2"},"ch":["open grid-win"],"superc":null},{"tgn":"BUTTON","attr":{"refname":"button3"},"ch":["open ext-win"],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
+"CELL":{"prep":{"tgn":"DIV","as":"cell","attr":{"as":"cell","usetag":"td","style":"text-align:center;width:10%;"},"ch":[],"superc":null,"script":function anonymous(appContext,factory,document
+/**/) {
+
+
+
+          this.onSetData=function(data){
+            this.innerText=data;
+          };
+
+        
+//# sourceURL=W3View:///<cell>
+}}},
+"APP":{"prep":{"tgn":"DIV","as":"app","attr":{"as":"app"},"ch":[{"tgn":"BUTTON","attr":{"_ref":"button"},"ch":["open win"],"superc":null},{"tgn":"BUTTON","attr":{"_ref":"button1"},"ch":["open modal win"],"superc":null},{"tgn":"BUTTON","attr":{"_ref":"button2"},"ch":["open grid-win"],"superc":null},{"tgn":"BUTTON","attr":{"_ref":"button3"},"ch":["open ext-win"],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
 /**/) {
 
 
@@ -169,7 +181,7 @@ return new W3View(appContext)
 }}}});
 })(appContext),(function(appContext){
 return new W3View(appContext)
-.setRegistry({"TBL":{"prep":{"tgn":"DIV","as":"tbl","attr":{"as":"tbl","style":"box-sizing:border-box;border:1px solid black;\n        width:100%;height:100%;\n        padding:0px 20px 0px 0px;"},"ch":[{"tgn":"DIV","attr":{"style":"float:left;width:100%;height:100%;overflow:hidden;min-height:150px;"},"ch":[{"tgn":"ARRAY-ITERATOR","attr":{"usetag":"table","border":"1","style":"width:100%;height:100%;min-height:150px;overflow:hidden;","refname":"tb"},"ch":[{"tgn":"ROW","attr":{},"ch":[],"superc":null}],"superc":null}],"superc":null},{"tgn":"DIV","attr":{"style":"float:left;height:100%;width:0px;overflow:visible;"},"ch":[{"tgn":"SCROLLBAR","attr":{"style":"width:20px; height: 100%; min-height:150px;\n            border:1px solid black;","refname":"scroll"},"ch":[],"superc":null}],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
+.setRegistry({"TBL":{"prep":{"tgn":"DIV","as":"tbl","attr":{"as":"tbl","style":"box-sizing:border-box;border:1px solid black;\n        width:100%;height:100%;\n        padding:0px 20px 0px 0px;"},"ch":[{"tgn":"DIV","attr":{"style":"float:left;width:100%;height:100%;overflow:hidden;min-height:150px;"},"ch":[{"tgn":"ARRAY-ITERATOR","attr":{"usetag":"table","border":"1","style":"width:100%;height:100%;min-height:150px;overflow:hidden;","_ref":"tb"},"ch":[{"tgn":"ROW","attr":{},"ch":[],"superc":null}],"superc":null}],"superc":null},{"tgn":"DIV","attr":{"style":"float:left;height:100%;width:0px;overflow:visible;"},"ch":[{"tgn":"SCROLLBAR","attr":{"style":"width:20px; height: 100%; min-height:150px;\n            border:1px solid black;","_ref":"scroll"},"ch":[],"superc":null}],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
 /**/) {
 
 
@@ -227,7 +239,7 @@ return new W3View(appContext)
         
 //# sourceURL=W3View:///<tbl>
 }}},
-"ROW":{"prep":{"tgn":"tr","as":"row","attr":{"as":"row","super":"array-iterator","tagname":"tr"},"ch":[{"tgn":"CELL","attr":{},"ch":[],"superc":null}],"superc":"array-iterator","script":function anonymous(appContext,factory,document
+"ROW":{"prep":{"tgn":"tr","as":"row","attr":{"as":"row","super":"array-iterator","tagname":"tr"},"ch":[{"tgn":"POPUPS:CELL","attr":{},"ch":[],"superc":null},{"tgn":"POPUPS:CELL","attr":{"style":"background-color:rgba(128,128,128,0.3)"},"ch":[],"superc":null}],"superc":"array-iterator","script":function anonymous(appContext,factory,document
 /**/) {
 
 
@@ -246,7 +258,7 @@ return new W3View(appContext)
           
 //# sourceURL=W3View:///<row>
 }}},
-"CELL":{"prep":{"tgn":"DIV","as":"cell","attr":{"as":"cell","usetag":"td","style":"text-align:center;width:10%;"},"ch":[],"superc":null,"script":function anonymous(appContext,factory,document
+"XCELL":{"prep":{"tgn":"DIV","as":"xcell","attr":{"as":"xcell","usetag":"td","style":"text-align:center;width:10%;"},"ch":[],"superc":null,"script":function anonymous(appContext,factory,document
 /**/) {
 
 
@@ -256,9 +268,9 @@ return new W3View(appContext)
           };
 
         
-//# sourceURL=W3View:///<cell>
+//# sourceURL=W3View:///<xcell>
 }}},
-"SCROLLBAR":{"prep":{"tgn":"DIV","as":"scrollbar","attr":{"as":"scrollbar"},"ch":[{"tgn":"DIV","attr":{"style":"cursor:pointer;position:relative;\n          width:100%; height:100px;\n          min-height:20px;top:0px;\n          border:2px solid black;\n          background-color:#999999;margin-top:0px;","refname":"scroller"},"ch":[],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
+"SCROLLBAR":{"prep":{"tgn":"DIV","as":"scrollbar","attr":{"as":"scrollbar"},"ch":[{"tgn":"DIV","attr":{"style":"cursor:pointer;position:relative;\n          width:100%; height:100px;\n          min-height:20px;top:0px;\n          border:2px solid black;\n          background-color:#999999;margin-top:0px;","_ref":"scroller"},"ch":[],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
 /**/) {
 
 
@@ -312,7 +324,7 @@ return new W3View(appContext)
         
 //# sourceURL=W3View:///<scrollbar>
 }}},
-"APP":{"prep":{"tgn":"DIV","as":"app","attr":{"as":"app"},"ch":[{"tgn":"TBL","attr":{"refname":"table"},"ch":[],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
+"APP":{"prep":{"tgn":"DIV","as":"app","attr":{"as":"app"},"ch":[{"tgn":"TBL","attr":{"_ref":"table"},"ch":[],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
 /**/) {
 
 
@@ -332,7 +344,7 @@ return new W3View(appContext)
 }}}});
 })(appContext),(function(appContext){
 return new W3View(appContext)
-.setRegistry({"SLIDER":{"prep":{"tgn":"DIV","as":"slider","attr":{"as":"slider","min":"0","max":"1","value":"0"},"ch":[{"tgn":"DIV","attr":{"style":"padding:20px;border:1px solid black;"},"ch":[{"tgn":"DIV","attr":{"style":"height:10px;border:1px solid black;","refname":"bar"},"ch":[{"tgn":"DIV","attr":{"style":"position:relative;height:0px;width:0px","refname":"mover"},"ch":[{"tgn":"DIV","attr":{"style":"position:absolute;margin:-10px 0 0 -10px;width:20px; height:30px;border:1px solid black;background-color:gray;"},"ch":[],"superc":null}],"superc":null}],"superc":null}],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
+.setRegistry({"SLIDER":{"prep":{"tgn":"DIV","as":"slider","attr":{"as":"slider","min":"0","max":"1","value":"0"},"ch":[{"tgn":"DIV","attr":{"style":"padding:20px;border:1px solid black;"},"ch":[{"tgn":"DIV","attr":{"style":"height:10px;border:1px solid black;","_ref":"bar"},"ch":[{"tgn":"DIV","attr":{"style":"position:relative;height:0px;width:0px","_ref":"mover"},"ch":[{"tgn":"DIV","attr":{"style":"position:absolute;margin:-10px 0 0 -10px;width:20px; height:30px;border:1px solid black;background-color:gray;"},"ch":[],"superc":null}],"superc":null}],"superc":null}],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
 /**/) {
 
 
@@ -383,7 +395,7 @@ return new W3View(appContext)
         
 //# sourceURL=W3View:///<slider>
 }}},
-"COLOR-CHOOSER":{"prep":{"tgn":"DIV","as":"color-chooser","attr":{"as":"color-chooser","style":"box-sizing:border-box;"},"ch":[{"tgn":"H1","attr":{"col":"2","refname":"content"},"ch":[],"superc":null},{"tgn":"SLIDER","attr":{"min":"0","max":"255","value":"128","style":"background-color:white;","col":"8","refname":"slider"},"ch":[],"superc":null},{"tgn":"INPUT","attr":{"type":"text","col":"2","style":"text-align:right;height:50px;\n          font-size:40px;overflow:visible;border:0;\n          border-bottom:5px solid green;min-width:100px;padding:0px 10px;","refname":"value"},"ch":[],"superc":null},{"tgn":"CLEAR","attr":{},"ch":[],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
+"COLOR-CHOOSER":{"prep":{"tgn":"DIV","as":"color-chooser","attr":{"as":"color-chooser","style":"box-sizing:border-box;"},"ch":[{"tgn":"H1","attr":{"col":"2","_ref":"content"},"ch":[],"superc":null},{"tgn":"SLIDER","attr":{"min":"0","max":"255","value":"128","style":"background-color:white;","col":"8","_ref":"slider"},"ch":[],"superc":null},{"tgn":"INPUT","attr":{"type":"text","col":"2","style":"text-align:right;height:50px;\n          font-size:40px;overflow:visible;border:0;\n          border-bottom:5px solid green;min-width:100px;padding:0px 10px;","_ref":"value"},"ch":[],"superc":null},{"tgn":"CLEAR","attr":{},"ch":[],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
 /**/) {
 
 
@@ -414,7 +426,7 @@ return new W3View(appContext)
         
 //# sourceURL=W3View:///<color-chooser>
 }}},
-"RGB-CHOOSER":{"prep":{"tgn":"DIV","as":"rgb-chooser","attr":{"as":"rgb-chooser","style":"border:1px solid black; padding:20px;"},"ch":[{"tgn":"COLOR-CHOOSER","attr":{"refname":"red"},"ch":["Red"],"superc":null},{"tgn":"COLOR-CHOOSER","attr":{"refname":"green"},"ch":["Green"],"superc":null},{"tgn":"COLOR-CHOOSER","attr":{"refname":"blue"},"ch":["Blue"],"superc":null},{"tgn":"CLEAR","attr":{},"ch":[],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
+"RGB-CHOOSER":{"prep":{"tgn":"DIV","as":"rgb-chooser","attr":{"as":"rgb-chooser","style":"border:1px solid black; padding:20px;"},"ch":[{"tgn":"COLOR-CHOOSER","attr":{"_ref":"red"},"ch":["Red"],"superc":null},{"tgn":"COLOR-CHOOSER","attr":{"_ref":"green"},"ch":["Green"],"superc":null},{"tgn":"COLOR-CHOOSER","attr":{"_ref":"blue"},"ch":["Blue"],"superc":null},{"tgn":"CLEAR","attr":{},"ch":[],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
 /**/) {
 
 
@@ -435,7 +447,7 @@ return new W3View(appContext)
         
 //# sourceURL=W3View:///<rgb-chooser>
 }}},
-"APP":{"prep":{"tgn":"DIV","as":"app","attr":{"as":"app"},"ch":[{"tgn":"DIV","attr":{"style":"height:100px;padding:20px 0px;font-size:20px;\n          text-align:center;border:1px solid black;border-bottom:0px;","id":"disp"},"ch":[{"tgn":"SPAN","attr":{"style":"background-color:white; padding:10px;border-radius: 20px;","refname":"va"},"ch":[],"superc":null}],"superc":null},{"tgn":"RGB-CHOOSER","attr":{"refname":"control"},"ch":[],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
+"APP":{"prep":{"tgn":"DIV","as":"app","attr":{"as":"app"},"ch":[{"tgn":"DIV","attr":{"style":"height:100px;padding:20px 0px;font-size:20px;\n          text-align:center;border:1px solid black;border-bottom:0px;","id":"disp"},"ch":[{"tgn":"SPAN","attr":{"style":"background-color:white; padding:10px;border-radius: 20px;","_ref":"va"},"ch":[],"superc":null}],"superc":null},{"tgn":"RGB-CHOOSER","attr":{"_ref":"control"},"ch":[],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
 /**/) {
 
 
@@ -449,12 +461,12 @@ return new W3View(appContext)
 }}}});
 })(appContext),(function(appContext){
 return new W3View(appContext)
-.setRegistry({"HELLO-WORLD":{"prep":{"tgn":"DIV","as":"hello-world","attr":{"as":"hello-world"},"ch":[{"tgn":"H1","attr":{"refname":"content"},"ch":[],"superc":null},{"tgn":"INPUT","attr":{"placeholder":"type your name here","refname":"input"},"ch":[],"superc":null},{"tgn":"H2","attr":{},"ch":["Hello ",{"tgn":"SPAN","attr":{"refname":"name"},"ch":["Anonimous"],"superc":null},"!"],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
+.setRegistry({"HELLO-WORLD":{"prep":{"tgn":"DIV","as":"hello-world","attr":{"as":"hello-world"},"ch":[{"tgn":"H1","attr":{"_ref":"content"},"ch":[],"superc":null},{"tgn":"INPUT","attr":{"placeholder":"type your name here","_ref":"input"},"ch":[],"superc":null},{"tgn":"H2","attr":{},"ch":["Hello ",{"tgn":"SPAN","attr":{"_ref":"name"},"ch":["Anonimous"],"superc":null},"!"],"superc":null}],"superc":null,"script":function anonymous(appContext,factory,document
 /**/) {
 
 
 					//CONSTRUCTOR tag should be used inside SCRIPT tag
-					this.ref.input.onkeyup = function(e){
+					this.ref.input.onkeydown=this.ref.input.onkeyup = function(e){
 						this.setData(this.ref.input.value);
 					}.bind(this);
 					this.onSetData = function(data){

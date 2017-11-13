@@ -187,6 +187,17 @@
 				</script>
 			</win>
 			
+      <div as='cell' useTag="td"
+        style="text-align:center;width:10%;">
+        <script>
+
+          this.onSetData=function(data){
+            this.innerText=data;
+          };
+
+        </script>
+      </div>
+
 
 			<div as="app">
 				<button ref="button">open win</button>

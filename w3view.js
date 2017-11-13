@@ -157,7 +157,7 @@ function W3View(appContext){
 		res.tgn=root.getAttribute('tagname') || root.tagName;
 		res.as=root.getAttribute('as');
 		res.attr=nmToObj(root.attributes);
-		if(res.attr.ref) {res.attr.refname=res.attr.ref; delete res.attr.ref;}
+		if(res.attr.ref) {res.attr._ref=res.attr.ref; delete res.attr.ref;}
 		res.ch=[];
 		res.superc = root.getAttribute('super');
 		var ch=root.childNodes;
@@ -250,7 +250,7 @@ function W3View(appContext){
 			var cch=factory.create(prep.ch[i].tgn, prep.ch[i].attr, prep.ch[i].ch,instance);
 			//если у созданной ноды есть атрибут ref
 			//добавить ссылку на ноду в ref инстанса
-			var ref=cch.getAttribute('refname');
+			var ref=cch.getAttribute('_ref');
 			if(ref){
 				instance.ref[ref]=cch;
 			}
@@ -280,16 +280,17 @@ function W3View(appContext){
 		} 
 		else {
 			var path = name.toUpperCase().split(':');
-			if(path.length>1 && modules[path[0]]){
-				return modules[path[0]].create(
+			if(path.length>1 && modules[path[0]]){ 
+				instance = modules[path[0]].create(
 					path.slice(1).join(':'),
 					attr, ch, root
 				);
+				instance.fullTgn = name;
+				return instance;
 			}
 			instance=document.createElement(name);
 			instance.ref={content:instance};
 		}
-
 		if(!root) root=instance;
 		setAttributes(instance, attr);
 		if(ch && ch.length)
@@ -299,9 +300,9 @@ function W3View(appContext){
 				continue;
 			}
 			var cch=factory.create(ch[i].tgn, ch[i].attr, ch[i].ch, root);
-			var ref=cch.getAttribute('refname');
+			var ref=cch.getAttribute('_ref');
 			if(ref){
-				root.ref=root.ref || {}; 
+				root.ref=root.ref || {};
 				root.ref[ref]=cch;
 			}
 			if(cch.mount){
@@ -326,7 +327,15 @@ function W3View(appContext){
 		if(!tpl.as){
 			throw new Error('Sample should be registered component');
 		}
-		var res = factory.create(tpl.as, nmToObj(tpl.attributes));
+		var attrs = {};
+		for(var i=0;i<tpl.attributes.length;i++){
+			var att=tpl.attributes[i];
+			if(tpl[att.name] && typeof tpl[att.name]==='function'){
+				continue;
+			}
+			attrs[att.name]=att.value;
+		}
+		var res = factory.create(tpl.fullTgn || tpl.as, attrs);
 		return res;
 	};
 
@@ -339,7 +348,7 @@ function W3View(appContext){
 		while(this.children.length > 0){
 			templates.push(this.removeChild(this.children[0]));
 		}
-
+// return;
 		this.onSetData = function(array, opts){
 			if(!array) array=[];
 			if(!Array.isArray(array)) {
