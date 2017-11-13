@@ -214,10 +214,11 @@ return new W3View(appContext)
             }
           }.bind(this);
 
-          this.ref.tb.onwheel =function(e){
+          this.ref.tb.onmousewheel=this.ref.tb.onwheel =function(e){
 						e = e || window.event;
+            var delta = e.deltaY || -e.wheelDelta
 						if(e.preventDefault) e.preventDefault(); else e.returnValue = false;
-            if(e.deltaY>0){
+            if(delta>0){
               data.offset++;
             } else{
               data.offset--;
