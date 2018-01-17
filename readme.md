@@ -60,12 +60,60 @@ second conception is - NO NEW WORDS.
 Component definition - is the markup of one sample HTMLElement.
 Just write some HTML markup and embedded constructor script,
 like this:
-
-		//"hello-world" definition
+```html
+//"hello-world" definition
+<div as="hello-world">
+	<input ref="input" placeholder="type your name here">
+	<h1>Hello <span ref="name">Anonimous</span>!</h1>
+	<script>
+		var me=this;
+		this.ref.input.onkeydown=this.ref.input.onkeyup = function(e){
+			me.setData(me.ref.input.value);
+		};
+		this.onSetData = function(data){
+			me.ref.name.innerText = data || 'Anonimous';
+		};
+	</script>
+</div>
+//Here:
+//"this" - is the reference to DIV, that is instance of "hello-world".
+//attribute "ref" - is some one like *id*, inside the component.
+//"this.ref" - is the table of references to corresponded elements.
+```
+Looks like web page, when web was young, is not it? 
+Yes, but it is **reusable component**.
+It can be used as simple application,
+and it can be used as part of more complex app inside another component, 
+for example:
+```html
+<div as="double-hello-world">
+	<hello-world></hello-world>
+	<hr>
+	<hello-world></hello-world>
+</div>
+```
+Okay, lets combine these examples, make complete HTML page and 
+run "double-hello-world" app:
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="content-type" content="text/html;charset=utf-8">
+		<title>Double Hello</title>
+	<head>
+	<script src="w3view.js"></script>
+	<script type="text/w3view" id="components">
+		
+		//any text can be placed between components definitions,
+		//except HTML markup.
+		
+		//hello-world component
 		<div as="hello-world">
+			<h1 ref="content"></h1>
 			<input ref="input" placeholder="type your name here">
-			<h1>Hello <span ref="name">Anonimous</span>!</h1>
-			<script>
+			<h2>Hello <span ref="name">Anonimous</span>!</h2>
+			<constructor>
+				//CONSTRUCTOR tag should be used inside SCRIPT tag
 				var me=this;
 				this.ref.input.onkeydown=this.ref.input.onkeyup = function(e){
 					me.setData(me.ref.input.value);
@@ -73,74 +121,27 @@ like this:
 				this.onSetData = function(data){
 					me.ref.name.innerText = data || 'Anonimous';
 				};
-			</script>
+			</constructor>
 		</div>
-		//Here:
-		//"this" - is the reference to DIV, that is instance of "hello-world".
-		//attribute "ref" - is some one like *id*, inside the component.
-		//"this.ref" - is the table of references to corresponded elements.
-
-Looks like web page, when web was young, is not it? 
-Yes, but it is **reusable component**.
-It can be used as simple application,
-and it can be used as part of more complex app inside another component, 
-for example:
-
+		
+		//root of app 
 		<div as="double-hello-world">
-			<hello-world></hello-world>
+			<hello-world>Hello first</hello-world>
 			<hr>
-			<hello-world></hello-world>
+			<hello-world>Hello second</hello-world>
 		</div>
 
-Okay, lets combine these examples, make complete HTML page and 
-run "double-hello-world" app:
+	</script>
 
-	<!DOCTYPE html>
-	<html>
-		<head>
-			<meta http-equiv="content-type" content="text/html;charset=utf-8">
-			<title>Double Hello</title>
-		<head>
-		<script src="w3view.js"></script>
-		<script type="text/w3view" id="components">
-			
-			//any text can be placed between components definitions,
-			//except HTML markup.
-			
-			//hello-world component
-			<div as="hello-world">
-				<h1 ref="content"></h1>
-				<input ref="input" placeholder="type your name here">
-				<h2>Hello <span ref="name">Anonimous</span>!</h2>
-				<constructor>
-					//CONSTRUCTOR tag should be used inside SCRIPT tag
-					var me=this;
-					this.ref.input.onkeydown=this.ref.input.onkeyup = function(e){
-						me.setData(me.ref.input.value);
-					};
-					this.onSetData = function(data){
-						me.ref.name.innerText = data || 'Anonimous';
-					};
-				</constructor>
-			</div>
-			
-			//root of app 
-			<div as="double-hello-world">
-				<hello-world>Hello first</hello-world>
-				<hr>
-				<hello-world>Hello second</hello-world>
-			</div>
-
+	<body style="margin:50px;">
+		<script defer="defer">
+			var w3view = new W3View();
+			w3view.parse(components.textContent);
+			w3view.create('double-hello-world').mount(document.body);
 		</script>
-
-		<body style="margin:50px;">
-			<script defer="defer">
-				var w3view = new W3View();
-				w3view.parse(components.textContent);
-				w3view.create('double-hello-world').mount(document.body);
-			</script>
-		</body>
-	</html>
+	</body>
+</html>
+```
 
 You can find this example in ./examples folder of this repo.
 or <a href="https://rawgit.com/vitalydmitriev1970/W3View/master/examples/readmeExample.html">click here</a>
