@@ -1,47 +1,12 @@
 'use strict';
 /**
- * Usage: node build.js <path/to/src/file> > <path/to/dest/file>
+ * Usage: node build.js <path/to/src/file> <funcName> > <path/to/dest/file>
  * for example
- * node build.js ../examples/modules/window.w3v.html > ../examples/built/window.js
+ * node build.js ../examples/modules/window.w3v.html appBundle > ../examples/built/bundle.js
  */
-const loader = require('../loader/moduleLoader.js');
-const converter = require('./converter.js');
-const reader = require('../loader/filereader.js');
-
-var W3View = require('../w3view.js');
-var jsdom = require('node-jsdom'); 
-
-jsdom = jsdom.jsdom || jsdom;
-W3View.document = jsdom("");
+const builder = require(__dirname+'/builder.js');
 
 let src = process.argv[2];
+let trgFunc = process.argv[3];
 
-loader(null, src, reader, function(){
-	let buffer = [];
-	let imports = {};
-	var i = 0;
-	for(var path in loader.imported){
-		buffer.push('('+converter(loader.imported[path])+')(appContext)');
-		imports[path] = i;
-		i++;
-	}
-
-	buffer = [ 'function w3view(appContext){var factory=['+buffer.join(',')+']' ];
-
-	for(var path in loader.imported){
-		var factory=loader.imported[path];
-		if(factory.imports){
-			for(var i=0;i<factory.imports.length;i++){
-				var msrc = factory.imports[i].src;
-				buffer.push(
-					'factory['+imports[path]+
-					'].putModule(\''+factory.imports[i].name+
-					'\',factory['+imports[msrc]+'])');
-			}
-		}
-	}
-	buffer.push('return factory['+imports[reader.makeSrc(src)]+'];}',
-							'//# sourceURL=W3View:///'+src
-	);
-	console.log(buffer.join(';\n'));
-});
+builder(src, trgFunc, console.log);

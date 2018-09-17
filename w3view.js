@@ -348,7 +348,7 @@ function W3View(appContext){
 		while(this.children.length > 0){
 			templates.push(this.removeChild(this.children[0]));
 		}
-// return;
+
 		this.onSetData = function(array, opts){
 			if(!array) array=[];
 			if(!Array.isArray(array)) {

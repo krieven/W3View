@@ -1,11 +1,8 @@
 'use strict';
 
-const W3View = require('../w3view.js');
-const jsdom = require('node-jsdom');
+module.exports = function(factory){
 
-const converter = function(factory){
-
-	const registry=factory.getRegistry();
+	const registry = factory.getRegistry();
 
 	let buffer=[];
 
@@ -31,5 +28,3 @@ const converter = function(factory){
 
 	return buffer.join("\n");
 };
-
-module.exports = converter;
