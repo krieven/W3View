@@ -1,0 +1,20 @@
+
+<import src="child.html" as="child" type="html"></import>
+
+<div as="app-root">
+	<h2>test imported modules</h2>
+
+	<child:app-child usetag="h3">
+		<app-inner></app-inner>
+	</child:app-child>
+
+	<app-child-ext></app-child-ext>
+
+</div>
+
+<div as="app-inner">app inner</div>
+
+<child:app-child as="app-child-ext" usetag="div">
+	<app-inner></app-inner>
+	<app-inner></app-inner>
+</child:app-child>

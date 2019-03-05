@@ -7,7 +7,7 @@
 11 kB of documented, not minified code.
 
 # In current version 
-- <a href="https://rawgit.com/vitalydmitriev1970/W3View/master/loader/index.html">Modularity and namespaces added</a>
+- <a href="https://rawgit.com/vitalydmitriev1970/W3View/master/examples/modules/index.html">Modularity and namespaces added</a>
 - <a	href="https://rawgit.com/vitalydmitriev1970/W3View/master/examples/window.1.html">Prebuilding your modules into one js bundle</a> 
 
 ## What W3View does ?
