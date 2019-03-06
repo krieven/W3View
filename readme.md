@@ -4,11 +4,14 @@
 - Simple and absolutely painless.
 - Componentize your work in easiest way.
 
-11 kB of documented, not minified code.
+12.5 kB of documented, not minified code.
+
+## Use w3view for your SPA and kill nuclear monsters in your mind.
 
 # In current version 
 - <a href="https://rawgit.com/vitalydmitriev1970/W3View/master/examples/modules/index.html">Modularity and namespaces added</a>
 - <a	href="https://rawgit.com/vitalydmitriev1970/W3View/master/examples/window.1.html">Prebuilding your modules into one js bundle</a> 
+- Two new lifecycle handlers (start and stop) to keep your memory clean.
 
 ## What W3View does ?
 W3View generates **reusable UI components** from HTML based declarative 
@@ -42,8 +45,8 @@ contains one constructor**
 * **Small set of additional attributes**
 * **Natural, manageble DOM Nodes as component instances**
 * **Natural DOM events**
-* **Only five new methods to use**
-* **Up to five methods to implement**
+* **Only seven new methods to use**
+* **Up to seven methods to implement (all is optional)**
 * **API and lifecycle are oriented on reactive programming**
 
 ## What W3View is not?

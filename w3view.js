@@ -32,9 +32,6 @@ function W3View(appContext){
 
 	var document = W3View.document || window.document;
 
-
-
-
 	this.findLocalPrep=function(find){
 		var name=(find + '').toUpperCase();
 		return (registry[name] && registry[name].prep) ? registry[name].prep : undefined;
@@ -63,8 +60,13 @@ function W3View(appContext){
 			}
 		}
 	};
-	/**
+	/*
 	 * Make preparat from sample HTMLElement
+	 */
+	/**
+	 * 
+	 * @param {NamedNodeMap} nm 
+	 * @returns {Object} 
 	 */
 	function nmToObj(nm){
 		var res = {};
@@ -194,7 +196,7 @@ function W3View(appContext){
 
 	/**
 	 * Magic method, - factory of components - 
-	 * does all dirty work at DOM nodes creation,
+	 * does all dirty work during DOM nodes creation,
 	 * attribute setting, adding children and references registration
 	 */
 	factory.create=function(name, attr, ch, root){
@@ -206,9 +208,8 @@ function W3View(appContext){
 			//имя описано текущей фабрикой
 			if(factory.findPrep(prep.tgn)){
 				//базовое имя описано текущей фабрикой или модулем
-				prep.attr = prep.attr || {};
-				prep.attr.usetag = attr.usetag || prep.attr.usetag;
-				instance = factory.create(prep.tgn, prep.attr, prep.ch);
+				var prepattr = W3View.mix( W3View.mix({}, prep.attr), attr.usetag?{usetag:attr.usetag}:{});
+				instance = factory.create(prep.tgn, prepattr, prep.ch);
 			} else {
 				//базовое имя стандартное
 				var tagname = attr.usetag || prep.tgn;
@@ -239,8 +240,6 @@ function W3View(appContext){
 			var ref=cch.getAttribute('_ref');
 			if(ref){
 				root.ref=root.ref || {};
-				if(root.ref[ref])
-					throw new Error('Overriding of refs is avoid: '+ name + '.'+ref);
 				root.ref[ref]=cch;
 			}
 			if(cch.mount){
@@ -251,9 +250,7 @@ function W3View(appContext){
 		}
 		var mixin = W3View.mixin;
 		if(prep){
-			for(var k in mixin){
-				instance[k] = instance[k] || mixin[k];
-			}
+			W3View.mix(instance, mixin, true);
 			initInstance(instance, name);
 		}
 
@@ -261,7 +258,7 @@ function W3View(appContext){
 		return instance;
 	};
 
-	factory.byExample = function byExample(tpl){
+	factory.byExample = function (tpl){
 		if(!tpl.as){
 			throw new Error('Sample should be registered component');
 		}
@@ -310,21 +307,71 @@ function W3View(appContext){
 	};
 };
 
+/**
+ * add all properties from mixin into trg,
+ * 
+ * @param {object} trg
+ * @param {object} mixin
+ * @param {boolean} notOverride
+ * @returns {object} trg
+ */
+W3View.mix = function(trg, mixin, dontOverride){
+	trg = trg || {}; mixin = mixin || {};
+	for(var key in mixin){
+		trg[key] = (dontOverride?trg[key]:null) || mixin[key];
+	}
+	return trg;
+};
+
 W3View.mixin = {};
+/**
+ * Recursively calls onStart handlers
+ */
+W3View.mixin.start = function(){
+	if(this.onStart){
+		this.onStart();
+	}
+	for(var i = 0; this.children && i < this.children.length; i++){
+		var ch = this.children[i];
+		ch.start = ch.start || W3View.mixin.start;
+		ch.start();
+	}
+};
+/**
+ * Recursively calls onStop handlers
+ */
+W3View.mixin.stop = function(){
+	if(this.onStop){
+		this.onStop();
+	}
+	for(var i = 0; this.children && i < this.children.length; i++){
+		var ch = this.children[i];
+		ch.stop = ch.stop || W3View.mixin.stop;
+		ch.stop();
+	}
+};
+
+W3View.mixin.onStart = function(){};
+/**
+ * Please cleanup all references to this,
+ * including handlers, placed into any kind of dispatchers,
+ * observables and event listeners
+ */
+W3View.mixin.onStop = function(){};
 
 /**
  * Mount element into target content
  * at index position
  * 
- * @param {DOMNode} target - destination target
+ * @param {Element} target - destination target
  * @param {number} index - index in destination
  */
 W3View.mixin.mount=function(target, index){
 	target = target.ref && target.ref.content ? target.ref.content : target;
 	this.unmount();
-	if(index === undefined || target.children.length <= index ) 
+	if(index === undefined || target.childNodes.length <= index ) 
 		target.appendChild(this);
-	else target.insertBefore(this,target.children[index < 0 ? 0 : index]);
+	else target.insertBefore(this,target.childNodes[index < 0 ? 0 : index]);
 	this.onMount();
 };
 /**
@@ -337,7 +384,7 @@ W3View.mixin.unmount=function(){
 
 /**
  * setData - public API methods for
- * setting data into element, user defined onSetData callback will
+ * setting data into element, user defined onSetData handler will
  * be called immediately
  * 
  * @param {any} data
@@ -348,7 +395,7 @@ W3View.mixin.setData=function(data,opts,a1){
 	this.onSetData(data,opts,a1);
 };
 /**
- * recursively destroy self and subtree
+ * recursively destroys self and subtree
  */
 W3View.mixin.destroy=function(){
 	if(this.unmount){
@@ -356,6 +403,9 @@ W3View.mixin.destroy=function(){
 	} else this.parentNode.removeChild(this);
 	if(this.onDestroy){
 		this.onDestroy();
+	}
+	if(this.onStop){
+		this.onStop();
 	}
 	while(this.children.length){
 		if(!this.children[0].destroy){
@@ -365,19 +415,19 @@ W3View.mixin.destroy=function(){
 	}
 };
 
-///lifecycle callbacks
+///lifecycle handlers
 /**
- * all of these callbacks already presented in each
+ * all of these handlers already presented in each
  * instance of W3View components.
  * Author of component can override each of them.
  */
 /**
- * callback on this.setData
+ * handler on this.setData
  */
 W3View.mixin.onSetData=function(data,opts){};
 
 /**
- * callbacks on element.mount and element.unmount
+ * handlers on element.mount and element.unmount
  * in this time you can touch parentElement if needed,
  * onMount will be called after inserting into DOM tree
  * onUnmount - before removing
@@ -386,18 +436,17 @@ W3View.mixin.onMount=function(){};
 W3View.mixin.onUnmount=function(){};
 
 /**
- * callback called immediately after element created
+ * handler called immediately when element created
  * before mount 
  */
 W3View.mixin.onCreate=function(){};
 /**
- * callback called when destroy
+ * handler called when destroy
  * Please cleanup all references to this,
- * including callbacks, placed into any kind of dispatchers,
+ * including handlers, placed into any kind of dispatchers,
  * observables and event listeners
  */
 W3View.mixin.onDestroy=function(){};
-	
 
 if(typeof (module) === 'object'){
 	module.exports = W3View;
