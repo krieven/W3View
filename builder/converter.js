@@ -2,6 +2,7 @@
 
 module.exports = function(factory){
 
+	if(!factory.getRegistry) return;
 	const registry = factory.getRegistry();
 
 	let buffer=[];

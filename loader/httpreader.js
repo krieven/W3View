@@ -15,7 +15,7 @@ function reader(src, callback){
 
 reader.makeSrc=function(currentSrc, nextPart){
 	nextPart = nextPart || '';
-	if(nextPart.substr(0)==='/') return nextPart;
+	if(nextPart.substr(0)==='/') return reader.normalize(nextPart);
 	currentSrc = nextPart ? reader.dirname(currentSrc) : currentSrc;
 	var src = reader.normalize(currentSrc + nextPart);
 	return src;
@@ -43,7 +43,6 @@ reader.get = function(src, callback){
 
 reader.dirname=function(path){
 	var res=path.split('?')[0].split('/');
-	var last = res[res.length-1];
 	res[res.length-1] = '';
 	return res.join('/');
 };

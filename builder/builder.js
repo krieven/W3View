@@ -15,7 +15,11 @@ function builder(src, trgFunc, callback){
 		let imports = {};
 		var i = 0;
 		for(var path in loader.imported){
-			buffer.push('('+converter(loader.imported[path])+')(appContext)');
+			var converted = converter(loader.imported[path]);
+			if(converted) buffer.push('('+converted+')(appContext)');
+			else buffer.push(
+				JSON.stringify(loader.imported[path])
+			);
 			imports[path] = i;
 			i++;
 		}
@@ -31,7 +35,8 @@ function builder(src, trgFunc, callback){
 					buffer.push(
 						'factory['+imports[path]+
 						'].putModule(\''+factory.imports[i].name+
-						'\',factory['+imports[msrc]+'])');
+						'\',factory['+imports[msrc]+'], \''+
+						factory.imports[i].type+'\')');
 				}
 			}
 		}

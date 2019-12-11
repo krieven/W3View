@@ -20,16 +20,39 @@ function W3View(appContext){
 			registry[k]=newRegistry[k]; 
 		return factory;
 	};
-	this.putModule = function(name, module){
+
+	/**
+	 * the HTML modules
+	 */
+	var modules = {};
+	/**
+	 * the Javascript modules
+	 */
+	var scripts = {};
+	var evaluated = {};
+
+	this.putModule = function(name, module, type){
+		var container = {html:modules, js:scripts};
 		name = name.toUpperCase();
-		modules[name] = module;
+		if(container[type]) container[type][name] = module;
 	};
-	
 	/**
 	 * 
 	 */
-	var modules = {};
-
+	function require(name){
+		name = name && name.toUpperCase();
+		if(!scripts[name]) return;
+		if(scripts[name].evaluated) return scripts[name].evaluated;
+		return scripts[name].evaluated = (
+			new Function('',
+				'var module = {};\n' +
+				scripts[name].raw +
+				'\nreturn module.exports;\n' +
+				'//# sourceURL=W3View.JS:///'+(factory.src?scripts[name].src:('<script:'+name+'>'))
+			)
+		)();
+	}
+	
 	var document = W3View.document || window.document;
 
 	this.findLocalPrep=function(find){
@@ -55,7 +78,7 @@ function W3View(appContext){
 			}
 			if(prep.script){
 				instance.__ = prep.script;
-				instance.__(appContext,factory,document);
+				instance.__(appContext,factory,document,require);
 				instance.onCreate();
 			}
 		}
@@ -105,7 +128,7 @@ function W3View(appContext){
 			if(tgn==='CONSTRUCTOR' || tgn==='SCRIPT'){
 				var construct="\n"+(textContent)+
 					"\n//# sourceURL=W3View:///"+(factory.src?factory.src:'')+"<"+res.as+">";
-				res.script = new Function('appContext,factory,document', construct);
+				res.script = new Function('appContext,factory,document,require', construct);
 			} else {
 				var child = prepare(cChild);
 				delete child.script;
@@ -120,24 +143,34 @@ function W3View(appContext){
 	 * register Components, takes definitions from
 	 * string, append new definitions into registry
 	 * @param {string} str
-	 * @returns {void} 
+	 * @returns {w3view || str} 
 	 */
 	factory.parse=function(str){
 		var matrix=document.createElement('div');
 		matrix.innerHTML=str;
 		var ch=matrix.children;
-		factory.register(ch);
+		if(ch.length) {
+			factory.register(ch);
+			return factory;
+		}
+		else return str;
 	};
 
 
 	factory.register = function(ch){
 		for(var i=0;i<ch.length;i++){
-			if(ch[i].tagName.toUpperCase()==='IMPORT' && ch[i].getAttribute('type') &&
-					ch[i].getAttribute('type').toLowerCase()==='html'){
-				factory.imports =factory.imports || [];
-				factory.imports.push(
-					{src:ch[i].getAttribute('src'), name:ch[i].getAttribute('as')}
-				);
+			if(ch[i].tagName.toUpperCase()==='IMPORT' && ch[i].getAttribute('type')){
+				var type = ch[i].getAttribute('type').toLowerCase();
+				if(type === 'html' || type === 'js'){
+					factory.imports = factory.imports || [];
+					factory.imports.push(
+						{
+							'type': type,
+							'src':ch[i].getAttribute('src'), 
+							'name':ch[i].getAttribute('as')
+						}
+					);
+				}
 				continue;
 			}
 			var asName=(ch[i].getAttribute('as') || '').toUpperCase();
@@ -147,7 +180,7 @@ function W3View(appContext){
 					registry[asName]={};
 					registry[asName].prep=prep;
 				} else {
-					throw new Error(asName + ' - already registered component')
+					throw new Error(asName + ' - is already registered component')
 				}
 			}
 		}
@@ -378,8 +411,10 @@ W3View.mixin.mount=function(target, index){
  * Unmount element from DOM tree
  */
 W3View.mixin.unmount=function(){
-	this.onUnmount();
-	if(this.parentNode) this.parentNode.removeChild(this);
+	if(this.parentNode) {
+		this.onUnmount();
+		this.parentNode.removeChild(this);
+	}
 };
 
 /**

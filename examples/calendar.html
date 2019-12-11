@@ -1,0 +1,205 @@
+<html>
+
+<head>
+	<title>eeee</title>
+	<meta http-equiv="content-type" content="text/html;charset=utf-8">
+</head>
+
+<body>
+	<style>
+			.calendarValBox{
+				padding:10px;
+				border:1px solid black;
+				display:inline-block;
+				cursor:pointer;
+			}
+			.calendarDropBox{
+				border:1px solid black;
+				position:absolute;
+				background-color:#ffffff;
+			}
+			.calendarDaysBox, .calendarMonthsBox, .calendarYearsBox{
+				float:left;
+				padding:20px;
+				xborder: 1px solid black;
+			}
+			.calendarDaysBox li, .calendarMonthsBox li, .calendarYearsBox li{
+				list-style-type: none;
+				display: block;
+			}
+			.calendarDaysBox ul, .calendarMonthsBox ul, .calendarYearsBox ul{
+				padding: 0;
+			}
+			.calendarYearsBox{
+				
+			}
+			.calendarMonthsBox{
+				
+			}
+			.calendarDaysBox{
+				
+				width:165px;
+			}
+			.calendarDay, .calendarMnth, .calendarYear{
+				cursor:pointer;
+				line-height:25px;
+			}
+			.calendarDay{
+				float:left;
+				width:33px;
+				height:33px;
+				text-align:center;
+				line-height:33px;
+				border-radius:16px;
+			}
+			[active] {
+				background-color:#000000;
+				color:#ffffff;
+			}
+		</style>
+
+<div id="components" style="display:none;">
+	///////////
+	<div as="calendar-control" value="" locale="">
+		<button ref="toggle" class="calendarValBox"></button>
+		<calendar-dropbox ref="drop"></calendar-dropbox>
+		<script type="javascript">
+			var model = {
+				yyyy: undefined,
+				mm: undefined,
+				dd: undefined,
+				locale: 'ru',
+				parse: function (arg){
+					return arg.getFullYear ? arg : new Date(arg);
+				},
+				setValue: function (val){
+					var v = this.parse(val);
+					this.yyyy = v.getFullYear();
+					this.mm = v.getMonth();
+					this.dd = v.getDate();
+				},
+				getValue: function (){
+					return new Date(this.yyyy, this.mm, this.dd);
+				},
+				toString: function (){
+					var v = this.getValue();
+					return JSON.stringify(v).replace('"','').split('T')[0];
+				},
+				getYearsNear: function (year){
+					var res = [];
+					for(var i = year-4; i<year+5; i++){
+						res.push(i);
+					}
+					return res;
+				},
+				getMonths: function (){
+					return this.monthsList[this.locale] ? this.monthsList[this.locale] : this.monthsList['en'];
+				},
+
+				monthsList: {
+					'ru': ["Янв","Фев","Мар","Апр","Май","Июн","Июл","Авг","Сен","Окт","Ноя","Дек"],
+					'en': ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+				}
+			};
+			this.onMount = function (){
+				var val = this.getAttribute('value') || new Date();
+				var loc = this.getAttribute('locale');
+				this.setData({value: val, locale: loc});
+				this.ref.drop.setListener(this);
+				this.ref.drop.unmount();
+			};
+			this.onSetData = function (data){
+				model.setValue(data.value);
+				model.locale = data.locale || model.locale;
+				this.ref.toggle.innerText = model.toString();
+				this.ref.drop.setData(model);
+				this.onChange(model.getValue());
+			};
+			this.onChange = function (){};
+			this.getValue = function (){
+				return model.toString();
+			};
+			var expanded = false;
+			var current;
+			this.ref.toggle.onclick=function(){
+				
+				if(!expanded) this.ref.drop.mount(this);
+				else  this.ref.drop.unmount();
+				expanded = !expanded;
+			}.bind(this);
+		</script>
+	</div>
+	///////////
+	<li as="c-year-month">
+		<script type="javascript">
+			this.onSetData = function(data, opt, i){
+				this.innerText = data;
+				if(data === opt) this.setAttribute('active',true);
+				else  this.removeAttribute('active');
+			}
+		</script>
+	</li>
+	///////////
+	<div as="calendar-dropbox" class="calendarDropBox">
+
+		<div class="calendarYearsBox">
+			<button>up</button>
+			<array-iterator usetag="ul" ref="years">
+				<c-year-month class="calendarYear">2008</c-year-month>
+				<c-year-month class="calendarYear" active>2009</c-year-month>
+			</array-iterator>
+			<button>down</button>
+		</div>
+		<div class="calendarMonthsBox">
+			<div class="calendarMnth"> January 	</div>
+			<div class="calendarMnth"> February </div>
+			<div class="calendarMnth"> March 		</div>
+			<div class="calendarMnth"> April 		</div>
+			<div class="calendarMnth"> May 			</div>
+			<div class="calendarMnth"> June 		</div>
+			<div class="calendarMnth"> July 		</div>
+			<div class="calendarMnth"> August 	</div>
+			<div class="calendarMnth"> September</div>
+			<div class="calendarMnth"> October 	</div>
+			<div class="calendarMnth"> November </div>
+			<div class="calendarMnth"> December </div>
+		</div>
+		<div class="calendarDaysBox">
+			<div class="calendarDay" active>1</div>
+		</div>
+
+		<div style="clear:both;"></div>
+		<script type="javascript">
+			var listener ;
+			this.setListener = function(l){
+				listener = l;
+			};
+			var model;
+			this.onSetData = function (data){
+				model = data;
+				this.ref.years.setData(model.getYearsNear(model.yyyy), model.yyyy);
+			};
+		</script>
+	</div>
+	///////////
+	
+</div>
+
+
+<script src="../w3view.js"></script>
+<script type="text/javascript" defer="defer">
+	'use strict';
+	var appContext = {};
+	var w3v = new W3View(appContext);
+	w3v.register(components.children);
+	var cc = w3v.create('calendar-control');
+	cc.onChange = function(val){
+		console.log(val);
+	};
+	cc.mount(document.body);
+</script>
+
+
+</body>
+
+</html>

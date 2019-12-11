@@ -7,32 +7,39 @@ function moduleLoader(appContext, src, reader, onload){
     function(response){
       var factory = new W3View(appContext);
       if(reader.showSrc) factory.src = src;
-      factory.parse(response);
-
-      moduleLoader.imported[src]=factory;
+      var result = factory.parse(response);
+      if(typeof result == 'string'){
+        result = {
+          raw: result,
+          src: src
+        };
+      }
+      moduleLoader.imported[src]=result;
       var loading = 0;
 
-      if(factory.imports){
-        for(var i=0; i<factory.imports.length; i++){
-          var msrc = reader.makeSrc(src, factory.imports[i].src);
+      if(result.imports){
+        for(var i=0; i<result.imports.length; i++){
+          var msrc = reader.makeSrc(src, result.imports[i].src);
           if(!moduleLoader.imported[msrc]){
             (function(name,msrc,i){
-              moduleLoader(appContext,msrc,reader,function(res){
-                loading--;
-                moduleLoader.imported[msrc]=res;
-                factory.putModule(name,res);
-                factory.imports[i].src=msrc;
-                if(loading===0) onload(factory);
+              moduleLoader(appContext,msrc,reader,
+                function(res){
+                  loading--;
+                  moduleLoader.imported[msrc]=res;
+                  result.putModule(name, res, result.imports[i].type);
+                  result.imports[i].src=msrc;
+                  if(loading===0) onload(result);
               });
-            })(factory.imports[i].name, msrc,i);
+            })(result.imports[i].name, msrc, i);
             loading++;
             continue;
           }
-          factory.putModule(factory.imports[i].name, moduleLoader.imported[msrc]);
-          factory.imports[i].src = msrc;
+          result.putModule(result.imports[i].name, 
+            moduleLoader.imported[msrc], result.imports[i].type);
+          result.imports[i].src = msrc;
         }
       }
-      if(loading===0) onload(factory);
+      if(loading===0) onload(result);
     }
   )
 };

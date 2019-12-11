@@ -3,6 +3,7 @@
 			<import src="./grid.w3v.html" as="grid" type="html"></import>
 			<import src="./slider.w3v.html" as="slider" type="html"></import>
 			<import src="./hello-world.w3v.html" as="hello" type="html"></import>
+			<import src="js/script.js" as="script" type="js"></import>
 
 			<div as="win" 
 				style="position:fixed;
@@ -111,6 +112,8 @@
 						return false;
 					};
 					
+					require('script')();
+
 					this.ref.caption.innerText=this.getAttribute('caption');
 				</script>
 			</div>
