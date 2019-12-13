@@ -7,11 +7,15 @@
 12.5 kB of documented, not minified code.
 
 ## Use w3view for your SPA and kill nuclear monsters in your mind.
+Unlike the common Javascript UI frameworks, W3View is not based on any templates, does not define its own markup language or rule definition language, and does not drive you into the solid frames of unnatural concepts.
+
+Completely based on HTML, Javascript and DOM API, W3View offers a new look at the capabilities of long-known and widespread technologies. Like React, it is just a library for building user interfaces. But unlike it W3View is closer to JavaFX, SWING or Qt.
 
 # In current version 
 - <a href="https://rawgit.com/vitalydmitriev1970/W3View/master/examples/modules/index.html">Modularity and namespaces added</a>
 - <a	href="https://rawgit.com/vitalydmitriev1970/W3View/master/examples/window.1.html">Prebuilding your modules into one js bundle</a> 
 - Two new lifecycle handlers (start and stop) to keep your memory clean.
+- CommonJS modules can be imported now
 
 ## What W3View does ?
 W3View generates **reusable UI components** from HTML based declarative 

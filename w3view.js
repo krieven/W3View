@@ -48,7 +48,8 @@ function W3View(appContext){
 				'var module = {};\n' +
 				scripts[name].raw +
 				'\nreturn module.exports;\n' +
-				'//# sourceURL=W3View.JS:///'+(factory.src?scripts[name].src:('<script:'+name+'>'))
+				'//# sourceURL=W3View.JS:///'+
+				(factory.src?scripts[name].src:(''+name+'____'+(Math.random()*1000).toFixed(0)))
 			)
 		)();
 	}
