@@ -24,7 +24,7 @@ function builder(src, trgFunc, callback){
 			i++;
 		}
 
-		buffer = [ 'function '+(trgFunc || 'w3view')+
+		buffer = [ 'function '+(trgFunc || '')+
 			'(appContext){var factory=['+buffer.join(',')+']' ];
 
 		for(var path in loader.imported){

@@ -9,4 +9,4 @@ const builder = require(__dirname+'/builder.js');
 let src = process.argv[2];
 let trgFunc = process.argv[3];
 
-builder(src, trgFunc, console.log);
+builder(src, trgFunc || 'w3view', console.log);
