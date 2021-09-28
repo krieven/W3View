@@ -18,8 +18,6 @@
     "url": "https://github.com/vitalydmitriev1970/W3View/issues"
   },
   "homepage": "https://github.com/vitalydmitriev1970/W3View#readme",
-  "dependencies": {
-  },
   "main": "./w3view.js",
   "devDependencies": {
     "express": "^4.17.1"

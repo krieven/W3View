@@ -8,7 +8,7 @@
             </div>
           </div>
         </div>
-        <script type="javascript">
+        <script>
           var value;
           var max, min, defValue;
           this.onSetData=function(data){
@@ -63,10 +63,10 @@
         <input type="text" ref="value" col="2"
           style="text-align:right;height:50px;
           font-size:40px;overflow:visible;border:0;
-          border-bottom:5px solid green;min-width:100px;padding:0px 10px;">
+          border-bottom:5px solid green;min-width:100px;padding:10px 10px;">
         <clear></clear>
         
-        <script type="javascript">
+        <script>
           this.ref.slider.onchange = function(value){this.ref.value.value = value; this.onchange(value);}.bind(this);
           
           this.ref.value.onchange = function(e){
@@ -98,8 +98,8 @@
         <color-chooser ref="red">Red</color-chooser>
         <color-chooser ref="green">Green</color-chooser>
         <color-chooser ref="blue">Blue</color-chooser>
-        <clear></clear>
-        <script type="javascript">
+
+        <script>
 
           this.getValue=function(){
             return "rgb("+this.ref.red.getValue()+
@@ -119,16 +119,17 @@
 
       <div as="app">
         <div style="height:100px;padding:20px 0px;font-size:20px;
-          text-align:center;border:1px solid black;border-bottom:0px;" id="disp">
-            <span ref="va" style="background-color:white; padding:10px;border-radius: 20px;"></span>
+          text-align:center;border:1px solid black;border-bottom:0px;" ref="disp">
+            <span ref="val" style="background-color:white; padding:10px;border-radius: 20px;"></span>
         </div>
         <rgb-chooser ref="control"></rgb-chooser>
         <script>
           this.ref.control.onchange = function(value){
-            disp.style.backgroundColor = value;
-            val.innerText = value;
-          };
-          this.ref.control.setData();
+            this.ref.disp.style.backgroundColor = value;
+            this.ref.val.innerText = value;
+          }.bind(this);
+          
+          this.ref.control.onchange(this.ref.control.getValue());
         </script>
       </div>
 

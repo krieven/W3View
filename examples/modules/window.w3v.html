@@ -1,8 +1,8 @@
 
 
-			<import src="./grid.w3v.html" as="grid" type="html"></import>
-			<import src="./slider.w3v.html" as="slider" type="html"></import>
-			<import src="./hello-world.w3v.html" as="hello" type="html"></import>
+			<import src="grid.w3v.html" as="grid" type="html"></import>
+			<import src="slider.w3v.html" as="slider" type="html"></import>
+			<import src="hello-world.w3v.html" as="hello" type="html"></import>
 			<import src="js/script.js" as="script" type="js"></import>
 
 			<div as="win" 
@@ -154,35 +154,6 @@
 				</script>
 			</div>
 
-			<win as="ext-win" caption="extended window" usetag="a">
-				<div>
-
-
-				Helloooo! this window is EXT-WIN instance<br>
-				EXT-WIN - is extended win
-
-
-				</div>
-				<button style="display:block;width:100%;margin-top:30px;" ref=zcaption>
-					BUTTON
-				</button>
-				<script>
-					var pcolor;
-					var capt = this.ref.caption.innerHTML;
-					this.ref.content.addEventListener('mouseover', function(e){
-						e = e || window.event;
-						pcolor=e.target.style.backgroundColor;
-						e.target.style.backgroundColor="#cccccc";
-						this.ref.caption.innerText=e.target.tagName+" "+capt;
-					}.bind(this));
-					this.ref.content.addEventListener('mouseout', function(e){
-						e = e || window.event;
-						e.target.style.backgroundColor=pcolor || '';
-						this.ref.caption.innerText=capt;
-					}.bind(this));
-				</script>
-			</win>
-
 			<win as="grid-win" caption="window with grid">
 				<grid:app style="height:100%;min-height: 150px;" ref="grid"></grid:app>
 				<script>
@@ -190,6 +161,10 @@
 				</script>
 			</win>
 			
+			<win as="rgb-chooser" caption="choose color">
+				<slider:app></slider:app>
+			</win>
+
       <div as='cell' useTag="td"
         style="text-align:center;width:10%;">
         <script>
@@ -206,7 +181,7 @@
 				<button ref="button">open win</button>
 				<button ref="button1">open modal win</button>
 				<button ref="button2">open grid-win</button>
-				<button ref="button3">open ext-win</button>
+				<button ref="button3">open slider</button>
 				<script>
 					this.ref.button.onclick=function(){
 						var win=factory.create('win');
@@ -236,7 +211,7 @@
 					};
 
 					this.ref.button3.onclick=function(){
-						var win=factory.create('ext-win');
+						var win=factory.create('rgb-chooser');
 						win.onclose=function(){ win.destroy(); };
 						win.mount(this.parentElement);					
 						return false;
