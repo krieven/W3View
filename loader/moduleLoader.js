@@ -37,6 +37,7 @@ function moduleLoader(appContext, src, reader, onload) {
                   if (loading === 0) onload(result);
                 });
             })(result.imports[i].name, msrc, i);
+            moduleLoader.imported[msrc] = moduleLoader.imported[msrc] || true;
             loading++;
             continue;
           }

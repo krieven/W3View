@@ -1,6 +1,6 @@
 {
   "name": "w3view",
-  "version": "1.0.6",
+  "version": "1.0.8",
   "description": "The HTML was created for this, use w3view for your SPA and kill monsters in your mind.",
   "directories": {
     "example": "examples"
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/vitalydmitriev1970/W3View#readme",
   "main": "./w3view.js",
+  
   "devDependencies": {
     "express": "^4.17.1"
   },
