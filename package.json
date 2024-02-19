@@ -21,9 +21,7 @@
   "main": "./w3view.js",
   
   "devDependencies": {
-    "express": "^4.17.1"
-  },
-  "optionalDependencies": {
+    "express": "^4.17.1",
     "jsdom": "^16.4.0"
   }
 }
