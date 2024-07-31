@@ -1,5 +1,12 @@
 'use strict';
 
+/**
+ * @deprecated - use loadModule
+ * @param {*} appContext 
+ * @param {*} src 
+ * @param {*} reader 
+ * @param {*} onload 
+ */
 function moduleLoader(appContext, src, reader, onload) {
   moduleLoader.imported = moduleLoader.imported || {};
   src = reader.makeSrc(src);
