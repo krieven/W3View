@@ -127,12 +127,23 @@ const factoryLoader = (function () {
    * @param {httpreader | filereader} reader - читатель источника
    * @param {(factory: W3View) => void} onload - колбэк
    */
-  return function factoryLoader(appContext, src, reader, onload) {
+  function factoryLoader(appContext, src, reader, onload) {
     src = reader.makeSrc(src)
     loadModule(src, reader, (mod) => {
       onload(makePrepared(src, appContext))
     })
   }
+
+  factoryLoader.loadModules = function (src, reader, onload) {
+    src = reader.makeSrc(src)
+    loadModule(src, reader, (mod) => {
+      onload(src, modules)
+    })
+  }
+
+
+  return factoryLoader
+
 })()
 
 if (typeof module !== 'undefined' && typeof require === 'function') {

@@ -5,20 +5,20 @@ const jsdom = require('jsdom');
 
 W3View.document = new jsdom.JSDOM('').window.document;
 
-const loader = require('../loader/moduleLoader.js');
+const loader = require('../loader/factoryLoader.js').loadModules;
 const converter = require('./converter.js');
 const reader = require('../loader/filereader.js');
 
 function builder(src, trgFunc, callback) {
-	loader({}, src, reader, function () {
+	loader(src, reader, function (src, modules) {
 		let buffer = [];
 		let imports = {};
 		var i = 0;
-		for (var path in loader.imported) {
-			var converted = converter(loader.imported[path]);
+		for (var path in modules) {
+			var converted = converter(modules[path]);
 			if (converted) buffer.push(converted);
 			else {
-				buffer.push(JSON.stringify(loader.imported[path]));
+				buffer.push(JSON.stringify(modules[path]));
 			}
 			imports[path] = i;
 			i++;
@@ -27,20 +27,20 @@ function builder(src, trgFunc, callback) {
 		buffer = ['function ' + (trgFunc || '') +
 			'(appContext){var factory=[' + buffer.join(',') + ']'];
 
-		for (var path in loader.imported) {
-			var factory = loader.imported[path];
-			if (factory.imports) {
-				for (var i = 0; i < factory.imports.length; i++) {
-					var msrc = factory.imports[i].src;
+		for (var path in modules) {
+			var mod = modules[path];
+			if (mod.imports) {
+				for (var i = 0; i < mod.imports.length; i++) {
+					var msrc = mod.imports[i].src;
 					buffer.push(
 						'factory[' + imports[path] +
-						'].putModule(\'' + factory.imports[i].name +
+						'].putModule(\'' + mod.imports[i].name +
 						'\',factory[' + imports[msrc] + '], \'' +
-						factory.imports[i].type + '\')');
+						mod.imports[i].type + '\')');
 				}
 			}
 		}
-		buffer.push('return factory[' + imports[reader.makeSrc(src)] + '];}',
+		buffer.push('return factory[' + imports[src] + '];}',
 			'//# sourceURL=W3View.bundle:///' + src + '.js'
 		);
 		callback(buffer.join(';\n'));

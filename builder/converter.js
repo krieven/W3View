@@ -9,8 +9,8 @@ function convertJs(module) {
 
 module.exports = function (module) {
 
-	if (!module.getRegistry) return convertJs(module);
-	const registry = module.getRegistry();
+	if (!module.registry) return convertJs(module);
+	const registry = module.registry;
 
 	let buffer = [];
 
