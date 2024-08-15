@@ -1,32 +1,26 @@
 'use strict';
-
+/**
+   * Загрузчик модуля и его зависимостей, передаёт в колбэк инициализированную контекстом фабрику компонентов
+   * Кэширует загруженные модули и инициализированные фабрики
+   * 
+   * @param {*} appContext - контекст приложения
+   * @param {string} src - путь к источнику
+   * @param {httpreader | filereader} reader - читатель источника
+   * @param {(factory: W3View) => void} onload - колбэк
+   * 
+   * @property loadModules - то-же, что и factoryLoader, но для сборщика, не нужен appContext и в onload передаёт загруженные модули
+   */
 const factoryLoader = (function () {
 
   const WAITING = 'WAITING'
   const READY = 'READY'
 
   const status = {}
-
-  /**
-   * 
-   * {
-   *    src: {
-   *       imports:[{name, src, type}],
-   *       registry: {
-   *          name: prep
-   *       } | {src, raw, evaluated},
-   *        src: string
-   *    }
-   * }
-   * 
-   */
-  const modules = {}
-  /**
-   * object[src] = Map<appContext:any, factory:W3View>
-   */
-  const prepared = {}
-
+  const roots = {}
   const readyHandler = {}
+
+  const modules = {}
+  const prepared = {}
 
   function makeJsModule(source, src) {
     return {
@@ -41,8 +35,9 @@ const factoryLoader = (function () {
 
   function toReady(src) {
     status[src] = READY
-    readyHandler[src]?.forEach((handler) => handler(modules[src]))
-    readyHandler[src] = []
+    while (readyHandler[src]?.length) {
+      readyHandler[src].pop()(modules[src])
+    }
   }
 
   function makePrepared(src, context) {
@@ -59,7 +54,6 @@ const factoryLoader = (function () {
       return prepared[src].get(context)
     }
     const factory = new W3View(context).setRegistry(module.registry)
-
     prepared[src].set(context, factory)
 
     module.imports?.forEach(item =>
@@ -69,64 +63,55 @@ const factoryLoader = (function () {
     return prepared[src].get(context)
   }
 
-  /**
-   * Загружает модуль в modules и стартует загрузку зависимостей,
-   * если модуль уже в статусе READY то сразу вызывает onModuleReady
-   * @param {*} src - нормализованный путь к источнику
-   * @param {*} reader - filereader | httpreader
-   * @param {*} onModuleReady - получает модуль из modules
-   * @param {*} path - путь в дереве зависимостей до загружаемого модуля (исключительно)
-   */
-  function loadModule(src, reader, onModuleReady, path) {
-    path = path || []
-    if (status[src] === READY || path.indexOf(src) > -1) {
-      onModuleReady(modules[src])
-      return
-    }
-    readyHandler[src] = readyHandler[src] || []
-    readyHandler[src].unshift(onModuleReady)
-    if (status[src] === WAITING) {
-      return
-    }
-    path.push(src)
-    status[src] = WAITING
-    reader(src, (response) => {
-      let factory = new W3View()
-      factory.src = reader.showSrc && src
-      factory = factory.parse(response)
-      if (typeof factory === 'string') {
-        modules[src] = makeJsModule(response, reader.showSrc && src)
-        toReady(src)
-        return
-      }
-      modules[src] = { imports: factory.imports, registry: factory.getRegistry(), src: reader.showSrc && src }
+  function loadModule(src, reader, onModuleReady) {
+    let count = 0
+    const root = src
 
-      if (!factory.imports || !factory.imports.length) {
-        toReady(src)
+    function load(src, reader, onload) {
+
+      if (status[src] === READY) {
+        return onload(modules[src])
+      }
+
+      readyHandler[src] = readyHandler[src] || []
+      if (status[src] === WAITING) {
+        roots[src] !== root && count++
+        readyHandler[src].push((mod) => {
+          roots[src] !== root && count--
+          onload(mod)
+        })
         return
       }
-      factory.imports.forEach(
-        imp => {
-          const msrc = reader.makeSrc(src, imp.src)
-          loadModule(msrc, reader, (mod) => {
-            if (modules[src].imports
-              .every(i => path.indexOf(i.src) > -1 || status[i.src] === READY)) {
-              toReady(src)
-            }
-          }, path.slice())
+      readyHandler[src].push(onload)
+      status[src] = WAITING
+      roots[src] = root
+      count++
+      reader(src, (response) => {
+        count--
+        let factory = new W3View()
+        factory.src = reader.showSrc && src
+        factory = factory.parse(response)
+        if (typeof factory === 'string') {
+          modules[src] = makeJsModule(response, reader.showSrc && src)
+          return toReady(src)
         }
-      )
-    })
+        modules[src] = { imports: factory.imports, registry: factory.getRegistry(), src: reader.showSrc && src }
+        if (!factory.imports?.length) {
+          return toReady(src)
+        }
+        factory.imports.forEach(
+          imp => {
+            const msrc = reader.makeSrc(src, imp.src)
+            load(msrc, reader, (mod) => {
+              !count && toReady(src)
+            })
+          }
+        )
+      })
+    }
+    load(src, reader, onModuleReady)
   }
 
-  /**
-   * Загрузчик модуля и его зависимостей, передаёт в колбэк инициализированную контекстом фабрику компонентов
-   * 
-   * @param {*} appContext - контекст приложения
-   * @param {string} src - путь к источнику
-   * @param {httpreader | filereader} reader - читатель источника
-   * @param {(factory: W3View) => void} onload - колбэк
-   */
   function factoryLoader(appContext, src, reader, onload) {
     src = reader.makeSrc(src)
     loadModule(src, reader, (mod) => {
@@ -137,13 +122,18 @@ const factoryLoader = (function () {
   factoryLoader.loadModules = function (src, reader, onload) {
     src = reader.makeSrc(src)
     loadModule(src, reader, (mod) => {
-      onload(src, modules)
+      const extracted = {}
+      const extract = (src) => {
+        if (!extracted[src]) {
+          extracted[src] = modules[src]
+          modules[src]?.imports?.forEach(imp => extract(reader.makeSrc(src, imp.src)))
+        }
+      }
+      onload(src, extract(src) || extracted)
     })
   }
 
-
   return factoryLoader
-
 })()
 
 if (typeof module !== 'undefined' && typeof require === 'function') {

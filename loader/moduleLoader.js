@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * @deprecated - use loadModule
+ * @deprecated - use factoryLoader
  * @param {*} appContext 
  * @param {*} src 
  * @param {*} reader 

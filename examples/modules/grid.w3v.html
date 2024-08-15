@@ -1,182 +1,174 @@
-      
-      <div as='tbl' 
-        style='box-sizing:border-box;border:1px solid black;
+<div as='tbl' style='box-sizing:border-box;border:1px solid black;
         width:100%;height:100%;
         padding:0px 20px 0px 0px;'>
-        <div style="float:left;width:100%;height:100%;overflow:hidden;min-height:150px;">
-          <array-iterator useTag='table' ref='tb' border=1 
-              style='width:100%;height:100%;min-height:150px;overflow:hidden;'>
-            <row></row>
-          </array-iterator>
-        </div>
-        <div style="float:left;height:100%;width:0px;overflow:visible;">
-          <scrollbar ref="scroll"
-            style='width:20px; height: 100%; min-height:150px;
+  <div style="float:left;width:100%;height:100%;overflow:hidden;min-height:150px;">
+    <array-iterator useTag='table' ref='tb' border=1 style='width:100%;height:100%;min-height:150px;overflow:hidden;'>
+      <row></row>
+    </array-iterator>
+  </div>
+  <div style="float:left;height:100%;width:0px;overflow:visible;">
+    <scrollbar ref="scroll" style='width:20px; height: 100%; min-height:150px;
             border:1px solid black;'>
-          </scrollbar>
-        </div>
-        <script>
+    </scrollbar>
+  </div>
+  <script>
 
-          var data = {};
-          this.onSetData=function(input){
-            data = input || {list:[]};
-            data.len = Math.round(this.parentElement.offsetHeight/30);
-            data.offset = data.offset>(data.list.length-data.len)?(data.list.length-data.len):data.offset;
-            if(data.offset+data.len > data.list.length) data.offset=data.list.length-data.len;
-            if(data.offset < 0) data.offset=0;
-            
-            var frame=data.list.slice(data.offset,data.offset+data.len);
-            this.ref.tb.setData(frame);
-            this.ref.scroll.setData({app:this, data:data});
-          };
+    var data = {};
+    this.onSetData = function (input) {
+      data = input || { list: [] };
+      data.len = Math.round(this.parentElement.offsetHeight / 30);
+      data.offset = data.offset > (data.list.length - data.len) ? (data.list.length - data.len) : data.offset;
+      if (data.offset + data.len > data.list.length) data.offset = data.list.length - data.len;
+      if (data.offset < 0) data.offset = 0;
 
-          var resize = this.onresize =  function(){
-            this.setData(data);
-          }.bind(this);
+      var frame = data.list.slice(data.offset, data.offset + data.len);
+      this.ref.tb.setData(frame);
+      this.ref.scroll.setData({ app: this, data: data });
+    };
 
-          var keyDown=function(e){
-						e = e || window.event;
-            var sh={38:+1, 40:-1}[e.keyCode];
-            if(sh !== undefined){
-              if(!e.ctrlKey && !e.altKey && !e.shiftKey) e.preventDefault(); 
-              else return;
-              data.offset-=sh;
-              this.setData(data);
-            }
-          }.bind(this);
+    var resize = this.onresize = function () {
+      this.setData(data);
+    }.bind(this);
 
-          this.ref.tb.onmousewheel=this.ref.tb.onwheel =function(e){
-						e = e || window.event;
-            var delta = e.deltaY || -e.wheelDelta
-						if(e.preventDefault) e.preventDefault(); else e.returnValue = false;
-            if(delta>0){
-              data.offset++;
-            } else{
-              data.offset--;
-            }
-            this.setData(data);
-            return false;
-          }.bind(this);
-          
-          this.onMount = function(){
-            // window.addEventListener('resize',resize);
-            // window.addEventListener('keydown',keyDown);
-          };
+    var keyDown = function (e) {
+      e = e || window.event;
+      var sh = { 38: +1, 40: -1 }[e.keyCode];
+      if (sh !== undefined) {
+        if (!e.ctrlKey && !e.altKey && !e.shiftKey) e.preventDefault();
+        else return;
+        data.offset -= sh;
+        this.setData(data);
+      }
+    }.bind(this);
 
-          this.onUnmount = function(){
-            // window.removeEventListener('resize',resize);
-            // window.removeEventListener('keydown',keyDown);
-          };
-          
-        </script>
-      </div>
+    this.ref.tb.onmousewheel = this.ref.tb.onwheel = function (e) {
+      e = e || window.event;
+      var delta = e.deltaY || -e.wheelDelta
+      if (e.preventDefault) e.preventDefault(); else e.returnValue = false;
+      if (delta > 0) {
+        data.offset++;
+      } else {
+        data.offset--;
+      }
+      this.setData(data);
+      return false;
+    }.bind(this);
 
-      <div as='row' super="array-iterator"  tagName='tr'>
-          <popups:cell></popups:cell>
-          <popups:cell style="background-color:rgba(128,128,128,0.3)"></popups:cell>
-          <script>
-            var superSetData = this.onSetData.bind(this);
+    this.onMount = function () {
+      // window.addEventListener('resize',resize);
+      // window.addEventListener('keydown',keyDown);
+    };
 
-            this.onSetData=function(data){
-              superSetData(data);
-              if(data[0]%3===0){
-                this.style.backgroundColor="#ccffcc";
-              }
-              else{
-                this.style.backgroundColor="";
-              }
-            };
+    this.onUnmount = function () {
+      // window.removeEventListener('resize',resize);
+      // window.removeEventListener('keydown',keyDown);
+    };
 
-          </script>
-      </div>
+  </script>
+</div>
 
-      <div as='xcell' useTag="td"
-        style="text-align:center;width:10%;">
-        <script>
+<div as='row' super="array-iterator" tagName='tr'>
+  <popups:cell></popups:cell>
+  <popups:cell style="background-color:rgba(128,128,128,0.3)"></popups:cell>
+  <script>
+    var superSetData = this.onSetData.bind(this);
 
-          this.onSetData=function(data){
-            this.innerText=data;
-          };
+    this.onSetData = function (data) {
+      superSetData(data);
+      if (data[0] % 3 === 0) {
+        this.style.backgroundColor = "#ccffcc";
+      }
+      else {
+        this.style.backgroundColor = "";
+      }
+    };
 
-        </script>
-      </div>
+  </script>
+</div>
 
-      <div as='scrollbar'>
-        <div ref='scroller' 
-          style='cursor:pointer;position:relative;
+<div as='xcell' useTag="td" style="text-align:center;width:10%;">
+  <script>
+
+    this.onSetData = function (data) {
+      this.innerText = data;
+    };
+
+  </script>
+</div>
+
+<div as='scrollbar'>
+  <div ref='scroller' style='cursor:pointer;position:relative;
           width:100%; height:100px;
           min-height:20px;top:0px;
           border:2px solid black;
           background-color:#999999;margin-top:0px;'></div>
-        <script>
-          var app = {}, data = {};
-          var hh = 0;
+  <script>
+    var app = {}, data = {};
+    var hh = 0;
 
-          this.onSetData=function(input){
-            data = input.data;
-            app = input.app;
-            var h=data.len/data.list.length*this.offsetHeight;
-            this.ref.scroller.style.height=(h)+'px';
-            hh=this.ref.scroller.offsetHeight-h;
-            this.ref.scroller.style.top=(data.offset/data.list.length*(this.offsetHeight-hh))+'px';
-          };
-          var downAt = 0;
-          var offsetAt = 0;
+    this.onSetData = function (input) {
+      data = input.data;
+      app = input.app;
+      var h = data.len / data.list.length * this.offsetHeight;
+      this.ref.scroller.style.height = (h) + 'px';
+      hh = this.ref.scroller.offsetHeight - h;
+      this.ref.scroller.style.top = (data.offset / data.list.length * (this.offsetHeight - hh)) + 'px';
+    };
+    var downAt = 0;
+    var offsetAt = 0;
 
-          var scrolling = this.ref.scroller.onmousedown=function (e){
-						e = e || window.event;
-            downAt = e.clientY;
-            offsetAt = data.offset;
-            document.body.addEventListener('mousemove', onmousemove);
-            document.body.addEventListener('mouseup', onmouseup);
-          };
+    var scrolling = this.ref.scroller.onmousedown = function (e) {
+      e = e || window.event;
+      downAt = e.clientY;
+      offsetAt = data.offset;
+      document.body.addEventListener('mousemove', onmousemove);
+      document.body.addEventListener('mouseup', onmouseup);
+    };
 
-          var onmouseup=function(e){
-            document.body.removeEventListener('mousemove', onmousemove);
-            document.body.removeEventListener('mouseup', onmouseup);
-          };
+    var onmouseup = function (e) {
+      document.body.removeEventListener('mousemove', onmousemove);
+      document.body.removeEventListener('mouseup', onmouseup);
+    };
 
-          var onmousemove=function(e){
-						e = e || window.event;
-						if(e.preventDefault) e.preventDefault(); else e.returnValue = false;
-            var eY=e.clientY;
-            if(downAt<0) {eY=e.offsetY;}
-            var dy = Math.round((eY-downAt)/(this.offsetHeight-hh)*data.list.length);
-            
-            var offset = offsetAt+dy;
-            app.setData({list:data.list, offset:offset});
-            return false;
-          }.bind(this);
+    var onmousemove = function (e) {
+      e = e || window.event;
+      if (e.preventDefault) e.preventDefault(); else e.returnValue = false;
+      var eY = e.clientY;
+      if (downAt < 0) { eY = e.offsetY; }
+      var dy = Math.round((eY - downAt) / (this.offsetHeight - hh) * data.list.length);
 
-          this.onmousedown = function(e){
-						e = e || window.event;
-            if(e.target !== this) return;
-            offsetAt=0;
-            downAt=-1;
-            onmousemove(e);
-          };
+      var offset = offsetAt + dy;
+      app.setData({ list: data.list, offset: offset });
+      return false;
+    }.bind(this);
 
-        </script>
-      </div>
+    this.onmousedown = function (e) {
+      e = e || window.event;
+      if (e.target !== this) return;
+      offsetAt = 0;
+      downAt = -1;
+      onmousemove(e);
+    };
 
-      <div as=app>
-        <tbl ref="table"></tbl>
-        <script>
-          var data=[];
-          for(var i =0; i<1000; i++){
-            data.push([i, '10'+i,  '20'+i, '30'+i, '40'+i, i, '10'+i,  '20'+i, '30'+i, '40'+i]);
-          }
-          this.onresize = function(){
-            this.ref.table.onresize();
-          }
-          this.onMount=function(){
-            this.ref.table.setData({list:data, offset:0});
-            this.parentElement.onresize=this.onresize.bind(this);
-          };
-        </script>
-      </div>
+  </script>
+</div>
 
-      <import src="window.w3v.html" as="popups" type="html"></import>
-      <import src="hello-world.w3v.html" as="hello" type="html"></import>
+<div as=app>
+  <tbl ref="table"></tbl>
+  <script>
+    var data = [];
+    for (var i = 0; i < 1000; i++) {
+      data.push([i, '10' + i, '20' + i, '30' + i, '40' + i, i, '10' + i, '20' + i, '30' + i, '40' + i]);
+    }
+    this.onresize = function () {
+      this.ref.table.onresize();
+    }
+    this.onMount = function () {
+      this.ref.table.setData({ list: data, offset: 0 });
+      this.parentElement.onresize = this.onresize.bind(this);
+    };
+  </script>
+</div>
 
- 
+<import src="window.w3v.html" as="popups" type="html"></import>
+<import src="hello-world.w3v.html" as="hello" type="html"></import>

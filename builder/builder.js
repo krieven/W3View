@@ -31,7 +31,7 @@ function builder(src, trgFunc, callback) {
 			var mod = modules[path];
 			if (mod.imports) {
 				for (var i = 0; i < mod.imports.length; i++) {
-					var msrc = mod.imports[i].src;
+					var msrc = reader.makeSrc(src, mod.imports[i].src);
 					buffer.push(
 						'factory[' + imports[path] +
 						'].putModule(\'' + mod.imports[i].name +
@@ -40,9 +40,9 @@ function builder(src, trgFunc, callback) {
 				}
 			}
 		}
-		buffer.push('return factory[' + imports[src] + '];}',
-			'//# sourceURL=W3View.bundle:///' + src + '.js'
-		);
+		buffer.push('return factory[' + imports[src] + '];}');
+		reader.showSrc && buffer.push('//# sourceURL=W3View.bundle:///' + src + '.js');
+
 		callback(buffer.join(';\n'));
 	});
 };
