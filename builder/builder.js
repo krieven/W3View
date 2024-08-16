@@ -5,7 +5,7 @@ const jsdom = require('jsdom');
 
 W3View.document = new jsdom.JSDOM('').window.document;
 
-const loader = require('../loader/factoryLoader.js').loadModules;
+const loader = require('../loader/moduleLoader.js').loadModules;
 const converter = require('./converter.js');
 const reader = require('../loader/filereader.js');
 
