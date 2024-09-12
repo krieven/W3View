@@ -5,17 +5,17 @@
 	<script src="../../w3view.js"></script>
 	<script src="../../loader/moduleLoader.js"></script>
 	<script src="../../loader/httpreader.js"></script>
+
+	<script src="../custom-element/custom-modules.js"></script>
+
 	<script>
 
 		moduleLoader({}, 'window.w3v.html', reader, function(factory){
 			factory.create('app').mount(document.body);
 		});
-
-		moduleLoader({}, 'app.w3v.html', reader, function(factory){
-			factory.create('app').mount(document.body);
-		})
 		
 	</script>
+	<custom-modules></custom-modules>
 </head>
 <body></body>
 </html>

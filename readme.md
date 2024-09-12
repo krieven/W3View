@@ -13,7 +13,7 @@ Completely based on HTML, Javascript and DOM API, W3View offers a new look at th
 
 # Features 
 - <a href="https://rawgit.com/vitalydmitriev1970/W3View/master/examples/modules/index.html">Modularity and namespaces added</a>
-- <a	href="https://rawgit.com/vitalydmitriev1970/W3View/master/examples/window.1.html">Prebuilding your modules into one js bundle</a> 
+- <a	href="https://rawgit.com/vitalydmitriev1970/W3View/master/examples/index.html">Prebuilding your modules into one js bundle</a> 
 - Two new lifecycle handlers (start and stop) to keep your memory clean.
 - CommonJS modules can be imported now
 
