@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<script src="../w3view.js"></script>
+	<script src="./built/bundle.js"></script>
+	<script src="./custom-element/custom-bundle.js"></script>
+
+	<link rel="stylesheet" type="text/css" href="grid.css">
+</head>
+
+<body style="padding:50px;">
+	<script>
+		appBundle().create('app').mount(document.body);
+	</script>
+
+	<custom-bundle></custom-bundle>
+
+</body>
+
+</html>

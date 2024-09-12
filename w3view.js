@@ -5,8 +5,12 @@
 String.prototype.trim = String.prototype.trim || function () { return this; };
 
 function W3View(appContext) {
-	var registry = {};
+	var document = W3View.document || window.document;
 	var factory = this;
+
+	var registry = {};
+	var modules = {};
+	var scripts = {};
 
 	this.getRegistry = function () {
 		var result = {};
@@ -20,32 +24,20 @@ function W3View(appContext) {
 		return factory;
 	};
 
-	/**
-	 * the HTML modules
-	 */
-	var modules = {};
-	/**
-	 * the Javascript modules
-	 */
-	var scripts = {};
 
 	this.putModule = function (name, module, type) {
 		var container = { html: modules, js: scripts };
-		name = name.toUpperCase();
-		if (container[type]) container[type][name] = module;
+		container[type] && (container[type][name.toUpperCase()] = module);
 	};
 
-	function require(name) {
-		name = name && name.toUpperCase();
-		if (!scripts[name]) return;
-		if (scripts[name].evaluated) return scripts[name].evaluated;
+	function require(find) {
+		var name = (find + '').toUpperCase();
+		return scripts[name] && scripts[name].evaluated;
 	}
-
-	var document = W3View.document || window.document;
 
 	this.findLocalPrep = function (find) {
 		var name = (find + '').toUpperCase();
-		return (registry[name] && registry[name].prep) ? registry[name].prep : undefined;
+		return registry[name] && registry[name].prep || undefined;
 	};
 
 	this.findPrep = function (find) {
@@ -54,9 +46,7 @@ function W3View(appContext) {
 			return prep;
 		}
 		var path = (find + '').toUpperCase().split(':');
-		if (path.length > 1 && modules[path[0]]) {
-			return modules[path[0]].findPrep(path.slice(1).join(':'));
-		}
+		return path.length > 1 && modules[path[0]] && modules[path[0]].findPrep(path.slice(1).join(':'));
 	};
 
 	var initInstance = function (instance, name) {
@@ -127,7 +117,7 @@ function W3View(appContext) {
 	 * register Components, takes definitions from
 	 * string, append new definitions into registry
 	 * @param {string} str
-	 * @returns {w3view || str} 
+	 * @returns {W3View || str} 
 	 */
 	this.parse = function (str) {
 		var matrix = document.createElement('div');
@@ -164,13 +154,10 @@ function W3View(appContext) {
 		}
 		var asName = (el.getAttribute('as') || '').toUpperCase();
 		if (asName) {
-			if (!registry[asName]) {
-				var prep = prepare(el);
-				registry[asName] = {};
-				registry[asName].prep = prep;
-			} else {
+			if (registry[asName]) {
 				throw new Error(asName + ' - is already registered component')
 			}
+			registry[asName] = { prep: prepare(el) };
 		}
 	};
 
@@ -225,16 +212,16 @@ function W3View(appContext) {
 		ch = ch || [];
 		var instance;
 		var prep = this.findLocalPrep(name);
+		var mix = W3View.mix;
 		if (prep) {
 			//имя описано текущей фабрикой
 			if (this.findPrep(prep.tgn)) {
 				//базовое имя описано текущей фабрикой или модулем
-				var prepattr = W3View.mix(W3View.mix({}, prep.attr), attr.usetag ? { usetag: attr.usetag } : {});
+				var prepattr = mix(mix({}, prep.attr), attr.usetag && { usetag: attr.usetag } || {});
 				instance = this.create(prep.tgn, prepattr, prep.ch);
 			} else {
 				//базовое имя стандартное
-				var tagname = attr.usetag || prep.tgn;
-				instance = makeFromPrep(tagname, prep);
+				instance = makeFromPrep(attr.usetag || prep.tgn, prep);
 			}
 		} else {
 			var path = name.toUpperCase().split(':');
@@ -249,7 +236,7 @@ function W3View(appContext) {
 			}
 			instance.ref = instance.ref || { content: instance };
 		}
-		if (!root) root = instance;
+		root || (root = instance);
 		setAttributes(instance, attr);
 		if (ch && ch.length)
 			for (var i = 0; i < ch.length; i++) {
@@ -271,11 +258,10 @@ function W3View(appContext) {
 			}
 		var mixin = W3View.mixin;
 		if (prep) {
-			W3View.mix(instance, mixin, true);
+			mix(instance, mixin, true);
 			initInstance(instance, name);
 		}
 
-		instance.destroy = mixin.destroy;
 		return instance;
 	};
 
@@ -297,7 +283,7 @@ function W3View(appContext) {
 
 	///builtin components
 	//ARRAY-ITERATOR
-	registry['ARRAY-ITERATOR'] = {prep:{tgn:"DIV",as:"ARRAY-ITERATOR",attr:{as:"ARRAY-ITERATOR"}}};
+	registry['ARRAY-ITERATOR'] = { prep: { tgn: "DIV", as: "ARRAY-ITERATOR", attr: { as: "ARRAY-ITERATOR" } } };
 	registry['ARRAY-ITERATOR'].builtin = true;
 	this.findLocalPrep('ARRAY-ITERATOR').script = function (appContext, factory) {
 		var examples = [];
