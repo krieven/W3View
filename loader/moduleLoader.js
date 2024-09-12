@@ -12,8 +12,8 @@
    */
 const moduleLoader = (function () {
 
-  const WAITING = 'WAITING'
-  const READY = 'READY'
+  const WAITING = 1
+  const READY = 2
 
   const status = {}
   const roots = {}

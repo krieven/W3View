@@ -386,7 +386,7 @@ W3View.mixin.mount = function (target, index) {
  */
 W3View.mixin.unmount = function () {
 	if (this.parentNode) {
-		this.onUnmount();
+		this.onUnmount && this.onUnmount();
 		this.parentNode.removeChild(this);
 	}
 };
@@ -401,25 +401,18 @@ W3View.mixin.unmount = function () {
  * @param {any} a1
  */
 W3View.mixin.setData = function (data, opts, a1) {
-	this.onSetData(data, opts, a1);
+	this.onSetData && this.onSetData(data, opts, a1);
 };
 /**
  * recursively destroys self and subtree
  */
 W3View.mixin.destroy = function () {
-	if (this.unmount) {
-		this.unmount();
-	} else this.parentNode.removeChild(this);
-	if (this.onDestroy) {
-		this.onDestroy();
-	}
-	if (this.onStop) {
-		this.onStop();
-	}
+	this.unmount &&	this.unmount() || this.parentNode.removeChild(this);
+	this.onDestroy && this.onDestroy();
+	this.onStop && this.onStop();
+	
 	while (this.children.length) {
-		if (!this.children[0].destroy) {
-			this.children[0].destroy = W3View.mixin.destroy;
-		}
+		this.children[0].destroy = this.children[0].destroy || W3View.mixin.destroy;
 		this.children[0].destroy();
 	}
 };
