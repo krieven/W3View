@@ -1,10 +1,11 @@
 class CustomModules extends HTMLElement {
   constructor() {
     super()
+    this.init()
   }
 
-  connectedCallback() {
-    const shadow = this.attachShadow({ mode: 'open' });
+  init() {
+    const shadow = this.attachShadow({ mode: 'closed' });
 
     moduleLoader({}, 'app.w3v.html', reader, function (factory) {
       factory.create('app').mount(shadow);
@@ -28,9 +29,10 @@ clear {clear:both;display:block;}
 [col="11"]{width:	91.6667%;}
 [col="12"]{width:	100.0000%;}`
       shadow.appendChild(style)
+      
     })
 
   }
 }
 
-customElements.define("custom-modules", CustomModules);
+customElements.define('hello-world', CustomModules);
